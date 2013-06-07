@@ -19,8 +19,6 @@ local.properties
 *.asv
 *.mat
 
-
-
 # External tool builders
 .externalToolBuilders/
 
