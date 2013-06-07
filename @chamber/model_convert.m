@@ -64,7 +64,7 @@ for i = 1:length(t),
     Ntot(i) = sum(Y(i,2:nSec+1));
     Ni = Y(i,2:nSec+1);
     Dpi  = Y(i,nSec+2:(2*nSec+1));
-    dNi = N_to_dlog(Dpi,Ni);
+    dNi = obj.N_to_dlog(Dpi,Ni);
        
     dN(i,:) = interp1(Dpi,dNi,Dp0,'linear',0);
     
