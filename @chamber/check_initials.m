@@ -91,7 +91,7 @@ if(length(initials.N) ~= num_of_distr || length(initials.sigma) ~= num_of_distr)
 end
 
 
-display('Initial parameters OK.');
+% display('Initial parameters OK.');
 
 end
 
