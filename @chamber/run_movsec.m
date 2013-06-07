@@ -25,7 +25,7 @@ Dp=logspace(initials.Dp_min,initials.Dp_max,initials.sections);
 % is the same as Dp's length (i.e. initials.sections).
 dNdlogDp = zeros(size(Dp));
 for i=1:length(initials.mu)
-    dNdlogDp=dNdlogDp + log_normal(Dp,initials.mu(i),initials.sigma(i),initials.N(i));
+    dNdlogDp=dNdlogDp + obj.log_normal(Dp,initials.mu(i),initials.sigma(i),initials.N(i));
 end
 
 
