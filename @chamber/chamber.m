@@ -102,6 +102,9 @@ classdef chamber < handle
         % these sections moves.
         run_moving_center(obj)
         
+        [dN] = N_to_dlog(obj, Dp,N);
+        
+        [out] = distribution_info_Vtot(obj,Dp,dN);
 
     end
     
@@ -125,9 +128,9 @@ classdef chamber < handle
         
         [out] = sapphir_beta2(Dp,T)
         
-        [out] = distribution_info_Vtot(Dp,dN);
-        
         [Diffcoeff] = diff_particle(Dp,T)
+        
+        [out] = integrate_distribution(Dp,dN,dmin,dmax)
     end
     
     % Static methods:
