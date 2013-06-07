@@ -13,7 +13,6 @@ sections = 30;
 tvect = 0:60:7200;
 
 part_source(:,:,1) = [tvect' [1.0.*ones(1,31), zeros(1,length(tvect)-31)]' (3e-9.*ones(1,length(tvect)))'];
-part_source(:,:,2) 
 
 Cvap_const = 1;
 Cvap0 = 5e7;
