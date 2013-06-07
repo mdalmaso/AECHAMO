@@ -1,12 +1,6 @@
-% (c) Pauli Simonen 2013
-%
-% Version history:
-% 2013-06-04    0.1.0 Separated from function initialize.
-
 function set_params(obj, varargin)
-%SET_PARAMS Sets the parameters for chamber object.
-%   Detailed explanation goes here
-
+% SET_PARAMS Sets the parameters for chamber object.
+%
 % Sets the initial parameters of the chamber object (obj).
 %
 % obj.set_params('field_name_1', value_1, ...
@@ -15,7 +9,10 @@ function set_params(obj, varargin)
 % sets the obj's initial parameters. Fields with names field_name_1, 
 % field_name_2 and field_name_n are replaced by values value_1, value_2 
 % and value_n, respectively. Other fields will not be changed.
-%
+% 
+% A private function of class chamber, used by chamber.initialize.
+% For initializing the values, use method chamber.initialize!
+
 %
 % THE PARAMETERS OF THE CHAMBER MODEL
 % 
@@ -144,13 +141,11 @@ function set_params(obj, varargin)
 %                   mu.
 % 
 % sections          The number of sections in the size distribution.
+
+% (c) Pauli Simonen 2013
 %
-% *****
-% Example:
-% 
-% obj=chamber;
-% obj.initialize('sigma',1.6); % Change the parameter obj.sigma from
-%                              % default 1.33 to 1.6.
+% Version history:
+% 2013-06-04    0.1.0 Separated from function initialize.
 
 
 % Initialize with default values only if the object has not been

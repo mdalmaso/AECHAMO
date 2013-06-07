@@ -1,9 +1,13 @@
+function out = coagulationMatrix(Dp,ind)
+% COAGULATIONMATRIX calculates the matrix for coagulation between sections.
+% 
+% coagulationMatrix(Dp, ind)
+
 % (c) Miikka Dal Maso 2013
 %
 % Version history:
 % 2013-05-24    0.1.0
 
-function out = coagulationMatrix(Dp,ind)
 
 le = length(Dp);
 out = zeros(le,le);

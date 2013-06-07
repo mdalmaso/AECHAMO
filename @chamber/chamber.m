@@ -8,7 +8,7 @@
 
 classdef chamber < handle
 
-% classdef chamber < handle   
+% Class chamber 
 % 
 % A class for running the chamber model. The class contains the needed
 % initial parameters, such as chamber.Ntot0 (initial particle

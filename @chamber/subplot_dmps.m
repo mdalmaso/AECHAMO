@@ -1,11 +1,10 @@
+function subplot_dmps(obj,sub)
+% SUBPLOT_DMPS plots the distribution.
+
 % (c) Miikka Dal Maso 2013
 %
 % Version history:
 % 2013-05-24    0.1.0
-
-function subplot_dmps(obj,sub)
-% view dmpsdata, input is a variable.
-% useful for testing
 
 v = obj.output_data.distr;
 

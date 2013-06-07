@@ -1,3 +1,9 @@
+function run_moving_center(obj)
+% RUN_MOVING_CENTER Runs the simulation with fixed sections using ode45.
+% Saves the results to chamber.output_data.
+%  
+% A private function of class chamber, used by public method chamber.run.
+
 % Moving center solver
 % (c) Pauli Simonen 2013
 %
@@ -16,12 +22,6 @@
 % -Make obj.sections stand only for number of sections. Create a new
 %  variable for user-defined section spacing.
 % -Constant particle sources.
-
-function run_moving_center(obj)
-% RUN_MOVING_CENTER Runs the simulation with fixed sections using ode45.
-% Saves the results to chamber.output_data.
-%  
-% A private function of class chamber, used by public method chamber.run.
 
 initials=obj.initials;
 % Make a logarithmically spaced vector between 10^(Dp_min) and 10^(Dpmax).

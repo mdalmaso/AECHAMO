@@ -1,9 +1,17 @@
+function[K] = koag_kernel(Dp1,Dp2,dens,T)
+% KOAG_KERNEL calculates and returns coagulation coefficient.
+% 
+% [K] = koag_kernel(Dp1, Dp2, dens, T)
+% Calculates the coagulation kernel between diameters Dp1 and Dp2. Dp2 can
+% be a vector containing several diameters. In that case, the function will
+% return a vector of coagulation kernels between Dp1 and all diameters in
+% Dp2.
+
 % (c) Miikka Dal Maso 2013
 %
 % Version history:
 % 2013-05-24    0.1.0
 
-function[K] = koag_kernel(Dp1,Dp2,dens,T)
 
 if length(Dp1)>1,
     fprintf('koag_kernel error: The first argument MUST be scalar!! \n')

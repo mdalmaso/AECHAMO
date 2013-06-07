@@ -1,14 +1,20 @@
+function run_movsec(obj)
+% RUN_MOVSEC runs the simulation with moving sections.
+% 
+% Saves the results to chamber.output_data.
+% 
+% A private function of class chamber, used by public method chamber.run.
+
 % (c) Miikka Dal Maso & Pauli Simonen 2013
 %
 % Version history:
 % 2013-05-24    0.1.0
-
+% 
 % TODO:
 % -User defined initial sections in the same way as in run_moving_center.
 %  Maybe initials.sections should not be used in this meaning for clarity.
 
-function run(obj)
-% tic
+
 initials=obj.initials;
 % Make a logarithmically spaced vector between 10^(Dp_min) and 10^(Dpmax).
 % Number of cells is initials.sections.

@@ -1,12 +1,11 @@
+function [] = check_initials(obj)
+%CHECK_INITIALS Checks the initial parameters and reports errors.
+
 % (c) Pauli Simonen 2013
 %
 % Version history:
 % 2013-06-04    0.1.0 Separated from function initialize.
 
-
-function [] = check_initials(obj)
-%CHECK_INITIALS Checks the initial parameters and reports errors.
-%   Detailed explanation goes here
 
 initials = obj.initials;
 

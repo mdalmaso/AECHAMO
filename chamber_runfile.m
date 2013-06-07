@@ -1,16 +1,3 @@
-% (c) Pauli Simonen 2013
-%
-% Version history:
-% 2013-05-24    0.1.0
-% 2013-06-04    0.1.1 Now all parameters are first initialized and then
-%                     checked all at once.
-
-% TODO:
-% -Muistin s‰‰st‰minen: aja yksi ajo kerrallaan, tallenna tulokset
-%  tiedostoon, puhdista workspace ja aja seuraava ajo.
-% 
-
-
 function [chamb,elapsed] = chamber_runfile(filename)
 % function chamber_runfile(filename)
 % 
@@ -25,7 +12,18 @@ function [chamb,elapsed] = chamber_runfile(filename)
 % parameters will be forwarded to chamber.initialize to apply the values to
 % chamber objects. When the program finds the next character #, it knows
 % that the definition of first chamber ends and the next begins.
+
+% (c) Pauli Simonen 2013
 %
+% Version history:
+% 2013-05-24    0.1.0
+% 2013-06-04    0.1.1 Now all parameters are first initialized and then
+%                     checked all at once.
+
+% TODO:
+% -Muistin s‰‰st‰minen: aja yksi ajo kerrallaan, tallenna tulokset
+%  tiedostoon, puhdista workspace ja aja seuraava ajo.
+
 
 % Read the settings from a file:
 settings = read_file(filename); % Function defined in the end of this file.

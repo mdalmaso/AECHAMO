@@ -1,11 +1,28 @@
+
+function[out_struct] = model_convert(obj,t,Y)
+% MODEL_CONVERT creates a structure of results calculated by simulation.
+% 
+% [out_struct] = model_convert(obj, t, Y)
+% t is the time vector and Y is the matrix calculated by simulation.
+% The data from Y is exported to out_struct, so that out_struct contains
+% following fields:
+% 
+% CMD - Count Median Diameter
+% Ntot - Total particle concentration
+% Vtot - Total particle volume
+% Dpmean - Mean diameter
+% Mtot - Total mass of particles
+% Mwall - Mass lost to wall
+% Mdilu - Mass diluted as aerosols
+% Mvdilu - Mass diluted as vapor
+% distr - Distribution as a function of time
+
 % (c) Miikka Dal Maso & Pauli Simonen 2013
 %
 % Version history:
 % 2013-05-24    0.1.0
 % 2013-06-06    0.1.1 Dp0 will be defined differently if fixed sections is
 %                     on.
-
-function[out_struct] = model_convert(obj,t,Y)
 
 initials = obj.initials;
 

@@ -1,21 +1,13 @@
-% (c) Pauli Simonen 2013
-%
-% Version history:
-% 2013-05-24    0.1.0
-% 2013-06-04    0.1.1 Separated function initialize to functions set_params
-%                     and check_initials.
-
-
 function initialize(obj,varargin)
-% Sets the initial parameters of the chamber object (obj).
+% INITIALIZE Sets the initial parameters of the chamber object (obj).
 %
-% obj.set_params('field_name_1', value_1, ...
-%               'field_name_2', value_2, ...
-%               'field_name_n', value_n)
-% sets the obj's initial parameters. Fields with names field_name_1, 
+% chamber.initialize('field_name_1', value_1, ...
+%                    'field_name_2', value_2, ...
+%                    'field_name_n', value_n)
+% sets the chamber's initial parameters. Fields with names field_name_1, 
 % field_name_2 and field_name_n are replaced by values value_1, value_2 
-% and value_n, respectively. Other fields will not be changed.
-%
+% and value_n, respectively. Other fields will not be changed. After
+% initialization the parameters will be checked by chamber.check_initials.
 %
 % THE PARAMETERS OF THE CHAMBER MODEL
 % 
@@ -151,6 +143,13 @@ function initialize(obj,varargin)
 % obj=chamber;
 % obj.initialize('sigma',1.6); % Change the parameter obj.sigma from
 %                              % default 1.33 to 1.6.
+
+% (c) Pauli Simonen 2013
+%
+% Version history:
+% 2013-05-24    0.1.0
+% 2013-06-04    0.1.1 Separated function initialize to functions set_params
+%                     and check_initials.
 
 
 obj.set_params(varargin{:});

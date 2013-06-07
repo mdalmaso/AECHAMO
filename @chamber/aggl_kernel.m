@@ -1,10 +1,12 @@
+function [K] = aggl_kernel(Dp1,Dp2,dens,T,Df,r0)
+% AGGL_KERNEL calculates the coagulation coefficients for agglomerates.
+% 
+% aggl_kernel(Dp1, Dp2, dens, T, Df, r0)
+
 % (c) Pauli Simonen 2013
 %
 % Version history:
 % 2013-05-24    0.1.0
-
-%Agglomeraattien koagulaationopeus vapaamolekyylialueella
-function [K] = aggl_kernel(Dp1,Dp2,dens,T,Df,r0)
 
 if length(Dp1)>1,
     fprintf('koag_kernel error: The first argument MUST be scalar!! \n')
