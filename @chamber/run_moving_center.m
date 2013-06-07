@@ -115,10 +115,12 @@ yout = [];
 tout = [];
 ye = 0;
 
+tvect = initials.tvect;
+
 tout=tvect(1);
 yout=y0;
 
-tvect = initials.tvect;
+
 
 t_start=tvect(1);
 delta_t = tvect(2)-tvect(1);
