@@ -83,7 +83,19 @@ classdef chamber < handle
         run(obj) % Defined in run.m
                 
         % Plots some data:
-        plot(obj,varargin) % Defined in plot.m       
+        plot(obj,varargin) % Defined in plot.m 
+        
+        % Makes a copy of a chamber object:
+        function [new_object] = copy(object)
+            % Make a new object of the same class.
+            new_object = feval(class(object));
+ 
+            % Copy all properties.
+            p = fieldnames(object);
+            for i = 1:length(p)
+                new_object.(p{i}) = object.(p{i});
+            end
+        end
 
     end
     

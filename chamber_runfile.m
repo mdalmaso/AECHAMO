@@ -32,7 +32,7 @@ settings = read_file(filename); % Function defined in the end of this file.
 [rows, cols] = size(settings);
 
 % Create the needed amount of chamber objects:
-chamb(rows) = chamber;
+chamb_temp(rows) = chamber;
 
 % Initialize first all chamber objects to see if there are any problems
 % with initializing before running the simulations
@@ -40,25 +40,42 @@ vars = '';
 for i=1:rows
     for j=1:cols
         if(~isempty(settings(i,j).param_name))
-            chamb(i).set_params(settings(i,j).param_name,settings(i,j).param_value);
+            chamb_temp(i).set_params(settings(i,j).param_name,settings(i,j).param_value);
         end
     end
-    chamb(i).check_initials;
+    chamb_temp(i).check_initials;
 end
 
 
 % Run the simulations now as we are sure that all the initializations went
 % OK.
+
 for i=1:rows
     tic
-    chamb(i).run;
-    elapsed = toc;
-    save(datestr(now,30),'chamb','elapsed');
-    delete(chamb(i));
+    chamb_temp(i).run;
+    elapsed_temp(i) = toc;
+    out_filename_temp{i} = strcat('temp_', datestr(now,30),'.mat');
+    save(out_filename_temp{i},'chamb_temp','elapsed_temp');
+    delete(chamb_temp(i));
 end
 
-end
 
+
+chamb(rows) = chamber;
+
+out_filename_final = strcat('run_', datestr(now,30));
+
+for i=1:rows
+    load(out_filename_temp{i});
+    chamb(i) = chamb_temp(i).copy;
+    delete(chamb_temp(i));
+    elapsed(i) = elapsed_temp(i);
+    save(out_filename_final,'chamb','elapsed');
+    delete(out_filename_temp{i});
+end
+delete(chamb_temp);
+
+end
 
 function [settings] = read_file(filename)
 % function [settings] = read_file(filename)
