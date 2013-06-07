@@ -1,10 +1,17 @@
 function [chamb,elapsed] = chamber_runfile(filename)
-% function chamber_runfile(filename)
+% CHAMBER_RUNFILE Runs the simulations initialized in file.
+% 
+% [chamb, elapsed] = chamber_runfile(filename).
 % 
 % Reads file 'filename' and calculates the number of runs (n) defined in
-% the file. Returns n chamber objects as arrays chamb(1), chamb(2) ... 
+% the file. Creates n chamber objects as arrays chamb(1), chamb(2) ... 
 % and runs the simulations.
-%
+% 
+% Returns the chamber objects and the time needed to run the simulation.
+% In addition, the results are saved to file 'run_timestamp.mat'.
+% If the function is interrupted before the final file is saved, the ready
+% simulations are saved in files 'temp_timestamp.mat'.
+% 
 % The settings file must be in following form:
 % The definition of first chamber object begins with character # and ends
 % with the same character #. The code between these characters is run and
@@ -19,11 +26,9 @@ function [chamb,elapsed] = chamber_runfile(filename)
 % 2013-05-24    0.1.0
 % 2013-06-04    0.1.1 Now all parameters are first initialized and then
 %                     checked all at once.
-
-% TODO:
-% -Muistin s‰‰st‰minen: aja yksi ajo kerrallaan, tallenna tulokset
-%  tiedostoon, puhdista workspace ja aja seuraava ajo.
-
+% 2013-06-07    0.1.2 Save the object as a .mat-file when the simulation is
+%                     ready and then delete it to save memory. At the  end,
+%                     merge all chamber objects together.
 
 % Read the settings from a file:
 settings = read_file(filename); % Function defined in the end of this file.
