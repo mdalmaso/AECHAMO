@@ -18,6 +18,7 @@ local.properties
 *.db
 *.asv
 *.mat
+test/
 
 # External tool builders
 .externalToolBuilders/
