@@ -171,7 +171,6 @@ if(isempty(obj.initials) || nargin == 1)
     obj.initials.vap_molmass   = 100;                  % Molecular mass of condensing vapor (g/mol)
     obj.initials.particle_dens = 1.84;                  % Particle density (g/cm3)
     obj.initials.stick_coeff   = 1.0;                  % Sticking coefficient
-    obj.initials.N             = 1e5;                  % Initial particle concentration
     obj.initials.Cvap0         = 1e7;                  % Initial condensing vapor concentration
     obj.initials.T             = 290;                  % temperature (K)
 
@@ -179,6 +178,7 @@ if(isempty(obj.initials) || nargin == 1)
     obj.initials.tvect = 0:60:10800;  % The time vector (seconds)
 
     % Distribution parameters
+    obj.initials.N             = 1e5;                  % Initial particle concentration
     obj.initials.Dp_min        = -9;     % Exponent of the minimum diameter of size distribution. Diameter will be 10^(Dp_min).
     obj.initials.Dp_max        = -6;     % Exponent of the maximum diameter of size distribution. Diameter will be 10^(Dp_max).
     obj.initials.mu            = 15e-9;  % The mean of lognormal size distribution.
@@ -243,7 +243,7 @@ for i=1:2:set_parameters*2  % Go through all parameter names in the input
           elseif(j==total_params)
               % If we are in the end of loop and no matching name is found,
               % such a field doesn't exist.
-              error('set_initials: Invalid argument: %s', parameter_name);              
+              warning('set_initials: Invalid argument: %s', parameter_name);              
           end
       end
 end
