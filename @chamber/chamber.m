@@ -117,6 +117,8 @@ classdef chamber < handle
         [dN] = N_to_dlog(obj, Dp,N);
         
         [out] = distribution_info_Vtot(obj,Dp,dN);
+        
+        [dy] = add_nucleation(obj,dy,t,part_source);
 
     end
     
