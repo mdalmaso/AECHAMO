@@ -24,6 +24,7 @@ function run_moving_center(obj)
 % -Constant particle sources.
 
 initials=obj.initials;
+
 % Make a logarithmically spaced vector between 10^(Dp_min) and 10^(Dpmax).
 % Number of cells is initials.sections.
 % If initials.sections is not a scalar, the user has already defined the

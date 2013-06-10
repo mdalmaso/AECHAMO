@@ -30,6 +30,12 @@ if(initials.Dp_min >= initials.Dp_max)
     error('set_initials: ''Dp_min'' must be smaller than ''Dp_max''.');
 end
 
+% Make sure that sigma(s) of distribution is > 1.0:
+for i=1:length(initials.sigma)
+    if(initials.sigma(i) <= 1.0)
+        error('set_initials: ''sigma'' must be bigger than 1.0.');
+    end
+
 % Check that the time vector is a vector.
 if(length(initials.tvect) < 2)
     error('set_initials: Argument ''tvect'' must be a vector.');
@@ -57,7 +63,7 @@ end
 
 % The same check for gas_source if it is a vector.
 if(isscalar(initials.gas_source) == 0)  % Is it an array?
-    % Check that there are two columns in dilu_vect:
+    % Check that there are two columns in gas_source:
     [rows cols]=size(initials.gas_source);
     if(cols ~=2)
         error('set_initials: The argument ''gas_source'' must consist of two columns.');
@@ -74,6 +80,26 @@ if(isscalar(initials.gas_source) == 0)  % Is it an array?
     end
 end
 
+% Check the particle source as well.
+if(isscalar(initials.part_source) == 0)  % Is it an array?
+    % Check that there are three columns in part_source:
+    [rows cols]=size(initials.part_source);
+    if(cols ~=3)
+        error('set_initials: The argument ''part_source'' must consist of three columns.');
+    end
+    % Check that the first element of part_source(:,1) is the same as the
+    % first element of tvect:
+    if(initials.part_source(1,1) ~= initials.tvect(1))
+        error('set_initials: The first column of argument ''part_source'' must have the same first value as ''tvect''.');
+    end
+    % Check that the last element of part_source(:,1) is the same as the last
+    % element of tvect:
+    if(initials.part_source(rows,1) ~= initials.tvect(length(initials.tvect)))
+        error('set_initials: The first column of argument ''part_source'' must have the same last value as ''tvect''.');
+    end
+end
+
+
 % Check the value of Df. Should be 1.0 < Df < 3.0.
 if(initials.Df < 1.0)
     error('chamber.initialize: Parameter Df must be larger than 1.0.');
@@ -89,9 +115,6 @@ num_of_distr = length(initials.mu);
 if(length(initials.N) ~= num_of_distr || length(initials.sigma) ~= num_of_distr)
     error('chamber.initialize: Parameters ''mu'', ''N'' and ''sigma'' must have equal lengths.');
 end
-
-
-% display('Initial parameters OK.');
 
 end
 

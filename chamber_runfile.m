@@ -98,6 +98,7 @@ function [settings] = read_file(filename)
 % chamber objects. When the program finds the next character #, it knows
 % that the definition of first chamber ends and the next begins.
 
+
 % Open the file:
 file = fopen(filename);
 
