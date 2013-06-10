@@ -1,12 +1,24 @@
-function subplot_dmps(obj,sub)
+function subplot_dmps(obj,sub,varargin)
 % SUBPLOT_DMPS plots the distribution.
 
 % (c) Miikka Dal Maso 2013
 %
 % Version history:
 % 2013-05-24    0.1.0
+% 2013-06-10    0.1.1 Takes now argument 'smoothed' to plot the smoothed
+%                     distribution instead of the original.
 
-v = obj.output_data.distr;
+if(nargin > 2)
+    if(strcmp(varargin{1},'smoothed'))
+        v = obj.output_data.distr_smoothed;
+    elseif(nargin > 3)
+        error('Too many arguments.');
+    else
+        error('Invalid argument: ''%s''.',varargin{1});
+    end
+else
+    v = obj.output_data.distr;
+end
 
 %% first one
 [m n]=size(v);

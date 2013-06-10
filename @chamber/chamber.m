@@ -105,7 +105,7 @@ classdef chamber < handle
         out_struct = model_convert(obj, t, Y) % Defined in model_convert.m
                
         % Plots the distribution, used in public method chamber.plot.
-        subplot_dmps(obj,sub);
+        subplot_dmps(obj,sub,varargin);
         
         % Runs the simulation with moving sections.
         run_movsec(obj)
