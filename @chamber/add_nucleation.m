@@ -1,6 +1,12 @@
 function [ dy ] = add_nucleation(obj,dy,t, part_source)
-%UNTITLED6 Summary of this function goes here
-%   Detailed explanation goes here
+%ADD_NUCLEATION Calculates the nucleation and adds it to dy.
+% 
+% [dy] = add_nucleation(obj,dy,t,part_source)
+% Calculates the dN/dt for each section and adds it to dy.
+
+% (c) Pauli Simonen 2013
+% Version history:
+% 2013-06-10    0.1.0
 
 initials = obj.initials;
 
