@@ -386,15 +386,18 @@ function dy = chamberODE(t,y)
         % end coagulation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         % condensation %%%%
-        Kn = (2.*lambda)./y(2*nSec+4+i); % Knudsen number
-        betam = (Kn+1)./((0.377.*Kn)+1+(4/(3.*alfa)).*(Kn.^2)+(4/(3.*alfa)).*Kn);
-    
-        % I is the flux of molecules to the particle phase    
-        I = 2.*pi.*max([y(2*nSec+4+i) 0]).*1e2.*diffu.*(y(1)-Csat).*betam; %1/s
         
-        % Move the variable diameters by condensation.
-        dy(2*nSec+4+i) = dy(2*nSec+4+i)+(2.*mv.*I)./(pi.*rool.*y(2*nSec+4+i).^2.*NA.*1e6); % particle diameter (m/s)
-        dy(1) = dy(1) - y(i+1).*I;
+        dy = obj.add_condensation(dy, y, initials, i);
+%         
+%         Kn = (2.*lambda)./y(2*nSec+4+i); % Knudsen number
+%         betam = (Kn+1)./((0.377.*Kn)+1+(4/(3.*alfa)).*(Kn.^2)+(4/(3.*alfa)).*Kn);
+%     
+%         % I is the flux of molecules to the particle phase    
+%         I = 2.*pi.*max([y(2*nSec+4+i) 0]).*1e2.*diffu.*(y(1)-Csat).*betam; %1/s
+%         
+%         % Move the variable diameters by condensation.
+%         dy(2*nSec+4+i) = dy(2*nSec+4+i)+(2.*mv.*I)./(pi.*rool.*y(2*nSec+4+i).^2.*NA.*1e6); % particle diameter (m/s)
+%         dy(1) = dy(1) - y(i+1).*I;
         % end condensation %%%%
         
         % wall losses and sedimentation according to T. Anttila model...fitted

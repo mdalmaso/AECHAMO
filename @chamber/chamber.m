@@ -119,7 +119,7 @@ classdef chamber < handle
         [out] = distribution_info_Vtot(obj,Dp,dN);
         
         [dy] = add_nucleation(obj,dy,t,part_source);
-
+        
     end
     
     % Private static methods:
@@ -140,11 +140,13 @@ classdef chamber < handle
         % Makes the coagulation matrix
         [out] = coagulationMatrix(Dp,ind);
         
-        [out] = sapphir_beta2(Dp,T)
+        [out] = sapphir_beta2(Dp,T);
         
-        [Diffcoeff] = diff_particle(Dp,T)
+        [Diffcoeff] = diff_particle(Dp,T);
         
-        [out] = integrate_distribution(Dp,dN,dmin,dmax)
+        [out] = integrate_distribution(Dp,dN,dmin,dmax);
+        
+        [dy] = add_condensation(dy, y, initials, index);
     end
     
     % Static methods:

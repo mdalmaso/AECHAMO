@@ -7,6 +7,9 @@ function [ dy ] = add_nucleation(obj,dy,t, part_source)
 % (c) Pauli Simonen 2013
 % Version history:
 % 2013-06-10    0.1.0
+% 
+% TODO:
+% -Get the part_source from obj
 
 initials = obj.initials;
 
