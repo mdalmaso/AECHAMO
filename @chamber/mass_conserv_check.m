@@ -1,9 +1,9 @@
-% Mass conservation test.
+function [] = mass_conserv_check( chamber )
+%MASS_CONSERV_CHECK Finds out if the mass is conserved during simulation.
+%   Detailed explanation goes here
 
-kam=chamber_runfile('mass_conservation_params.m');
-
-initials = kam.initials;
-output = kam.output_data;
+initials = chamber.initials;
+output = chamber.output_data;
 
 NA = 6.022e23;
 
@@ -29,14 +29,22 @@ M_final_1 = M0 + dM_gas + dM_particles;
 % not diluted, and M_diluted is the mass that has diluted away from aerosol
 % during the simulation.
 
-M_aerosol = output.Mtot(end);
+% First, the mass of aerosol at the end is the mass of particles + mass of
+% vapor:
+M_aerosol = output.Mtot(end) + output.vap(end)*initials.vap_molmass/NA;
 
+% Diluted mass is the mass deposited on walls + mass diluted as particles +
+% mass diluted as vapor:
 M_diluted = output.Mwall(end) + output.Mdilu(end) + output.Mvdilu(end);
 
 M_final_2 = M_aerosol + M_diluted;
 
 diff_M = abs(M_final_2 - M_final_1);
 
-display('M_final_1: %d', M_final_1);
-display('M_final_2: %d', M_final_2);
-display('Difference: %d', diff_M);
+fprintf('M_final_1: %d\n', M_final_1);
+fprintf('M_final_2: %d\n', M_final_2);
+fprintf('Difference: %d\n', diff_M);
+fprintf('Error (difference/M_final_1): %d %%\n',diff_M/M_final_1*100);
+
+end
+
