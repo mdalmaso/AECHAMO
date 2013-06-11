@@ -41,6 +41,12 @@ figure(gcf)
 
 subplot(sub)
 
+% set time from seconds to hours
+v(2:end,1) = v(2:end,1)/3600;
+
+%set time from hours to days
+v(2:end,1) = v(2:end,1)/24;
+
 semilogy(v(2:end,1),v(2:end,2),'or');
 V=axis;
 ve=fix(V(:,1));
