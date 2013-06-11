@@ -73,15 +73,21 @@ for i = 1:length(t),
             end
         end
         dNi_smoothed = obj.N_to_dlog(Dpi_smoothed,Ni_smoothed);
-        dN_smoothed(i,:) = interp1(Dpi_smoothed,dNi_smoothed,Dp0,'linear',0);
+        dN_smoothed(i,:) = interp1(log10(Dpi_smoothed),dNi_smoothed,log10(Dp0),'linear',0);
     end
 
     dNi = obj.N_to_dlog(Dpi,Ni);
        
-    dN(i,:) = interp1(Dpi,dNi,Dp0,'linear',0);
+%     dN(i,:) = interp1(Dpi,dNi,Dp0,'linear',0);
     
-    Vtot(i) = obj.distribution_info_Vtot(Dp0,dN(i,:));
-        
+    dN(i,:) = interp1(log10(Dpi),dNi,log10(Dp0),'linear',0);
+    
+%     Vtot(i) = obj.distribution_info_Vtot(Dp0,dN(i,:));
+    
+%     Vtot(i) = obj.distribution_info_Vtot(Dpi,dNi);
+    dV = (pi./6).*Dpi.^3.*dNi;
+    Vtot(i) = trapz(log10(Dpi),dV);
+
     % Calculate CMD. Interpolate Ni to Dp0 and find such a point in Dp0
     % that the amount of particles that have smaller diameter equal the
     % amount of particles that have bigger diameter.

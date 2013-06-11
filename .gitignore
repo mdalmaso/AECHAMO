@@ -17,8 +17,6 @@ local.properties
 .loadpath
 *.db
 *.asv
-*.mat
-test/
 
 # External tool builders
 .externalToolBuilders/
