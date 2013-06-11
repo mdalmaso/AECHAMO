@@ -70,7 +70,8 @@ pcolor(v(2:m,1),v(1,3:n),Zdata');
 %colm = [rr rr rr];
 %colormap(colm);
 
-caxis([1 4]);
+%caxis([1 4.5]);
+%colorbar
 
 shading flat
 % rr = 0:0.15:1;
@@ -83,7 +84,7 @@ shading flat
 
 % colormap(colm);
 
-% caxis([1 5]);
+ caxis([1 5]);
 
 
 set(gca,'yscale','log')
@@ -91,14 +92,37 @@ set(gca,'yscale','log')
 % set(gca,'xtick',xti,'xticklabel',xtila,'fontsize',14)
 grid
 
+%% colorbar fix
+gcc=colorbar('horiz');
+set(gcc,'xlim',[1 5],'xtick',[1 2 3 4 5],'fontsize',10)
+set(gcc,'xticklabel',[10,100,1000,10000 100000]')
+x = xlabel(gcc, 'dN/dlogDp (cm^{-3})');
+set(x, 'fontsize',12)
+%set(x,'Fontangle','italic')
 
-% gcc=colorbar('horiz');
-% set(gcc,'xlim',[1 5],'xtick',[1 2 3 4 5],'fontsize',14)
-% set(gcc,'xticklabel',[10,100,1000,10000 100000]')
 % V=get(gcc,'position');
-% set(gcc,'position',[V(1) V(2)-0.03 V(3) V(4)])
+% set(gcc,'position',[V(1) V(2)+0.83 V(3) V(4)])
 
+%% vertical colorbar
+% gcc=colorbar('vertic');
+% set(gcc,'ylim',[1 5],'ytick',[1 2 3 4 5],'fontsize',14)
+% set(gcc,'yticklabel',[10,100,1000,10000 100000]')
+% % V=get(gcc,'position');
+% % set(gcc,'position',[V(1) V(2)-0.01 V(3) V(4)])
 
+%% x-axis fix
+xhandle = xlabel('time (d)');
+set(xhandle,'Fontsize',12)
+%set(xhandle,'Fontangle','italic')
+%set(xhandle,'Fontname','Computermodern')
+
+%% y-axis fix
+yhandle = ylabel('D_{p} (nm)','rotation',90);
+set(yhandle,'Fontsize',12)
+%set(yhandle,'Fontangle','italic')
+% set dp from m to nm
+set(gca,'YTickLabel',[1,10,100, 1000])
+%set(yhandle,'Fontname','Computermodern')
 
 %% first one
 
