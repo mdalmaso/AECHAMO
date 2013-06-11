@@ -1,12 +1,24 @@
-function subplot_dmps(obj,sub)
+function subplot_dmps(obj,sub,varargin)
 % SUBPLOT_DMPS plots the distribution.
 
 % (c) Miikka Dal Maso 2013
 %
 % Version history:
 % 2013-05-24    0.1.0
+% 2013-06-10    0.1.1 Takes now argument 'smoothed' to plot the smoothed
+%                     distribution instead of the original.
 
-v = obj.output_data.distr;
+if(nargin > 2)
+    if(strcmp(varargin{1},'smoothed'))
+        v = obj.output_data.distr_smoothed;
+    elseif(nargin > 3)
+        error('Too many arguments.');
+    else
+        error('Invalid argument: ''%s''.',varargin{1});
+    end
+else
+    v = obj.output_data.distr;
+end
 
 %% first one
 [m n]=size(v);
@@ -28,6 +40,12 @@ figure(gcf)
 %set(gcf,'papertype','a4letter')
 
 subplot(sub)
+
+% set time from seconds to hours
+v(2:end,1) = v(2:end,1)/3600;
+
+%set time from hours to days
+v(2:end,1) = v(2:end,1)/24;
 
 semilogy(v(2:end,1),v(2:end,2),'or');
 V=axis;
@@ -58,7 +76,8 @@ pcolor(v(2:m,1),v(1,3:n),Zdata');
 %colm = [rr rr rr];
 %colormap(colm);
 
-caxis([1 4]);
+%caxis([1 4.5]);
+%colorbar
 
 shading flat
 % rr = 0:0.15:1;
@@ -71,7 +90,7 @@ shading flat
 
 % colormap(colm);
 
-% caxis([1 5]);
+ caxis([1 5]);
 
 
 set(gca,'yscale','log')
@@ -79,14 +98,37 @@ set(gca,'yscale','log')
 % set(gca,'xtick',xti,'xticklabel',xtila,'fontsize',14)
 grid
 
+%% colorbar fix
+gcc=colorbar('horiz');
+set(gcc,'xlim',[1 5],'xtick',[1 2 3 4 5],'fontsize',10)
+set(gcc,'xticklabel',[10,100,1000,10000 100000]')
+x = xlabel(gcc, 'dN/dlogDp (cm^{-3})');
+set(x, 'fontsize',12)
+%set(x,'Fontangle','italic')
 
-% gcc=colorbar('horiz');
-% set(gcc,'xlim',[1 5],'xtick',[1 2 3 4 5],'fontsize',14)
-% set(gcc,'xticklabel',[10,100,1000,10000 100000]')
 % V=get(gcc,'position');
-% set(gcc,'position',[V(1) V(2)-0.03 V(3) V(4)])
+% set(gcc,'position',[V(1) V(2)+0.83 V(3) V(4)])
 
+%% vertical colorbar
+% gcc=colorbar('vertic');
+% set(gcc,'ylim',[1 5],'ytick',[1 2 3 4 5],'fontsize',14)
+% set(gcc,'yticklabel',[10,100,1000,10000 100000]')
+% % V=get(gcc,'position');
+% % set(gcc,'position',[V(1) V(2)-0.01 V(3) V(4)])
 
+%% x-axis fix
+xhandle = xlabel('time (d)');
+set(xhandle,'Fontsize',12)
+%set(xhandle,'Fontangle','italic')
+%set(xhandle,'Fontname','Computermodern')
+
+%% y-axis fix
+yhandle = ylabel('D_{p} (nm)','rotation',90);
+set(yhandle,'Fontsize',12)
+%set(yhandle,'Fontangle','italic')
+% set dp from m to nm
+set(gca,'YTickLabel',[1,10,100, 1000])
+%set(yhandle,'Fontname','Computermodern')
 
 %% first one
 

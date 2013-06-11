@@ -24,6 +24,7 @@ function run_moving_center(obj)
 % -Constant particle sources.
 
 initials=obj.initials;
+
 % Make a logarithmically spaced vector between 10^(Dp_min) and 10^(Dpmax).
 % Number of cells is initials.sections.
 % If initials.sections is not a scalar, the user has already defined the
@@ -311,15 +312,18 @@ function dy = chamberODE(t,y)
         Source = interp1(Source(:,1),Source(:,2),t,'linear',0);
     end
     
-    if(initials.part_source_is_vect)
-        for i=1:length(part_source(1,1,:))
-            part_source_temp = interp1(part_source(:,1,i), part_source(:,2:3,i), t,'linear',0);
-            index = part_source_temp(2);
-            dy(1+index) = dy(1+index)+part_source_temp(1);
-        end
-%     else % Korjaa: index yms, part_source on aina vektori tai nolla
-%         dy(1+index) = dy(1+index)+part_source(1);
-    end
+    % Nucleation:
+    dy = obj.add_nucleation(dy, t, part_source);
+    
+%     if(initials.part_source_is_vect)
+%         for i=1:length(part_source(1,1,:))
+%             part_source_temp = interp1(part_source(:,1,i), part_source(:,2:3,i), t,'linear',0);
+%             index = part_source_temp(2);
+%             dy(1+index) = dy(1+index)+part_source_temp(1);
+%         end
+% %     else % Korjaa: index yms, part_source on aina vektori tai nolla
+% %         dy(1+index) = dy(1+index)+part_source(1);
+%     end
     
     
     
@@ -382,15 +386,18 @@ function dy = chamberODE(t,y)
         % end coagulation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         % condensation %%%%
-        Kn = (2.*lambda)./y(2*nSec+4+i); % Knudsen number
-        betam = (Kn+1)./((0.377.*Kn)+1+(4/(3.*alfa)).*(Kn.^2)+(4/(3.*alfa)).*Kn);
-    
-        % I is the flux of molecules to the particle phase    
-        I = 2.*pi.*max([y(2*nSec+4+i) 0]).*1e2.*diffu.*(y(1)-Csat).*betam; %1/s
         
-        % Move the variable diameters by condensation.
-        dy(2*nSec+4+i) = dy(2*nSec+4+i)+(2.*mv.*I)./(pi.*rool.*y(2*nSec+4+i).^2.*NA.*1e6); % particle diameter (m/s)
-        dy(1) = dy(1) - y(i+1).*I;
+        dy = obj.add_condensation(dy, y, initials, i);
+%         
+%         Kn = (2.*lambda)./y(2*nSec+4+i); % Knudsen number
+%         betam = (Kn+1)./((0.377.*Kn)+1+(4/(3.*alfa)).*(Kn.^2)+(4/(3.*alfa)).*Kn);
+%     
+%         % I is the flux of molecules to the particle phase    
+%         I = 2.*pi.*max([y(2*nSec+4+i) 0]).*1e2.*diffu.*(y(1)-Csat).*betam; %1/s
+%         
+%         % Move the variable diameters by condensation.
+%         dy(2*nSec+4+i) = dy(2*nSec+4+i)+(2.*mv.*I)./(pi.*rool.*y(2*nSec+4+i).^2.*NA.*1e6); % particle diameter (m/s)
+%         dy(1) = dy(1) - y(i+1).*I;
         % end condensation %%%%
         
         % wall losses and sedimentation according to T. Anttila model...fitted
