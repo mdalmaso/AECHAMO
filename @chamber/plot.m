@@ -93,4 +93,14 @@ plot(obj.output_data.tim/(24*60*60),obj.output_data.vap,'b*-')
 xhandle = xlabel('time (d)');
 yhandle = ylabel('C_{vap}(cm^{-3})','rotation',90);
 
+% Plot the distribution:
+figure(num_figs + 3)
+if(plot_smoothed == 1)
+    % If there was argument 'smoothed', plot the smoothed distribution:
+    obj.subplot_dmps(111,'smoothed');
+else
+    % Otherwise plot the original distribution:
+    obj.subplot_dmps(111);
+end
+
 end
