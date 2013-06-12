@@ -8,8 +8,11 @@ dilu_on = 0;
 
 Dp_min = -9;
 Dp_max = -6;
-sections = 40;
-output_sections = 300;
+
+sections = 90;
+
+
+output_sections = 90;
 
 tvect = 0:60:18000;
 
