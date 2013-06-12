@@ -181,12 +181,8 @@ while(t_span(1) < tvect(end))
         v2 = pi/6*y0(2*nSec+1+4+ie)^3*Ni2;  % Total vol of particles in section ie+1
         vtot = (v1+v2)/(Ni1+Ni2);           % Average vol of particles in section ie+1 when the particles from ie are moved there.
         y0(2*nSec+4+1+ie) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
-        y0(2*nSec+4+ie) = y0(nSec+1+ie);        % Reset the diameter of section ie.
         y0(1+ie+1)=Ni1+Ni2; % Add particles from section ie to ie+1
         y0(1+ie) = 0;       % Delete particles from section ie.
-    else
-%         y0(2*nSec+4+ie) = y0(nSec+1+ie); % Reset the diameter of section ie.
-        ; % Let the diameter stay at its current value.
     end
     
     % The t and y vectors from ode will be saved to cumulative output
