@@ -22,7 +22,13 @@ for i = 1:sz(1)
 
 end
 
-figure(1)
+% Get the number of open figures:
+figs=findall(0,'type','figure');
+num_figs = length(figs);
+
+% Open a new figure:
+figure(num_figs+1);
+
 plot(t/(24*60*60),CS_tot,'b*-', 'MarkerSize', 5, 'LineWidth',1)
 handle1 = xlabel('time (d)');
 set(handle1,'Fontsize',9,'Fontname','Computermodern')
