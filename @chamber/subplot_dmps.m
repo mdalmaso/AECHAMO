@@ -132,5 +132,64 @@ set(gca,'YTickLabel',[1,10,100, 1000])
 
 %% first one
 
+%% Testiä
+% v=[dist(2:end,1), dist_original(:,:)];
+% Zdata=log10(abs(v(1:end,2:end))+1e-21);
+% pcolor(v(1:end,1),v(1:end,41:end),Zdata');
+% Error using pcolor (line 57)
+% Matrix dimensions must agree.
+%  
+% Zdata=log10(abs(v(1:end,2:41))+1e-21);
+% pcolor(v(1:end,1),v(1:end,41:end),Zdata');
+% Error using pcolor (line 57)
+% Matrix dimensions must agree.
+%  
+% length(v(1,41:end))
+% 
+% ans =
+% 
+%     41
+% 
+% pcolor(v(1:end,1),v(1:end,42:end),Zdata');
+% Error using pcolor (line 57)
+% Matrix dimensions must agree.
+%  
+% length(v(1,42:end))
+% 
+% ans =
+% 
+%     40
+% 
+% Zdata=log10(abs(v(1:end,2:41))+(1e-21));
+% 1e-21
+% 
+% ans =
+% 
+%    1.0000e-21
+% 
+% size(Zdata')
+% 
+% ans =
+% 
+%     40   301
+% 
+% size(v(1:end,2:41))
+% 
+% ans =
+% 
+%    301    40
+% 
+% pcolor(v(1:end,1),v(1:end,42:end),Zdata);
+% Error using pcolor (line 57)
+% Matrix dimensions must agree.
+%  
+% timemat=v(1:end,1).*ones(size(Zdata));
+% Error using  .* 
+% Matrix dimensions must agree.
+%  
+% for i=1:length(Zdata(1,:))
+% timemat(:,i)=v(1:end,1);
+% end
+
 
 
