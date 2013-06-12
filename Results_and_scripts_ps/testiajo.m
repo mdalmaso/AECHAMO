@@ -7,9 +7,9 @@ coag_on = 1;
 dilu_on = 0;
 
 Dp_min = -9;
-Dp_max = -7;
-sections = 10;
-output_sections = 1000;
+Dp_max = -6;
+sections = 40;
+output_sections = 300;
 
 tvect = 0:60:18000;
 
@@ -20,5 +20,5 @@ Cvap0 = 5e7;
 
 mu=[10e-9];
 sigma = [1.4];
-N = [3e3];
+N = [1e5];
 #
