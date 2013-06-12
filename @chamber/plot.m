@@ -33,6 +33,7 @@ figure(num_figs+1);
 
 plot_distr = 0;
 plot_smoothed = 0;
+plot_original = 0;
 
 % Check if there is additional arguments:
 if(nargin > 1)
@@ -42,6 +43,8 @@ if(nargin > 1)
                 plot_distr = 1;
             case('smoothed')
                 plot_smoothed = 1;
+            case('original')
+                plot_original = 1;
             otherwise
                 error('Invalid argument: ''%s''.', varargin{i-1});
         end
@@ -57,6 +60,9 @@ if(plot_distr == 1)
         
         % And terminate the function:
         return;
+    elseif(plot_original == 1)
+        obj.subplot_dmps(111,'original');
+        return;
     else
         % Otherwise plot only the original distribution:
         obj.subplot_dmps(111);
@@ -70,6 +76,8 @@ end
 if(plot_smoothed == 1)
     % If there was argument 'smoothed', plot the smoothed distribution:
     obj.subplot_dmps(311,'smoothed');
+elseif(plot_original == 1)
+    obj.subplot_dmps(311,'original');
 else
     % Otherwise plot the original distribution:
     obj.subplot_dmps(311);
@@ -98,6 +106,8 @@ figure(num_figs + 3)
 if(plot_smoothed == 1)
     % If there was argument 'smoothed', plot the smoothed distribution:
     obj.subplot_dmps(111,'smoothed');
+elseif(plot_original == 1)
+    obj.subplot_dmps(111,'original');
 else
     % Otherwise plot the original distribution:
     obj.subplot_dmps(111);

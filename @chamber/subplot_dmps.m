@@ -8,20 +8,45 @@ function subplot_dmps(obj,sub,varargin)
 % 2013-06-10    0.1.1 Takes now argument 'smoothed' to plot the smoothed
 %                     distribution instead of the original.
 
+% if(nargin > 2)
+%     if(strcmp(varargin{1},'smoothed'))
+%         v = obj.output_data.distr_smoothed;
+%     elseif(nargin > 3)
+%         error('Too many arguments.');
+%     else
+%         error('Invalid argument: ''%s''.',varargin{1});
+%     end
+% else
+%     v = obj.output_data.distr;
+% end
+
+plot_original = 0;
+
 if(nargin > 2)
-    if(strcmp(varargin{1},'smoothed'))
-        v = obj.output_data.distr_smoothed;
-    elseif(nargin > 3)
-        error('Too many arguments.');
-    else
-        error('Invalid argument: ''%s''.',varargin{1});
+    for i=1:nargin-2
+        switch(varargin{i})
+            case('smoothed')
+                v = obj.output_data.distr_smoothed;
+                Zdata=log10(abs(v(2:m,3:n))+1e-21);
+            case('original')
+                v = obj.output_data.distr_original;
+                Zdata=log10(abs(v(2:end,3:(end-2)/2+2))+(1e-21));
+                for i=1:length(Zdata(1,:))
+                    time(:,i)=v(2:end,1);
+                end
+                plot_original = 1;
+            otherwise
+                error('Invalid argument: ''%s''.',varargin{i});
+        end
     end
 else
-    v = obj.output_data.distr;
+    v = obj.output_data.distr;  
+    Zdata=log10(abs(v(2:end,3:end))+1e-21);
 end
 
+
 %% first one
-[m n]=size(v);
+% [m n]=size(v);
 
 %% calculating <15 nm particles
 
@@ -63,9 +88,12 @@ grid
 
 subplot(sub)
 
-Zdata=log10(abs(v(2:m,3:n))+1e-21);
 
-pcolor(v(2:m,1),v(1,3:n),Zdata');
+if(plot_original == 1)
+    pcolor(time,v(2:end,(end-2)/2+3:end),Zdata);
+else
+    pcolor(v(2:end,1),v(1,3:end),Zdata');
+end
 % shading interp
 
  colormap(jet(250));
