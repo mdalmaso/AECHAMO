@@ -18,7 +18,6 @@ local.properties
 *.db
 *.asv
 test/
-Pictures/
 
 # External tool builders
 .externalToolBuilders/
