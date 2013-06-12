@@ -56,7 +56,9 @@ Dp0 = logspace(initials.Dp_min, initials.Dp_max, initials.output_sections);
 Ntot=zeros(1,length(t));
 dN=zeros(length(t),length(Dp0));
 
-dist_original=zeros(length(t),2*length(Y(1,nSec+2:(2*nSec+1))));
+dist_original=zeros(length(t)+1,2*length(Y(1,nSec+2:(2*nSec+1)))+2);
+
+dist_original(2:end,1) = t;
 
 Vtot=zeros(1,length(t));
 out_struct.CMD = zeros(1,length(t));
@@ -81,8 +83,8 @@ for i = 1:length(t),
 
     dNi = obj.N_to_dlog(Dpi,Ni);
     
-    dist_original(i,:)=[dNi, Dpi];
-    
+    dist_original(i+1, 3:end)=[dNi, Dpi];
+    dist_original(i+1, 2) = Ntot(i);
 %     dN(i,:) = interp1(Dpi,dNi,Dp0,'linear',0);
     
     dN(i,:) = interp1(log10(Dpi),dNi,log10(Dp0),'linear',0);
