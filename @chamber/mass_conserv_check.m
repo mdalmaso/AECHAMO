@@ -11,13 +11,26 @@ NA = 6.022e23;
 M0 = initials.Cvap0*initials.vap_molmass/NA + output.Mtot(1);
 
 % Addition of mass by gas_source:
-dM_gas = trapz(initials.tvect, initials.gas_source(:,2).*initials.vap_molmass./NA);
+if(initials.Cvap_const ~= 1)
+    if(~isscalar(initials.gas_source)) 
+        dM_gas = trapz(initials.tvect, initials.gas_source(:,2).*initials.vap_molmass./NA);
+    else
+        dM_gas = initials.gas_source*initials.vap_molmass/NA*(initials.tvect(end)-initials.tvect(1));
+    end
+else
+    error('The mass conservation check is not possible if vapor concentration is constant.');
+end
+
 
 % Addition of mass by part_source:
-Dp_nucl_particle = initials.part_source(1,3);
-M_nucl_particle = initials.particle_dens*Dp_nucl_particle^3*pi/6;
+if(~isscalar(initials.part_source))
+    Dp_nucl_particle = initials.part_source(1,3);
+    M_nucl_particle = initials.particle_dens*Dp_nucl_particle^3*pi/6;
 
-dM_particles = trapz(initials.tvect,initials.part_source(:,2).*M_nucl_particle);
+    dM_particles = trapz(initials.tvect,initials.part_source(:,2).*M_nucl_particle);
+else
+    dM_particles = 0;
+end
 
 % Total mass at the end = initial mass + dM_gas + dM_particles:
 M_final_1 = M0 + dM_gas + dM_particles;
