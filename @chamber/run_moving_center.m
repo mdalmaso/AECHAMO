@@ -17,6 +17,10 @@ function run_moving_center(obj)
 %                     are saved to the output data. So there is no need to
 %                     interpolate the output data to match user defined
 %                     time vector anymore.
+% 2013-06-12    0.1.4 Now the condensation is calculated only for sections
+%                     that contain particles. Huge improvement of
+%                     efficiency and makes also the distribution look more
+%                     natural.
 
 % TODO:
 % -Make obj.sections stand only for number of sections. Create a new
@@ -177,11 +181,8 @@ while(t_span(1) < tvect(end))
         v2 = pi/6*y0(2*nSec+1+4+ie)^3*Ni2;  % Total vol of particles in section ie+1
         vtot = (v1+v2)/(Ni1+Ni2);           % Average vol of particles in section ie+1 when the particles from ie are moved there.
         y0(2*nSec+4+1+ie) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
-        y0(2*nSec+4+ie) = y0(nSec+1+ie);        % Reset the diameter of section ie.
         y0(1+ie+1)=Ni1+Ni2; % Add particles from section ie to ie+1
         y0(1+ie) = 0;       % Delete particles from section ie.
-    else
-        y0(2*nSec+4+ie) = y0(nSec+1+ie); % Reset the diameter of section ie.
     end
     
     % The t and y vectors from ode will be saved to cumulative output
@@ -195,7 +196,7 @@ while(t_span(1) < tvect(end))
     %
     % Example: Time vector is [0 60 120 180 ...] which means that
     % delta_t = 60. Event occurs at time 125, so ode returns 
-    % t=[0 60 72 120 125]. 
+    % t=[0 60 120 125]. 
     % Then mod(t(end), delta_t) = 5 ~= 0.
     % Only values 60 and 120 of t and respective values of y are saved to
     % tout and yout.
@@ -386,8 +387,10 @@ function dy = chamberODE(t,y)
         % end coagulation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         % condensation %%%%
-        
-        dy = obj.add_condensation(dy, y, initials, i);
+        if(y(i+1) > 0)
+            dy = obj.add_condensation(dy, y, initials, i);
+        end
+
 %         
 %         Kn = (2.*lambda)./y(2*nSec+4+i); % Knudsen number
 %         betam = (Kn+1)./((0.377.*Kn)+1+(4/(3.*alfa)).*(Kn.^2)+(4/(3.*alfa)).*Kn);

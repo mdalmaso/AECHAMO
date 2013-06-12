@@ -85,6 +85,8 @@ classdef chamber < handle
         % Plots some data:
         plot(obj,varargin) % Defined in plot.m 
         
+        mass_conserv_check(chamber);
+        
         % Makes a copy of a chamber object:
         function [new_object] = copy(object)
             % Make a new object of the same class.
