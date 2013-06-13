@@ -139,8 +139,9 @@ t_span = t_start:delta_t:t_end;
 while(t_span(1) < tvect(end))
     % Run ode45 until one or more Dp:s grow over limit (i.e. the event
     % occurs) OR until the end of t_span is reached.
+
     [t,y,te,ye,ie]=ode45(@chamberODE,t_span,y0,options);
-    
+
     % Now ode45 has stopped, so some Dp has grown over limit OR ode45 has 
     % reached the end of t_span. If the end of t_span is reached, the
     % first element of the t_span will be later in this loop redefined so
