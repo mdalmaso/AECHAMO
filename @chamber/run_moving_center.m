@@ -187,6 +187,7 @@ while(t_span(1) < tvect(end))
         y0(1+ie+1)=Ntot; % Add particles from section ie to ie+1
         y0(1+ie) = 0;       % Delete particles from section ie.
     end
+
     
     % The t and y vectors from ode will be saved to cumulative output
     % vectors tout and yout. The first row of y and t is the same as the
