@@ -68,18 +68,18 @@ for i = 1:length(t),
     Ni = Y(i,2:nSec+1);
     Dpi = Y(i,nSec+2:(2*nSec+1));
     
-%     if(initials.fixed_sections ~= 0)
-%         for j=1:length(Dpi)/2
-%             Ni_smoothed(j)=Ni(2*j) + Ni(2*j-1);
-%             if(Ni_smoothed(j) > 0)
-%                 Dpi_smoothed(j) = ((Ni(2*j)*Dpi(2*j)^3 + Ni(2*j-1)*Dpi(2*j-1)^3)/Ni_smoothed(j))^(1/3);
-%             else
-%                 Dpi_smoothed(j) = (Dpi(2*j)^3 + Dpi(2*j-1)^3)^(1/3);
-%             end
-%         end
-%         dNi_smoothed = obj.N_to_dlog(Dpi_smoothed,Ni_smoothed);
-%         dN_smoothed(i,:) = interp1(log10(Dpi_smoothed),dNi_smoothed,log10(Dp0),'linear',0);
-%     end
+    if(initials.fixed_sections ~= 0)
+        for j=1:floor(length(Dpi)/2)
+            Ni_smoothed(j)=Ni(2*j) + Ni(2*j-1);
+            if(Ni_smoothed(j) > 0)
+                Dpi_smoothed(j) = ((Ni(2*j)*Dpi(2*j)^3 + Ni(2*j-1)*Dpi(2*j-1)^3)/Ni_smoothed(j))^(1/3);
+            else
+                Dpi_smoothed(j) = (Dpi(2*j)^3 + Dpi(2*j-1)^3)^(1/3);
+            end
+        end
+        dNi_smoothed = obj.N_to_dlog(Dpi_smoothed,Ni_smoothed);
+        dN_smoothed(i,:) = interp1(log10(Dpi_smoothed),dNi_smoothed,log10(Dp0),'linear',0);
+    end
 
     dNi = obj.N_to_dlog(Dpi,Ni);
     
@@ -132,21 +132,21 @@ dist(2:end,3:end) = dN;  % Then each column tells the particle concentration
                          
 out_struct.distr = dist; % Save the distribution to output.
 
-% if(initials.fixed_sections ~= 0)
-%     % Make the smoothed distribution:
-%     [ro, co] = size(dN_smoothed);
-%     dist_smoothed = zeros(ro+1,co+2); % Preallocate the distribution array.
-%     dist_smoothed(2:end,1) = t(:);    % Insert the time vector to the first column of dist.
-%     dist_smoothed(2:end,2) = Ntot(:); % Insert Ntot to the second column of dist.
-%     dist_smoothed(1,3:end) = Dp0;     % The first row of dist tells the Dp0s of distribution.
-%     dist_smoothed(2:end,3:end) = dN_smoothed;  % Then each column tells the particle concentration
-%                              % of corresponding section (Dp0) for all time
-%                              % points.
-% 
-%     out_struct.distr_smoothed = dist_smoothed; % Save the distribution to output.
-% else
-%     out_struct.distr_smoothed = NaN;
-% end
+if(initials.fixed_sections ~= 0)
+    % Make the smoothed distribution:
+    [ro, co] = size(dN_smoothed);
+    dist_smoothed = zeros(ro+1,co+2); % Preallocate the distribution array.
+    dist_smoothed(2:end,1) = t(:);    % Insert the time vector to the first column of dist.
+    dist_smoothed(2:end,2) = Ntot(:); % Insert Ntot to the second column of dist.
+    dist_smoothed(1,3:end) = Dp0;     % The first row of dist tells the Dp0s of distribution.
+    dist_smoothed(2:end,3:end) = dN_smoothed;  % Then each column tells the particle concentration
+                             % of corresponding section (Dp0) for all time
+                             % points.
+
+    out_struct.distr_smoothed = dist_smoothed; % Save the distribution to output.
+else
+    out_struct.distr_smoothed = NaN;
+end
 
 
 out_struct.Y = Y; % Save the original Y:
