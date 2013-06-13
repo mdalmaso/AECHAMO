@@ -108,7 +108,7 @@ absTol(initials.sections+1:(2*initials.sections+1)) = initials.Dp_tol; % Particl
 
 % Apply ode45 options: the tolerance settings and the function 'events' as
 % Event-function.
-options = odeset('absTol',absTol,'Events',@events); 
+options = odeset('absTol',absTol,'Events',@events, 'NonNegative', 2:initials.sections+1); 
 
 
 % Summary:
@@ -177,11 +177,14 @@ while(t_span(1) < tvect(end))
     if(y0(1+ie) > 0)    % Is there particles in section?
         Ni1=y0(1+ie);   % Number of particles in section ie
         Ni2=y0(1+ie+1); % Number of particles in section ie+1
+        Ntot = Ni1+Ni2;
         v1 = pi/6*y0(2*nSec+4+ie)^3*Ni1;    % Total vol of particles in section ie
         v2 = pi/6*y0(2*nSec+1+4+ie)^3*Ni2;  % Total vol of particles in section ie+1
-        vtot = (v1+v2)/(Ni1+Ni2);           % Average vol of particles in section ie+1 when the particles from ie are moved there.
-        y0(2*nSec+4+1+ie) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
-        y0(1+ie+1)=Ni1+Ni2; % Add particles from section ie to ie+1
+        vtot = (v1+v2)/Ntot;           % Average vol of particles in section ie+1 when the particles from ie are moved there.
+        if(vtot > 0)
+            y0(2*nSec+4+1+ie) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
+        end
+        y0(1+ie+1)=Ntot; % Add particles from section ie to ie+1
         y0(1+ie) = 0;       % Delete particles from section ie.
     end
     
