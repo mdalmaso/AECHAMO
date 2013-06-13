@@ -165,8 +165,8 @@ while(t_span(1) < tvect(end))
     % lowest index. The other Dp:s will be handled in the next loop if
     % needed.
     if(length(ie)>1)
-        display('ie:ssa useampi alkio');
-        pause;
+%         display('ie:ssa useampi alkio');
+%         pause;
         ie=ie(1);   % Take only the first index.
         y0=ye(1,:); % And the first row of ye as well.
     end
