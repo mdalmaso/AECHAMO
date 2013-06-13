@@ -69,9 +69,9 @@ for i = 1:length(t),
     Dpi = Y(i,nSec+2:(2*nSec+1));
     
     if(initials.fixed_sections ~= 0)
-        for j=1:length(Dpi)/2
+        for j=1:floor(length(Dpi)/2)
             Ni_smoothed(j)=Ni(2*j) + Ni(2*j-1);
-            if(Ni(j) > 0)
+            if(Ni_smoothed(j) > 0)
                 Dpi_smoothed(j) = ((Ni(2*j)*Dpi(2*j)^3 + Ni(2*j-1)*Dpi(2*j-1)^3)/Ni_smoothed(j))^(1/3);
             else
                 Dpi_smoothed(j) = (Dpi(2*j)^3 + Dpi(2*j-1)^3)^(1/3);
