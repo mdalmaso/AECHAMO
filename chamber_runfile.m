@@ -54,10 +54,14 @@ end
 
 % Run the simulations now as we are sure that all the initializations went
 % OK.
-
+s = warning('error', 'MATLAB:ode45:IntegrationTolNotMet');
 for i=1:rows
     tic
-    chamb_temp(i).run;
+    try 
+        chamb_temp(i).run;
+    catch
+        ;
+    end
     elapsed_temp(i) = toc;
     out_filename_temp{i} = strcat('temp_', datestr(now,30),'.mat');
     save(out_filename_temp{i},'chamb_temp','elapsed_temp');
