@@ -182,7 +182,9 @@ while(t_span(1) < tvect(end))
                 break;
             end
         end
-        t = t_temp;
+        t = t_temp';
+        clear t_temp;
+        nt = length(t);
     end
     
     % If there are particles in the section that has grown over limit, move
