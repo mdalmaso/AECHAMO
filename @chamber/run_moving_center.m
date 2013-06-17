@@ -165,11 +165,24 @@ while(t_span(1) < tvect(end))
     % limits. In that case, the program will take care of the Dp with
     % lowest index. The other Dp:s will be handled in the next loop if
     % needed.
+    multiple_events = 0;
     if(length(ie)>1)
 %         display('ie:ssa useampi alkio');
 %         pause;
         ie=ie(1);   % Take only the first index.
         y0=ye(1,:); % And the first row of ye as well.
+        te=te(1);
+        
+        % Redefine t so that it ends to the time point where the first
+        % event occurs:
+        for i=1:length(t)
+            if(t(i) <= te)
+                t_temp(i) = t(i);
+            else
+                break;
+            end
+        end
+        t = t_temp;
     end
     
     % If there are particles in the section that has grown over limit, move
@@ -188,7 +201,6 @@ while(t_span(1) < tvect(end))
         y0(1+ie+1)=Ntot; % Add particles from section ie to ie+1
         y0(1+ie) = 0;       % Delete particles from section ie.
     end
-
     
     % The t and y vectors from ode will be saved to cumulative output
     % vectors tout and yout. The first row of y and t is the same as the
@@ -213,6 +225,14 @@ while(t_span(1) < tvect(end))
     % values of t that equal the values of user input time vector are saved
     % to the output data.
     modulo_time = mod(t(end),delta_t);
+    
+    % If t consists of only one element, it has the same value as the last
+    % element of t during previous round.
+    if(length(t) < 2)
+        t_span = [te, te+(delta_t-modulo_time):delta_t:t_end];
+        continue;
+    end
+    
     if(modulo_time ~= 0)
         % If the last element of t does not equal any of the elements in
         % the time vector, save all other elements but the first and last,
