@@ -1,7 +1,7 @@
-ajoja = 8;
+ajoja = 10;
 
-for i = 1:ajoja
-    chamb(i).plot('dist')
+for i = [1,3,5,7,8,9,10]
+    chamb(i).plot('original')
 end
 
 chamb(1).plot('dist')
