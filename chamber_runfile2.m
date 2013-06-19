@@ -64,7 +64,7 @@ settings = read_file(filename); % Function defined in the end of this file.
 [rows, cols] = size(settings);
 
 if(rows > 1)
-    error('');
+    error('Multiple definitions in %s. Define multiple values for parameters as a vector or use function chamber_runfile.',filename);
 end
 
 %% Remove duplicate definitions, save the last definition.
@@ -183,7 +183,6 @@ end
 
 % Recursive for-loop
 function [chamb, obj_index] = recfor(indices,ranges,n,obj_index,constants, variables,chamb)
-% if(n~=0)
 if(n <= length(ranges))
     for i=1:ranges(n)
         indices(end+1)=i;
