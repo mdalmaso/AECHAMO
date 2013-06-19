@@ -1,0 +1,22 @@
+Error using warning
+Failure at t=2.180553e+03.  Unable to meet
+integration tolerances without reducing
+the step size below the smallest value
+allowed (7.275958e-12) at time t.
+
+Error in ode45 (line 309)
+        warning(message('MATLAB:ode45:IntegrationTolNotMet',
+        sprintf( '%e', t ), sprintf( '%e',
+        hmin )));
+
+Error in chamber/run_moving_center (line
+143)
+    [t,y,te,ye,ie]=ode45(@chamberODE,t_span,y0,options);
+    
+Error in chamber/run (line 16)
+    obj.run_moving_center;
+
+Error in chamber_runfile (line 61)
+        chamb_temp(i).run;
+ 
+309         warning(message('MATLAB:ode45:IntegrationTolNotMet', sprintf( '%e', t ), sprintf( '%e', hmin )));
