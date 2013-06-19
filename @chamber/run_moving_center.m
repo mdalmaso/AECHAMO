@@ -99,6 +99,9 @@ Vap_dilu = 0; % vapor lost to dilution (molecules)
 % Initial conditions:
 y0 = [initials.Cvap0 N Dp AE_Wall AE_dilu Vap_dilu Dp_variable];
 
+% [y0, C3] = add_vapor(y0, C1, C2, 1e5, 'constant');
+% C3.constant = 0;
+% C3.source = [...];
 
 % Error tolerance options for ode45:
 absTol = ones(size(y0)).*1e-6; % Preallocate the tolerance vector.
