@@ -60,7 +60,8 @@ for i=1:rows
     try 
         chamb_temp(i).run;
     catch
-        ;
+        err_information=lasterror;
+%         chamb_temp(i).output_data.warning = err_information.message;
     end
     elapsed_temp(i) = toc;
     out_filename_temp{i} = strcat('temp_', datestr(now,30),'.mat');
