@@ -3,7 +3,7 @@ M = 100; %g/mol
 NA = 6.022e23; % 1/mol
 
 % calculate deltaMoa
-i = 10;
+i = 3;
 Vtot = chamb(i).output_data.Vtot; % m3
 tim = chamb(i).output_data.tim;
 
@@ -20,8 +20,8 @@ plot(tim,deltaMoa,'b*')
 %plot(tim,deltaMoa2,'m*')
 
 %calculate deltaP
-k = 9e-17*30e-9*2.6908e19;
-P = 1.5*1e-9*2.6908e19;
+k = 2e-16*60e-9*2.6908e19;
+P = 100e-9*2.6908e19;
 
 deltaP = k.*P.*tim; % molkyyliä/(cm3)
 deltaP_mass = deltaP.*M./NA; % g/(cm3 ilmaa)
@@ -43,4 +43,4 @@ plot(deltaMoa,Y,'m*')
 
 saveas(h1,'deltaP_deltaMoa).fig')
 saveas(h2,'Y(t).fig')
-saveas(h2,'Y(deltaMoa).fig')
+saveas(h3,'Y(deltaMoa).fig')
