@@ -56,7 +56,9 @@ classdef chamber < handle
 % % Plot the total particle concentration as a function of time:
 % plot(dat.tim, dat.Ntot);
 % 
-
+    properties (Access = public)
+        error_messages  % Contains warnings and errors during simulation.
+    end
     % Properties that user can see, but not modify:
     properties (GetAccess = public, SetAccess = private)
         initials; % Contains all initial parameters. Defined in initialize.m.

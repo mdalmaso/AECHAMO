@@ -428,7 +428,8 @@ function dy = chamberODE(t,y)
         % end coagulation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         % condensation %%%%
-        if(y(i+1) > 0)
+%         if(y(i+1) > 0)
+        if(y(i+1) ~= 0)
             dy = obj.add_condensation(dy, y, initials, i);
         end
 
