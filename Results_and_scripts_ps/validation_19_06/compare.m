@@ -1,5 +1,5 @@
 
-i=1;
+i=8;
 
 err10(1)=abs(kam10(i).output_data.Ntot(floor(end/2))-kam200(i).output_data.Ntot(floor(end/2)))/kam200(i).output_data.Ntot(floor(end/2));
 err10(1)=err10(1)*100;
