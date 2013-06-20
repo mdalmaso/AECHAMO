@@ -155,7 +155,7 @@ yhandle = ylabel('D_{p} (nm)','rotation',90);
 set(yhandle,'Fontsize',12)
 %set(yhandle,'Fontangle','italic')
 % set dp from m to nm
-set(gca,'YTickLabel',[1,10,100, 1000])
+%set(gca,'YTickLabel',[1,10,100, 1000])
 %set(yhandle,'Fontname','Computermodern')
 
 %% first one
