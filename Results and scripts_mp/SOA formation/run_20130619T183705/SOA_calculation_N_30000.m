@@ -3,9 +3,9 @@ M = 100; %g/mol
 NA = 6.022e23; % 1/mol
 
 % calculate deltaMoa
-i = 3;
-Vtot = chamb(i).output_data.Vtot; % m3
-tim = chamb(i).output_data.tim;
+i = 2;
+Vtot = chamb_temp(i).output_data.Vtot; % m3
+tim = chamb_temp(i).output_data.tim;
 
 
 deltaVtot = Vtot - Vtot(1);
