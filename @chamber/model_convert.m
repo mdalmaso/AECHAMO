@@ -11,9 +11,10 @@ function[out_struct] = model_convert(obj,t,Y)
 % Vtot - Total particle volume
 % Dpmean - Mean diameter
 % Mtot - Total mass of particles
-% Mwall - Mass lost to wall
+% Mwall - Mass lost to wall as particles
 % Mdilu - Mass diluted as aerosols
 % Mvdilu - Mass diluted as vapor
+% Mvwall - Mass condensed to wall as vapor
 % distr - Distribution as a function of time
 % distr_smoothed - Smoothed distribution as a function of time. This is
 %                  created only if sections are fixed. Otherwise there is
@@ -27,6 +28,8 @@ function[out_struct] = model_convert(obj,t,Y)
 %                     on.
 % 2013-06-10    0.1.2 Added distribution smoothing if fixed sections are
 %                     used.
+% 2013-06-20    0.1.3 Added condensation sink to chamber walls. The mass of
+%                     vapor condensed to walls is saved into Mvwall.
 
 initials = obj.initials;
 
@@ -170,5 +173,9 @@ out_struct.Mtot = Vtot.*rool*1e6; % Total mass of particles ([Vtot]=m^3, [rool]=
 out_struct.Mwall= Y(:,2*nSec+2).*mv./NA; % Mass lost to wall
 out_struct.Mdilu= Y(:,2*nSec+3).*mv./NA; % Mass diluted as aerosols
 out_struct.Mvdilu=Y(:,2*nSec+4).*mv./NA; % Mass diluted in gas phase
+if(length(Y(1,:)) == 2*nSec+5)
+    out_struct.Mvwall = Y(:,2*nSec+5).*mv./NA; % Mass lost to wall as vapor
+else out_struct.Mvwall = 0;
+end
 
 end

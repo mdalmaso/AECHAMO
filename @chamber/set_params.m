@@ -72,6 +72,8 @@ function set_params(obj, varargin)
 % dilu_coeff        Dilution coefficient (1/s). Dilution affects particle
 %                   concentration in following way:
 %                   dN/dt = -dilu_coeff*N   (N = particle concentration)
+%                   Dilution affects the vapor concentration in a similar
+%                   way.
 %                   dilu_coeff can be either a scalar or an array. When
 %                   defined as a scalar, dilution coefficient will be 
 %                   constant during the simulation.
@@ -146,6 +148,8 @@ function set_params(obj, varargin)
 %
 % Version history:
 % 2013-06-04    0.1.0 Separated from function initialize.
+% 2013-06-20    0.1.1 Added vap_wallsink_on and vap_wallsink for vapor
+%                     condensation onto chamber walls.
 
 
 % Initialize with default values only if the object has not been
@@ -160,11 +164,13 @@ if(isempty(obj.initials) || nargin == 1)
                              % If Cvap_const == 1, the program will set
                              % gas_source to 0.
     obj.initials.fixed_sections = 0;      % Moving sections if this is 0, otherwise fixed sections.
+    obj.initials.vap_wallsink_on = 0;     % 1 if vapor deposits on walls
 
     % Basic values
     obj.initials.part_source   = 0;
     obj.initials.gas_source    = 1e5;                  % The condensing vapor source rate. Can be defined as scalar or two-column array.
-    obj.initials.dilu_coeff    = 1.00.*370/1460000;    % Dilution coefficient (1/s). Can be defined as scalar or two-column array.
+    obj.initials.dilu_coeff    = 1.00.*370/1460000;    % Dilution coefficient (1/(cm^3s)). Can be defined as scalar or two-column array.
+    obj.initials.vap_wallsink  = 0;                    % Vapor deposition velocity to walls (1/(cm^3s)).
     obj.initials.satu_conc     = 0;                    % The condensing vapor saturation concentration (1/cm^3).
     obj.initials.lambda        = 129.29e-9;            % The condensing vapor mean free path (m)
     obj.initials.diff_coeff    = 1.093392158075694e-1; % The condensing vapor diffusion coefficient (cm2/s)

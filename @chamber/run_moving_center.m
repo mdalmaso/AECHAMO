@@ -21,6 +21,7 @@ function run_moving_center(obj)
 %                     that contain particles. Huge improvement of
 %                     efficiency and makes also the distribution look more
 %                     natural.
+% 2013-06-20    0.1.5 Added condensation sink to chamber walls. 
 
 % TODO:
 % -Make obj.sections stand only for number of sections. Create a new
@@ -95,9 +96,10 @@ N = abs(N); % Make sure that concentrations are positive
 AE_Wall  = 0; % aerosol lost to wall (molecules)
 AE_dilu  = 0; % aerosol lost to dilution (molecules)
 Vap_dilu = 0; % vapor lost to dilution (molecules)
+Vap_Wall = 0; % vapor lost to walls (molecules)
 
 % Initial conditions:
-y0 = [initials.Cvap0 N Dp AE_Wall AE_dilu Vap_dilu Dp_variable];
+y0 = [initials.Cvap0 N Dp AE_Wall AE_dilu Vap_dilu Vap_Wall Dp_variable];
 
 % [y0, C3] = add_vapor(y0, C1, C2, 1e5, 'constant');
 % C3.constant = 0;
@@ -117,8 +119,8 @@ options = odeset('absTol',absTol,'Events',@events, 'NonNegative', 2:initials.sec
 % Summary:
 % concentrations: Y(2:nSec+1)
 % diameters:      Y((nSec+2):(2*nSec+1))
-% lost:           Y(2*nSec+2 2*nSec+3 2*nSec+4)
-% variable diams: Y((2*nSec+5 : 3*nSec+4))
+% lost:           Y(2*nSec+2 2*nSec+3 2*nSec+4 2*nSec+5)
+% variable diams: Y((2*nSec+6 : 3*nSec+5))
 yout = [];
 tout = [];
 ye = 0;
@@ -168,7 +170,6 @@ while(t_span(1) < tvect(end))
     % limits. In that case, the program will take care of the Dp with
     % lowest index. The other Dp:s will be handled in the next loop if
     % needed.
-    multiple_events = 0;
     if(length(ie)>1)
 %         display('ie:ssa useampi alkio');
 %         pause;
@@ -197,11 +198,11 @@ while(t_span(1) < tvect(end))
         Ni1=y0(1+ie);   % Number of particles in section ie
         Ni2=y0(1+ie+1); % Number of particles in section ie+1
         Ntot = Ni1+Ni2;
-        v1 = pi/6*y0(2*nSec+4+ie)^3*Ni1;    % Total vol of particles in section ie
-        v2 = pi/6*y0(2*nSec+1+4+ie)^3*Ni2;  % Total vol of particles in section ie+1
+        v1 = pi/6*y0(2*nSec+5+ie)^3*Ni1;    % Total vol of particles in section ie
+        v2 = pi/6*y0(2*nSec+1+5+ie)^3*Ni2;  % Total vol of particles in section ie+1
         vtot = (v1+v2)/Ntot;           % Average vol of particles in section ie+1 when the particles from ie are moved there.
         if(vtot > 0)
-            y0(2*nSec+4+1+ie) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
+            y0(2*nSec+5+1+ie) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
         end
         y0(1+ie+1)=Ntot; % Add particles from section ie to ie+1
         y0(1+ie) = 0;       % Delete particles from section ie.
@@ -287,7 +288,7 @@ if(length(tout) > length(tvect))
     % Y2 will be similar to Y, but only the variable diameters will be
     % saved to get as much information as possible. The fixed diameters
     % will be skipped.
-    temp = [yout(:,1:nSec+1),yout(:,2*nSec+5:3*nSec+4),yout(:,2*nSec+2:2*nSec+4)];        
+    temp = [yout(:,1:nSec+1),yout(:,2*nSec+6:3*nSec+5),yout(:,2*nSec+2:2*nSec+5)];        
     Y2=interp1(tout,temp,tvect);
     tout = tvect;
 else
@@ -296,7 +297,7 @@ else
     % Y2 will be similar to Y, but only the variable diameters will be
     % saved to get as much information as possible. The fixed diameters
     % will be skipped.
-    Y2 = [yout(:,1:nSec+1),yout(:,2*nSec+5:3*nSec+4),yout(:,2*nSec+2:2*nSec+4)];
+    Y2 = [yout(:,1:nSec+1),yout(:,2*nSec+6:3*nSec+5),yout(:,2*nSec+2:2*nSec+5)];
 end
 
 display('Ode45 finished, processing data...');
@@ -311,6 +312,7 @@ function dy = chamberODE(t,y)
     part_source = initials.part_source;
     Source = initials.gas_source ; % the condensing vapor source rate (1/cm^3/s) (scalar or 2-column array)
     Dilu   = initials.dilu_coeff ; % the dilution coefficient (scalar or 2-column array)
+    Vap_wallsink = initials.vap_wallsink;
     Csat   = initials.satu_conc ; % The condensing vapor saturation concentration
     lambda = initials.lambda ; % the condensing vapor mean free path
     diffu  = initials.diff_coeff ; % the condensing vapor diffusion coefficient
@@ -360,14 +362,14 @@ function dy = chamberODE(t,y)
     
     % Make coagulation kernel. Different functions for coagulation and
     % agglomeration.
-    kk=zeros(nSec,length(y((2*nSec+5):(3*nSec+4)))); % Preallocate
+    kk=zeros(nSec,length(y((2*nSec+6):(3*nSec+5)))); % Preallocate
     if(coagmode == 1) % coagmode == 1 => particles coagulate.
         for i = 1:nSec,
-            kk(i,:) = obj.koag_kernel(y(2*nSec+4+i),y((2*nSec+5):(3*nSec+4)),rool,T).*1e6;
+            kk(i,:) = obj.koag_kernel(y(2*nSec+5+i),y((2*nSec+6):(3*nSec+5)),rool,T).*1e6;
         end
     else    % Else coagmode == 0 => particles agglomerate.
         for i = 1:nSec,
-            kk(i,:) = obj.aggl_kernel(y(2*nSec+4+i),y((2*nSec+5):(3*nSec+4)),rool,T,Df,r0).*1e6;
+            kk(i,:) = obj.aggl_kernel(y(2*nSec+5+i),y((2*nSec+6):(3*nSec+5)),rool,T,Df,r0).*1e6;
         end
     end
     
@@ -383,7 +385,16 @@ function dy = chamberODE(t,y)
         dy(1) = dy(1)-Dilu.*y(1);
         % And save the information about lost vapor molecules:
         dy(2*nSec+4)  = dy(2*nSec+4)+Dilu.*y(1);
-    end  
+    end
+    
+    % Deposition of vapor on walls
+    if initials.vap_wallsink_on,
+        % Dilute the vapor by wall sink coefficient:
+        dy(1) = dy(1)-Vap_wallsink.*y(1);
+        % And save the information about lost vapor molecules:
+        dy(2*nSec+5) = dy(2*nSec+5)+Vap_wallsink.*y(1);
+    end
+        
     
     % Go through all particle diameters and calculate the effect of dilution,
     % coagulation, condensation and sedimentation on particle
@@ -395,14 +406,14 @@ function dy = chamberODE(t,y)
 
             % Calculate the molecules lost to dilution in aerosol phase and
             % save information to dy(2*nSec+3).
-            dy(2*nSec+3) = dy(2*nSec+3)+ Dilu.*y(i+1).*(NA.*1e6.*rool.*pi.*(y(2*nSec+4+i).^3))./(6.*mv);
+            dy(2*nSec+3) = dy(2*nSec+3)+ Dilu.*y(i+1).*(NA.*1e6.*rool.*pi.*(y(2*nSec+5+i).^3))./(6.*mv);
         end
         
         % coagulation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
         if CX,    
         % calculate a coagulation matrix
         % this tells how to partition the particles 
-        cM = obj.coagulationMatrix(y((2*nSec+5):(3*nSec+4)),i);
+        cM = obj.coagulationMatrix(y((2*nSec+6):(3*nSec+5)),i);
         for j = 1:i,
             if i == j
                 dy(j+1) = dy(j+1)-y(i+1).*y(j+1).*kk(i,j); % loss             
@@ -436,12 +447,12 @@ function dy = chamberODE(t,y)
         % wall losses and sedimentation according to T. Anttila model...fitted
         % by M. Dal Maso; only usable for SAPPHIR chamber!!
         if initials.sedi_on,
-            beta = obj.sapphir_beta2(y(2*nSec+4+i),T);
+            beta = obj.sapphir_beta2(y(2*nSec+5+i),T);
             %beta = 3.5e-5; % 0th order approx
             dy(i+1) = dy(i+1)-beta.*y(i+1);
 
             %molecules lost to the wall = volume lost to wall (in aerosol phase)
-            dy(2*nSec+2) = dy(2*nSec+2)+ beta.*y(i+1).*(NA.*1e6.*rool.*pi.*(y(2*nSec+4+i).^3))./(6.*mv);               
+            dy(2*nSec+2) = dy(2*nSec+2)+ beta.*y(i+1).*(NA.*1e6.*rool.*pi.*(y(2*nSec+5+i).^3))./(6.*mv);               
         end
     end %% End for loop.
     
@@ -456,11 +467,11 @@ end  % End function chamberODE
 function[value,isterminal,direction] = events(t,y)
     nSec = initials.sections;
     
-    Dps = y(2*nSec+5:3*nSec+3);
+    Dps = y(2*nSec+6:3*nSec+4);
     limits = Dplims';
     
 %     value = limits-Dps+eps(Dps); % Run ode45 as long as Dp(i) <= Dplim(i)
-    value = limits-Dps; % Run ode45 as long as Dp(i) < Dplim(i). When value == 0, ode45 is terminated.
+    value = limits-Dps; % Run ode45 as long as Dp(i) < Dplim(i). When value <= 0, ode45 is terminated.
     isterminal = ones(length(value),1);
     direction = ones(length(value),1).*(-1);
 end

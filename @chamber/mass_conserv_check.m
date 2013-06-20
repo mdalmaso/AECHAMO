@@ -46,9 +46,12 @@ M_final_1 = M0 + dM_gas + dM_particles;
 % vapor:
 M_aerosol = output.Mtot(end) + output.vap(end)*initials.vap_molmass/NA;
 
-% Diluted mass is the mass deposited on walls + mass diluted as particles +
-% mass diluted as vapor:
-M_diluted = output.Mwall(end) + output.Mdilu(end) + output.Mvdilu(end);
+% Diluted mass is:
+%   mass deposited on walls (particles) 
+% + mass deposited on walls (vapor)
+% + mass diluted as particles
+% + mass diluted as vapor:
+M_diluted = output.Mwall(end) + output.Mvwall(end) + output.Mdilu(end) + output.Mvdilu(end);
 
 M_final_2 = M_aerosol + M_diluted;
 
