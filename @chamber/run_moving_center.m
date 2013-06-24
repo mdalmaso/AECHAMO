@@ -109,11 +109,12 @@ y0 = [initials.Cvap0 N Dp AE_Wall AE_dilu Vap_dilu Vap_Wall Dp_variable];
 absTol = ones(size(y0)).*1e-6; % Preallocate the tolerance vector.
 absTol(1) = initials.Cvap_tol; % Vapor concentration tolerance
 absTol(2:initials.sections+1) = initials.N_tol; % Particle concentration tolerance
-absTol(initials.sections+1:(2*initials.sections+1)) = initials.Dp_tol; % Particle diameter tolerance
+absTol(initials.sections+2:(2*initials.sections+1)) = initials.Dp_tol; % Particle diameter tolerance
+absTol(2*initials.sections+6:(3*initials.sections+5)) = initials.Dp_tol; % Particle diameter tolerance
 
 % Apply ode45 options: the tolerance settings and the function 'events' as
 % Event-function.
-options = odeset('absTol',absTol,'Events',@events, 'NonNegative', 2:initials.sections+1); 
+options = odeset('absTol',absTol,'Events',@events, 'NonNegative', 1:initials.sections+1); 
 
 
 % Summary:
@@ -190,6 +191,10 @@ while(t_span(1) < tvect(end))
         clear t_temp;
         nt = length(t);
     end
+    
+    % Set the initial step of ode to one second, so the first step of
+    % solver after the event will not be too big.
+    options = odeset(options, 'InitialStep', 1);
     
     % If there are particles in the section that has grown over limit, move
     % the particles to next section and calculate the new diameter inside
