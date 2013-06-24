@@ -1,0 +1,10 @@
+Mallintamispöytäkirja löytyy excel tiedostosta: validation results.xlsx
+
+Siitä näkee käytetyt sektiomäärät ja alkuarvot kullekin ajolle sekä tulostiedostojen nimet.
+
+Lisäksi excelissä on laskettu tarvittava reaaliaika yhdelle tunnille mallinnusaikaa sektiomäärän funktiona. 
+
+Pictures kansiossa on kuvat lopussa vallitsevista tilavuudesta Vtot(end) ja lukumäärästä Ntot(end) samplen funktiona.
+Kyseisten kuvien x-akselin arvot vastaavat excel taulukossa olevia sample numeroita.
+
+
