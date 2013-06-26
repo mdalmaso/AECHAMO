@@ -23,13 +23,16 @@ figs=findall(0,'type','figure');
 num_figs = length(figs);
 
 % Open a new figure:
-figure(num_figs+1);
+h = figure(num_figs+1);
 
 plot(t/(24*60*60),CS_tot,'b*-', 'MarkerSize', 5, 'LineWidth',1)
 handle1 = xlabel('time (d)');
 set(handle1,'Fontsize',9,'Fontname','Computermodern')
 handle2 = ylabel('CS (s^{-1})','rotation',90);
 set(handle2,'Fontsize',9,'Fontname','Computermodern')
+
+% save figure 
+saveas(h,'CS(t).fig')
 
 end
 
