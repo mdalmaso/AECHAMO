@@ -25,7 +25,9 @@ end
 % Addition of mass by part_source:
 if(~isscalar(initials.part_source))
     Dp_nucl_particle = initials.part_source(1,3);
-    M_nucl_particle = initials.particle_dens*Dp_nucl_particle^3*pi/6;
+    
+
+    M_nucl_particle = initials.particle_dens*Dp_nucl_particle^3*pi/6*1e6;
 
     dM_particles = trapz(initials.tvect,initials.part_source(:,2).*M_nucl_particle);
 else

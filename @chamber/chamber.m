@@ -122,7 +122,7 @@ classdef chamber < handle
         
         [out] = distribution_info_Vtot(obj,Dp,dN);
         
-        [dy] = add_nucleation(obj,dy,t,part_source);
+        [dy] = add_nucleation(obj,dy,y,t,part_source);
         
     end
     

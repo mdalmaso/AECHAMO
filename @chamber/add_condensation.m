@@ -23,14 +23,17 @@ NA = 6.022e23;
 Kn = (2.*lambda)./y(2*nSec+5+i); % Knudsen number
 betam = (Kn+1)./((0.377.*Kn)+1+(4/(3.*alfa)).*(Kn.^2)+(4/(3.*alfa)).*Kn);
 
-% I is the flux of molecules to the particle phase    
-I = 2.*pi.*max([y(2*nSec+5+i) 0]).*1e2.*diffu.*(y(1)-Csat).*betam; %1/s
 
 if(initials.fixed_sections == 0)
+    % I is the flux of molecules to the particle phase    
+    I = 2.*pi.*max([y(nSec+1+i) 0]).*1e2.*diffu.*(y(1)-Csat).*betam; %1/s
     % Move the sections by condensation:
     dy(nSec+1+i) = dy(nSec+1+i)+(2.*mv.*I)./(pi.*rool.*y(nSec+1+i).^2.*NA.*1e6); % particle diameter (m/s)
     dy(1) = dy(1) - y(i+1).*I;
 else
+    % I is the flux of molecules to the particle phase    
+    I = 2.*pi.*max([y(2*nSec+5+i) 0]).*1e2.*diffu.*(y(1)-Csat).*betam; %1/s
+
     % Move the variable diameters by condensation:
     dy(2*nSec+5+i) = dy(2*nSec+5+i)+(2.*mv.*I)./(pi.*rool.*y(2*nSec+5+i).^2.*NA.*1e6); % particle diameter (m/s)
     dy(1) = dy(1) - y(i+1).*I;

@@ -95,9 +95,12 @@ for i = 1:length(t),
 %     Vtot(i) = obj.distribution_info_Vtot(Dp0,dN(i,:));
     
 %     Vtot(i) = obj.distribution_info_Vtot(Dpi,dNi);
-    dV = (pi./6).*Dpi.^3.*dNi;
-    Vtot(i) = trapz(log10(Dpi),dV);
-
+%     dV = (pi./6).*Dpi.^3.*dNi;
+%     Vtot(i) = trapz(log10(Dpi),dV);
+    % Vtot = N(Dp)*V(Dp)
+    dV = (pi./6).*Dpi.^3;
+    Vtot(i) = sum(Ni.*dV);
+    
     % Calculate CMD. Interpolate Ni to Dp0 and find such a point in Dp0
     % that the amount of particles that have smaller diameter equal the
     % amount of particles that have bigger diameter.
@@ -169,7 +172,8 @@ out_struct.Dpmean= Dpmean(:); % Save Dpmean values
 
 % mass balance stuff
 NA=6.022e23;
-out_struct.Mtot = Vtot.*rool*1e6; % Total mass of particles ([Vtot]=m^3, [rool]=g/cm^3)
+% all [M] = g/cm^3 !!!
+out_struct.Mtot = Vtot.*rool*1e6; % Total mass of particles ([Vtot]=m^3/cm^3, [rool]=g/cm^3)
 out_struct.Mwall= Y(:,2*nSec+2).*mv./NA; % Mass lost to wall
 out_struct.Mdilu= Y(:,2*nSec+3).*mv./NA; % Mass diluted as aerosols
 out_struct.Mvdilu=Y(:,2*nSec+4).*mv./NA; % Mass diluted in gas phase
