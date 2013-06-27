@@ -76,15 +76,15 @@ if(initials.part_source_is_vect)
     % the loop will go through all particle sources.
     for i=1:length(initials.part_source(1,1,:))
         ind = 1;
-        while(Dp(ind) < initials.part_source(1,3,i))
+        while(Dplims(ind) < initials.part_source(1,3,i))
             ind = ind+1;
         end
         initials.part_source(:,4,i) = initials.part_source(1,3,i);
-        if(ind > 1)
-            initials.part_source(:,3,i) = ind-1;
-        else
+%         if(ind > 1)
+%             initials.part_source(:,3,i) = ind-1;
+%         else
             initials.part_source(:,3,i) = ind;
-        end
+%         end
         % Muuta Dp_variable tässä
         
     end
@@ -181,9 +181,22 @@ while(t_span(1) < tvect(end))
     % lowest index. The other Dp:s will be handled in the next loop if
     % needed.
     if(length(ie)>1)
+        i = 1;
+        while(isequal(ye(i,:),ye(i+1,:)) && i < length(ye))
+            i = i+1;
+        end
+        ie=ie(1:i);
+        clear i;
+        
+        % Discard events that occur in sections that are next to each
+        % other:
+        difference = diff(ie);
+        difference = [2;difference];
+        ie=ie(difference ~= 1)
+        
 %         display('ie:ssa useampi alkio');
 %         pause;
-        ie=ie(1);   % Take only the first index.
+%         ie=ie(1);   % Take only the first index.
         y0=ye(1,:); % And the first row of ye as well.
         te=te(1);
         
@@ -208,20 +221,21 @@ while(t_span(1) < tvect(end))
     % If there are particles in the section that has grown over limit, move
     % the particles to next section and calculate the new diameter inside
     % the next section.
-    if(y0(1+ie) > 0)    % Is there particles in section?
-        Ni1=y0(1+ie);   % Number of particles in section ie
-        Ni2=y0(1+ie+1); % Number of particles in section ie+1
-        Ntot = Ni1+Ni2;
-        v1 = pi/6*y0(2*nSec+5+ie)^3*Ni1;    % Total vol of particles in section ie
-        v2 = pi/6*y0(2*nSec+1+5+ie)^3*Ni2;  % Total vol of particles in section ie+1
-        vtot = (v1+v2)/Ntot;           % Average vol of particles in section ie+1 when the particles from ie are moved there.
-        if(vtot > 0)
-            y0(2*nSec+5+1+ie) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
+    for i=1:length(ie)
+        if(y0(1+ie(i)) > 0)    % Is there particles in section?
+            Ni1=y0(1+ie(i));   % Number of particles in section ie
+            Ni2=y0(1+ie(i)+1); % Number of particles in section ie+1
+            Ntot = Ni1+Ni2;
+            v1 = pi/6*y0(2*nSec+5+ie(i))^3*Ni1;    % Total vol of particles in section ie
+            v2 = pi/6*y0(2*nSec+1+5+ie(i))^3*Ni2;  % Total vol of particles in section ie+1
+            vtot = (v1+v2)/Ntot;           % Average vol of particles in section ie+1 when the particles from ie are moved there.
+            if(vtot > 0)
+                y0(2*nSec+5+1+ie(i)) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
+            end
+            y0(1+ie(i)+1)=Ntot; % Add particles from section ie to ie+1
+            y0(1+ie(i)) = 0;       % Delete particles from section ie.
         end
-        y0(1+ie+1)=Ntot; % Add particles from section ie to ie+1
-        y0(1+ie) = 0;       % Delete particles from section ie.
     end
-    
     % The t and y vectors from ode will be saved to cumulative output
     % vectors tout and yout. The first row of y and t is the same as the
     % last row of previous run, so it will not be saved twice.
