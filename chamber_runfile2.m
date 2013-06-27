@@ -155,7 +155,9 @@ for i=1:total_num
     try 
         chamb_temp(i).run;
     catch
-        ;
+        err_information=lasterror;
+        chamb_temp(i).error_messages = err_information.message;
+        clear err_information;
     end
     elapsed_temp(i) = toc;
     out_filename_temp{i} = strcat('temp_', datestr(now,30),'.mat');

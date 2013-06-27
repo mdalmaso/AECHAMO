@@ -61,7 +61,7 @@ for i=1:rows
         chamb_temp(i).run;
     catch
         err_information=lasterror;
-%         chamb_temp(i).error_messages = err_information.message;
+        chamb_temp(i).error_messages = err_information.message;
     end
     elapsed_temp(i) = toc;
     out_filename_temp{i} = strcat('temp_', datestr(now,30),'.mat');
