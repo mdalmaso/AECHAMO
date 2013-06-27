@@ -79,7 +79,14 @@ if(initials.part_source_is_vect)
         while(Dp(ind) < initials.part_source(1,3,i))
             ind = ind+1;
         end
-        initials.part_source(:,3,i) = ind;
+        initials.part_source(:,4,i) = initials.part_source(1,3,i);
+        if(ind > 1)
+            initials.part_source(:,3,i) = ind-1;
+        else
+            initials.part_source(:,3,i) = ind;
+        end
+        % Muuta Dp_variable tässä
+        
     end
     clear ind;
 end
@@ -136,6 +143,8 @@ yout=y0;
 t_start=tvect(1);
 delta_t = tvect(2)-tvect(1);
 t_end = tvect(end);
+
+options = odeset(options, 'MaxStep', delta_t);
 
 % Define the time span for ode so that it equals the user defined tvect.
 t_span = t_start:delta_t:t_end;
@@ -351,7 +360,7 @@ function dy = chamberODE(t,y)
     end
     
     % Nucleation:
-    dy = obj.add_nucleation(dy, t, part_source);
+    dy = obj.add_nucleation(dy, y,t, part_source);
     
 %     if(initials.part_source_is_vect)
 %         for i=1:length(part_source(1,1,:))
