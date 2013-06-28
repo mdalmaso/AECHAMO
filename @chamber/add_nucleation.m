@@ -32,7 +32,7 @@ if(initials.part_source_is_vect)
                 % diameter of section 'index' will be changed to the
                 % diameter of nucleating particles.
                 dy(3*nSec+6) = -10*eps;
-            elseif(y(3*nSec+6) > 0)
+            else
                 Ntot = y(1+index);
                 % If there are already particles in the section, just move 
                 % the center diameter of corresponding section:
