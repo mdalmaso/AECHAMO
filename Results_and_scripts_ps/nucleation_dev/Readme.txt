@@ -6,3 +6,5 @@ run_20130628T104848 on ajettu samoilla alkuarvoilla (paitsi N = 0 ja aika on lyh
 
 run_20130628T135329 on ajettu täsmälleen samoilla alkuarvoilla kuin
 \Results and scripts_mp\Test and bug fixing\run_20130607T181225.mat
+
+run_20130628T145150.mat: Cvap != vakio, massa säilyy.
