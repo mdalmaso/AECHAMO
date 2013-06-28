@@ -106,7 +106,7 @@ Vap_dilu = 0; % vapor lost to dilution (molecules)
 Vap_Wall = 0; % vapor lost to walls (molecules)
 
 % Initial conditions:
-y0 = [initials.Cvap0 N Dp AE_Wall AE_dilu Vap_dilu Vap_Wall Dp_variable];
+y0 = [initials.Cvap0 N Dp AE_Wall AE_dilu Vap_dilu Vap_Wall Dp_variable eps];
 
 % [y0, C3] = add_vapor(y0, C1, C2, 1e5, 'constant');
 % C3.constant = 0;
@@ -118,6 +118,7 @@ absTol(1) = initials.Cvap_tol; % Vapor concentration tolerance
 absTol(2:initials.sections+1) = initials.N_tol; % Particle concentration tolerance
 absTol(initials.sections+2:(2*initials.sections+1)) = initials.Dp_tol; % Particle diameter tolerance
 absTol(2*initials.sections+6:(3*initials.sections+5)) = initials.Dp_tol; % Particle diameter tolerance
+% absTol(3*initials.sections+6) = 20*eps;
 
 % Apply ode45 options: the tolerance settings and the function 'events' as
 % Event-function.
@@ -182,7 +183,7 @@ while(t_span(1) < tvect(end))
     % needed.
     if(length(ie)>1)
         i = 1;
-        while(isequal(ye(i,:),ye(i+1,:)) && i < length(ye))
+        while( i < length(ye(:,1)) && isequal(ye(i,:),ye(i+1,:)))
             i = i+1;
         end
         ie=ie(1:i);
@@ -214,6 +215,15 @@ while(t_span(1) < tvect(end))
         nt = length(t);
     end
     
+%     if(~isempty(ye))
+%         difference = Dplims-ye(2*nSec+6:3*nSec+4);
+%         ie = [ie;(find(diff(difference) < 0))'];
+%         ie=sort(ie);
+%         difference = diff(ie);
+%         difference = [2;difference];
+%         ie=ie(difference ~= 1);
+%         clear difference;   
+%     end
     % Set the initial step of ode to one second, so the first step of
     % solver after the event will not be too big.
     options = odeset(options, 'InitialStep', 1);
@@ -222,7 +232,27 @@ while(t_span(1) < tvect(end))
     % the particles to next section and calculate the new diameter inside
     % the next section.
     for i=1:length(ie)
-        if(y0(1+ie(i)) > 0)    % Is there particles in section?
+        if(ie(i) == initials.sections)
+            % If the ie is nSec, it means that particles are to
+            % nucleate into an empty section. If this happens, the diameter
+            % of the section must be moved to correspond the diameter of
+            % nucleating particles.
+            
+            % Index of the section where particles nucleate is stored in
+            % initials.part_source, as well as the diameter of nucleating
+            % particles.
+            index = initials.part_source(1,3,1);
+            diam = initials.part_source(1,4,1);
+            y0(2*nSec+5+index) = diam;
+            
+            % Set the value of y(3*nSec+6) back to eps to indicate that the
+            % diameter of the section is now all right.
+            y0(3*nSec+6) = eps;
+            clear index;
+            clear diam;
+        
+        % Otherwise particles just need to be moved to another section.
+        elseif(y0(1+ie(i)) > 0)    % Is there particles in section?
             Ni1=y0(1+ie(i));   % Number of particles in section ie
             Ni2=y0(1+ie(i)+1); % Number of particles in section ie+1
             Ntot = Ni1+Ni2;
@@ -234,6 +264,12 @@ while(t_span(1) < tvect(end))
             end
             y0(1+ie(i)+1)=Ntot; % Add particles from section ie to ie+1
             y0(1+ie(i)) = 0;       % Delete particles from section ie.
+            
+            % Reset the diameter of the section that has now zero
+            % particles. If the diameter is not reset, it will grow
+            % immediatly over its limit if particles coagulate into it and
+            % grow by condensation.
+            y0(2*nSec+5+ie(i)) = y0(nSec+1+ie(i));
         end
     end
     % The t and y vectors from ode will be saved to cumulative output
@@ -275,6 +311,11 @@ while(t_span(1) < tvect(end))
         % elements.
         tout = [tout; t(2:nt-1)];
         yout = [yout; y(2:nt-1,:)];
+        
+        %TODO: It's possible that event happens between y(nt-2) and y(nt-1),
+        %so the diameters in y(nt-1) may be too big, the correct values are
+        %in y0, but represent the y at time t_span(1).
+        
         
         % Redefine the t_span for ode so that the first step is
         % delta_t-modulo_time. In this way the second element of t_span
@@ -501,6 +542,13 @@ function[value,isterminal,direction] = events(t,y)
     
 %     value = limits-Dps+eps(Dps); % Run ode45 as long as Dp(i) <= Dplim(i)
     value = limits-Dps; % Run ode45 as long as Dp(i) < Dplim(i). When value <= 0, ode45 is terminated.
+    
+    % Add y(3*nSec+6) to the end of value vector. This value indicates if
+    % particles are to nucleate into an empty section. If this happens, ode
+    % must be stopped and the diameter of the section must be moved to
+    % correspond the diameter of nucleating particles.
+    value = [value; y(3*nSec+6)];
+    
     isterminal = ones(length(value),1);
     direction = ones(length(value),1).*(-1);
 end
