@@ -21,7 +21,7 @@ for i = 1:le,
      ve1 = vol-newV;     
      ve2 = ve1./abs(ve1);
      ix = find(diff(ve2)); % this is the smaller of the volumes to divide between...
-
+     
      if isempty(ix), % if no found, put the particles in the largest bin
             out(i,end) = out(i,end)+newV./vol(end);
      else 
@@ -30,6 +30,8 @@ for i = 1:le,
             out(i,ix+1) = (newV-vol(ix))./(vol(ix+1)-vol(ix));  
             out(i,ix) = 1-out(i,ix+1);            
      end
+     out(i,isnan(out)) = 0;
+     out(i,isinf(out)) = 0;
 end
 end
 

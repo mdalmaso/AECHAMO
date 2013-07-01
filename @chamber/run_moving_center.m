@@ -122,7 +122,7 @@ absTol(2*initials.sections+6:(3*initials.sections+5)) = initials.Dp_tol; % Parti
 
 % Apply ode45 options: the tolerance settings and the function 'events' as
 % Event-function.
-options = odeset('absTol',absTol,'Events',@events, 'NonNegative', 1:initials.sections+1); 
+options = odeset('absTol',absTol,'Events',@events, 'NonNegative', 1:initials.sections+1, 'NonNegative', 2*initials.sections+6:3*initials.sections+5); 
 
 
 % Summary:
@@ -189,12 +189,13 @@ while(t_span(1) < tvect(end))
         ie=ie(1:i);
         clear i;
         
+        clear difference;
         % Discard events that occur in sections that are next to each
         % other:
         difference = diff(ie);
         difference = [2;difference];
         ie=ie(difference ~= 1)
-        
+        clear difference;
 %         display('ie:ssa useampi alkio');
 %         pause;
 %         ie=ie(1);   % Take only the first index.
@@ -427,7 +428,11 @@ function dy = chamberODE(t,y)
 % %         dy(1+index) = dy(1+index)+part_source(1);
 %     end
     
-    
+    difference = diff(y(2*nSec+6:3*nSec+5));
+    indices = difference<=0;
+    for i=1:length(indices)
+        y(2*nSec+5+i) = y(2*nSec+5+i)+indices(i)*difference(i);
+    end
     
     % Make coagulation kernel. Different functions for coagulation and
     % agglomeration.
