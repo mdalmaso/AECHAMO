@@ -1,6 +1,6 @@
 # Agglomeration test
 
-tvect=0:10:1500;
+tvect=0:10:8000;
 
 fixed_sections = 1;
 sedi_on = 0;
@@ -11,17 +11,17 @@ coag_mode = 'aggl';
 
 Dp_min = -11;
 Dp_max = -6;
-sections = 80;
-output_sections = 800;
+sections = 60;
+output_sections = 600;
 Cvap0 = 0;
 gas_source = 0;
 
 Df=2.0;
-r0 = 2e-9;
+r0 = 3e-10;
 particle_dens = 3.4;
 
-mu=[5e-10];
-sigma = [1.63];
+mu=[3e-10];
+sigma = [1.665];
 N = 5e8;
 
 #
