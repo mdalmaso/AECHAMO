@@ -26,11 +26,11 @@ if(initials.part_source_is_vect)
             % the corresponding section is not the same as the diameter of
             % the nucleating particles, the diameter of the section must be
             % changed.
-            if(abs(y(1+index)) < eps || y(3*nSec+6) < 0)
-                % If the section to which particles will nucleate is empty,
-                % try to set y(3*nSec+6) negative so ode will stop and the
-                % diameter of section 'index' will be changed to the
-                % diameter of nucleating particles.
+            if(abs(y(1+index)) < 0.1 || y(3*nSec+6) < 0)
+                % If the section to which particles will nucleate is empty
+                % (or nearly empty), try to set y(3*nSec+6) negative so ode
+                % will stop and the diameter of section 'index' will be
+                % changed to the diameter of nucleating particles.
                 dy(3*nSec+6) = -10*eps;
             else
                 Ntot = y(1+index);
