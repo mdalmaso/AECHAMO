@@ -1,8 +1,10 @@
-ajoja = 10;
+ajoja = 24;
 
-for i = [1,3,5,7,8,9,10]
+for i = [1:14,15, 16:24]
     chamb(i).plot('original')
+     chamb(i).mass_conserv_check
 end
+
 
 chamb(1).plot('dist')
 
