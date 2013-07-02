@@ -12,3 +12,8 @@ run_20130628T145150.mat: Cvap != vakio, massa säilyy.
 run_20130629T085050 on ajettu tiedostolla SOA_formation_28062013_nucl.m
 
 run_20130701T112621 sama kuin edellisen tiedoston chamb(1), nyt onnistuneesti.
+
+run_20130702T155202 sama kuin edellinen, mutta halkaisijat asetettu 'NonNegative'
+ja koagulaatio tapahtuu vain, kun kaikki halkaisijavektori on kasvava -> koagulaatio ei aiheuta NaN ja Inf.
+Tämä paljon nopeampi kuin edellinen.
+
