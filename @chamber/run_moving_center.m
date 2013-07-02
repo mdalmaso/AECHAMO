@@ -122,7 +122,7 @@ absTol(2*initials.sections+6:(3*initials.sections+5)) = initials.Dp_tol; % Parti
 
 % Apply ode45 options: the tolerance settings and the function 'events' as
 % Event-function.
-options = odeset('absTol',absTol,'Events',@events, 'NonNegative', 1:initials.sections+1); 
+options = odeset('absTol',absTol,'Events',@events, 'NonNegative', 1:initials.sections+1,'NonNegative', 2*initials.sections+6:3*initials.sections+5); 
 
 
 % Summary:
@@ -429,19 +429,23 @@ function dy = chamberODE(t,y)
     
     
     
-    % Make coagulation kernel. Different functions for coagulation and
-    % agglomeration.
-    kk=zeros(nSec,length(y((2*nSec+6):(3*nSec+5)))); % Preallocate
-    if(coagmode == 1) % coagmode == 1 => particles coagulate.
-        for i = 1:nSec,
-            kk(i,:) = obj.koag_kernel(y(2*nSec+5+i),y((2*nSec+6):(3*nSec+5)),rool,T).*1e6;
+    if(all(diff(y(2*nSec+6:3*nSec+5))>0))
+        CX = 1;
+        % Make coagulation kernel. Different functions for coagulation and
+        % agglomeration.
+        kk=zeros(nSec,length(y((2*nSec+6):(3*nSec+5)))); % Preallocate
+        if(coagmode == 1) % coagmode == 1 => particles coagulate.
+            for i = 1:nSec,
+                kk(i,:) = obj.koag_kernel(y(2*nSec+5+i),y((2*nSec+6):(3*nSec+5)),rool,T).*1e6;
+            end
+        else    % Else coagmode == 0 => particles agglomerate.
+            for i = 1:nSec,
+                kk(i,:) = obj.aggl_kernel(y(2*nSec+5+i),y((2*nSec+6):(3*nSec+5)),rool,T,Df,r0).*1e6;
+            end
         end
-    else    % Else coagmode == 0 => particles agglomerate.
-        for i = 1:nSec,
-            kk(i,:) = obj.aggl_kernel(y(2*nSec+5+i),y((2*nSec+6):(3*nSec+5)),rool,T,Df,r0).*1e6;
-        end
+    else
+        CX = 0;
     end
-    
     % Show the time evolution in Matlab command window:
     time = t
     
