@@ -10,14 +10,22 @@ alfa = 0.3;
 % initiate variables 
 count1 = 1;
 count2 = 1;
+
 Yend_real_save_90s = zeros(1,12);
 CSsave_90s = zeros(1,12);
+Vtot_end_save_90s = zeros(1,12);
+
 Yend_real_save_900s = zeros(1,10);
 CSsave_900s = zeros(1,10);
+Vtot_end_save_900s = zeros(1,10);
+
 h_CS = zeros(1,13);
 h2_CS =zeros(1,11);
+h_Vtot = zeros(1,13);
+h2_Vtot = zeros(1,11);
 
 for file = 1:3
+% data files and runs for calc
 if file == 1
     runs = [5:1:8, 17,18,19,20];
     load('K:\603_L\60304\Users\Poikkimäki\GitHub\AECHAMO\Results and scripts_mp\SOA formation\run_20130628T122218\run_20130628T122218.mat')
@@ -91,8 +99,9 @@ for i4 = 1:length(deltaP_mass)
     end    
 end
 
-%% calculate Yend_real(CSend) and loglog
+%% calculate Yend_real(CSend) and Yend_real(Vtot) loglog
 % file is current file, i is current run and tau is time place of Ymax
+% correct times tau for different runs and files
 if file == 1
     if i < 10
         tau = 81; % 0.5556days
@@ -105,7 +114,8 @@ elseif file == 3
     tau = 88; % 0.6042days
 end
 
-% what is loglog symbol (mark)
+% what is loglog symbol (mark) its different for runs and files and same
+% for diff gamma but same other values
 if file == 1
     if (i == 5) || (i == 7)
         mark = '.';        
@@ -138,66 +148,52 @@ elseif file == 3
     end
 end % mark
 
-% if gamma = 1/90s
-if (5<=i && i<=6) || (17<=i && i<=18)  
+% calc Yend and Vtot if gamma = 1/90s
+if (5<=i && i<=6) || (17<=i && i<=18)     
+    % Yend at right time and save every value to vector
     Yend_real_90s = Y(tau);
     Yend_real_save_90s(count1) = Yend_real_90s;
+    % same for CSend
     CSend_90s = CS(tau);  
-    CSsave_90s(count1) = CSend_90s; 
+    CSsave_90s(count1) = CSend_90s;     
+    % same for Vtot_end
+    Vtot_end_90s = Vtot(tau);
+    Vtot_end_save_90s(count1) = Vtot_end_90s;
+    
+    % loglog Yend(CSend)(one point each time)
     h8 = figure(8);
-    % loglog wall_sink = 1/90s
-    h_CS(count1) = loglog(CSend_90s, Yend_real_90s, mark);
-    handle1 = xlabel('CS_{end} (s^{-1})');
-    handle2 = ylabel('Y_{end}','rotation',90);    
+    h_CS(count1) = loglog(CSend_90s, Yend_real_90s, mark);      
     hold on;
-    count1 = count1 + 1;
-% if gamma = 1/900s
+    % loglog Yend(Vtot_end)(one point each time)
+    h10 = figure(10);
+    h_Vtot(count1) = loglog(Vtot_end_90s, Yend_real_90s, mark);      
+    hold on;
+    
+    count1 = count1 + 1;     
+    
+% calc Yend and Vtot if gamma = 1/900s
 elseif (7<=i && i<=8) || (19<=i && i<=20)
+    % Yend at right time and save every value to vector
     Yend_real_900s = Y(tau);
     Yend_real_save_900s(count2) = Yend_real_900s;
+    % same for CS
     CSend_900s = CS(tau);    
-    CSsave_900s(count2) = CSend_900s;
-    h9 = figure(9);
-    % loglog wall_sink = 1/900s
-    h2_CS(count2) = loglog(CSend_900s, Yend_real_900s, mark);
-    handle1 = xlabel('CS_{end} (s^{-1})');
-    handle2 = ylabel('Y_{end}','rotation',90);    
+    CSsave_900s(count2) = CSend_900s;  
+    % same for Vtot_end
+    Vtot_end_900s = Vtot(tau);
+    Vtot_end_save_900s(count2) = Vtot_end_900s;
+    
+    % loglog Yend(CSend) (one point each time)
+    h9 = figure(9);     
+    h2_CS(count2) = loglog(CSend_900s, Yend_real_900s, mark);       
     hold on;
+    % loglog Yend(Vtot_end)(one point each time)
+    h11 = figure(11);
+    h2_Vtot(count2) = loglog(Vtot_end_900s, Yend_real_900s, mark);      
+    hold on;
+    
     count2 = count2 + 1;
 end
-
-% what is legend NOT WORKING!!!
-% if file == 1
-%     if (i == 5) || (i == 7)        
-%         h = legend('test');
-%     elseif (i == 6) || (i == 8)
-%         h = legend('test2');
-%     elseif (i == 17) || (i == 19)
-%         h = legend('test3');
-%     elseif (i == 18) || (i == 20)  
-%         h = legend('test4');
-%     end
-% elseif file == 2
-%     if (i == 5) || (i == 7)
-%         h = legend('test5');
-%     elseif (i == 6) || (i == 8)
-%         h = legend('test6');
-%     elseif (i == 17) || (i == 19)
-%         h = legend('test7');
-%     elseif (i == 18) || (i == 20)  
-%         h = legend('test8');
-%     end 
-% elseif file == 3
-%     if (i == 5) || (i == 7)
-%         h = legend('test9');
-%     elseif (i == 6) || (i == 8)
-%         h = legend('test10');
-%     elseif i == 17
-%         h = legend('test11');
-%     elseif i == 18  
-%         h = legend('test12');
-%     end
-% end % legend
 
 %% loglog
 % % loglog deltaMoa and deltaP
@@ -263,32 +259,76 @@ end % file
 
 %% edit figures Yend_real(CSend)
 
-% add theoretical loglog
+% add theoretical loglog to fig8
 figure(8);
-title('\alpha = 0.3 and \gamma = 1/90s');
 hold on;
-CSarea_90s = 1e-5:max(CSsave_90s)/100:max(CSsave_90s);
+CSarea_90s = 1e-5:max(CSsave_90s)/100:max(CSsave_90s)*1.1;
 Yend_kaava_90s = alfa./(1+(1/90)./CSarea_90s);
 h_CS(count1) = loglog(CSarea_90s, Yend_kaava_90s, 'r');
 % fit data
-fitted_90s = fit_formula_mp(CSsave_90s',Yend_real_save_90s',max(CSsave_90s));
+fitted_90s = fit_formula_mp(CSsave_90s',Yend_real_save_90s',max(CSsave_90s),0);
 % edit legend 
 hleg1 = legend([h_CS,(fitted_90s.pict_fit)'],'1','2','3','4','5','6','7','8','9','10','11','12','\alpha /[1+( \gamma /CSend)]',fitted_90s.leg_name1,fitted_90s.leg_name2);
 set(hleg1,'Location','EastOutside')
+% add labels
+xhandle90 = xlabel('CS_{end} (s^{-1})');
+yhandle90 = ylabel('Y_{end}','rotation',90); 
+% add title
+title('\alpha = 0.3 and \gamma = 1/90s');
 
-% add theoretical loglog
+% add theoretical loglog to fig9
 figure(9);
-title('\alpha = 0.3 and \gamma = 1/900s');
 hold on;
-CSarea_900s = 1e-5:max(CSsave_900s)/100:max(CSsave_900s);
+CSarea_900s = 1e-5:max(CSsave_900s)/100:max(CSsave_900s)*1.1;
 Yend_kaava_900s = alfa./(1+(1/900)./CSarea_900s);
 h2_CS(count2) = loglog(CSarea_900s, Yend_kaava_900s, 'r');
 % fit data
-fitted_900s = fit_formula_mp(CSsave_900s',Yend_real_save_900s',max(CSsave_900s));
+fitted_900s = fit_formula_mp(CSsave_900s',Yend_real_save_900s',max(CSsave_900s),0);
 % edit legend 
 hleg2 = legend([h2_CS,(fitted_90s.pict_fit)'],'1','2','3','4','5','6','7','8','9','10','\alpha /[1+( \gamma /CSend)]',fitted_900s.leg_name1,fitted_900s.leg_name2);
 set(hleg2,'Location','EastOutside')
+% add labels
+xhandle900 = xlabel('CS_{end} (s^{-1})');
+yhandle900 = ylabel('Y_{end}','rotation',90); 
+% add title
+title('\alpha = 0.3 and \gamma = 1/900s');
 
+% add theoretical loglog to fig10
+figure(10);
+hold on;
+Vtot_area_90s = 1e-22:max(Vtot_end_save_90s)/100:max(Vtot_end_save_90s)*1.1;
+Yend_kaava_Vtot_90s = alfa./(1+(1/90)./((roo.*1e6.*Vtot_area_90s).^0.63));
+h_Vtot(count1) = loglog(Vtot_area_90s, Yend_kaava_Vtot_90s, 'r');
+% fit data
+fitted_Vtot_90s = fit_formula_mp(Vtot_end_save_90s',Yend_real_save_90s',max(Vtot_end_save_90s),1);
+% edit legend 
+hleg3 = legend([h_Vtot,(fitted_Vtot_90s.pict_fit)'],'1','2','3','4','5','6','7','8','9','10','11','12','\alpha /[1+( \gamma / M^{0.63})]',fitted_Vtot_90s.leg_name1,fitted_Vtot_90s.leg_name2);
+set(hleg3,'Location','EastOutside')
+% add labels
+xhandle90_V = xlabel('Vtot_{end} (m^{3})');
+yhandle90_V = ylabel('Y_{end}','rotation',90); 
+% add title
+title('\alpha = 0.3 and \gamma = 1/90s');
 
-saveas(h8,'Yend(CSend)_90s.fig')
-saveas(h9,'Yend(CSend)_900s.fig')
+% add theoretical loglog to fig11
+figure(11);
+hold on;
+Vtot_area_900s = 1e-22:max(Vtot_end_save_900s)/100:max(Vtot_end_save_900s)*1.1;
+Yend_kaava_Vtot_900s = alfa./(1+(1/900)./((roo.*1e6.*Vtot_area_900s).^0.63));
+h2_Vtot(count2) = loglog(Vtot_area_900s, Yend_kaava_Vtot_900s, 'r');
+% fit data
+fitted_Vtot_900s = fit_formula_mp(Vtot_end_save_900s',Yend_real_save_900s',max(Vtot_end_save_900s),1);
+% edit legend 
+hleg4 = legend([h2_Vtot,(fitted_Vtot_900s.pict_fit)'],'1','2','3','4','5','6','7','8','9','10','\alpha /[1+( \gamma / M^{0.63})]',fitted_Vtot_900s.leg_name1,fitted_Vtot_900s.leg_name2);
+set(hleg4,'Location','EastOutside')
+% add labels
+xhandle900_V = xlabel('Vtot_{end} (m^{3})');
+yhandle900_V = ylabel('Y_{end}','rotation',90); 
+% add title
+title('\alpha = 0.3 and \gamma = 1/900s');
+
+%% save pictures
+% saveas(h8,'Yend(CSend)_90s.fig')
+% saveas(h9,'Yend(CSend)_900s.fig')
+% saveas(h10,'Yend(Vtotend)_90s.fig')
+% saveas(h11,'Yend(Vtotend)_900s.fig')
