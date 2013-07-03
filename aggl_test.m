@@ -1,6 +1,6 @@
 # Agglomeration test
 
-tvect=0:10:8000;
+tvect=0:10:10000;
 
 fixed_sections = 1;
 sedi_on = 0;
@@ -21,7 +21,7 @@ r0 = 3e-10;
 particle_dens = 3.4;
 
 mu=[3e-10];
-sigma = [1.665];
+sigma = [1.67];
 N = 5e8;
 
 #
