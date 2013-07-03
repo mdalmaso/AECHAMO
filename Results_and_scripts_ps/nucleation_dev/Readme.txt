@@ -17,3 +17,11 @@ run_20130702T155202 sama kuin edellinen, mutta halkaisijat asetettu 'NonNegative
 ja koagulaatio tapahtuu vain, kun kaikki halkaisijavektori on kasvava -> koagulaatio ei aiheuta NaN ja Inf.
 Tämä paljon nopeampi kuin edellinen.
 
+run_20130703T085158 on ajettu samoilla alkuarvoilla kuin
+\Results and scripts_mp\Test and bug fixing\run_20130607T181225.mat, mutta
+N=0. Versio on nyt muuttunut siten, että koagulaatio tapahtuu vain silloin,
+kun halkaisijavektori on kasvava.
+
+temp-tiedostot: Ajettu tiedostolla SOA_formation_28062013_nucl.m, josta on
+poistettu pienempi höyrynlähde. Tässä siis 7 ensimmäistä ajoa, joissa on suuri
+höyrynlähde. Kaikki paitsi 6 onnistuneita.
