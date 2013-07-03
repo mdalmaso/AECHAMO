@@ -1,6 +1,6 @@
 ajoja = 24;
 
-for i = [1:14,15, 16:24]
+for i = [1:24]
     chamb(i).plot('original')
      chamb(i).mass_conserv_check
 end
@@ -13,7 +13,7 @@ for i = 1:ajoja
     CS(1:end,i) = CS_tot(chamb(i).output_data.distr);
 end
 
-%Vtot end
+%Ntot end
 sect = [10, 20, 30, 40, 60, 90];
 for i = 1:ajoja
    Ntot = chamb(i).output_data.Ntot(end);
