@@ -7,6 +7,11 @@ function [ dy ] = add_nucleation(obj,dy,y,t, part_source)
 % (c) Pauli Simonen 2013
 % Version history:
 % 2013-06-10    0.1.0
+% 2013-07-03    0.1.1 Added cell to y and dy to indicate if particles
+%                     nucleate to a section that has no particles and which
+%                     diameter is different to the diameter of nucleating
+%                     particles. If this new cell goes below zero, ode is
+%                     stopped and the diameter of the section is changed.
 % 
 % TODO:
 % -Get the part_source from obj

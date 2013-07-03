@@ -22,11 +22,17 @@ function run_moving_center(obj)
 %                     efficiency and makes also the distribution look more
 %                     natural.
 % 2013-06-20    0.1.5 Added condensation sink to chamber walls. 
+% 2013-07-03    0.1.6 Added a new cell to y to indicate if particles
+%                     nucleate to a section that has no particles and which
+%                     diameter is different to the diameter of nucleating
+%                     particles. If this new cell goes below zero, ode is
+%                     stopped and the diameter of the section is changed.
 
 % TODO:
 % -Make obj.sections stand only for number of sections. Create a new
 %  variable for user-defined section spacing.
 % -Constant particle sources.
+% -Remove nested functions.
 
 initials=obj.initials;
 
@@ -80,13 +86,7 @@ if(initials.part_source_is_vect)
             ind = ind+1;
         end
         initials.part_source(:,4,i) = initials.part_source(1,3,i);
-%         if(ind > 1)
-%             initials.part_source(:,3,i) = ind-1;
-%         else
-            initials.part_source(:,3,i) = ind;
-%         end
-        % Muuta Dp_variable tässä
-        
+        initials.part_source(:,3,i) = ind;        
     end
     clear ind;
 end
@@ -196,9 +196,6 @@ while(t_span(1) < tvect(end))
         difference = [2;difference];
         ie=ie(difference ~= 1)
         
-%         display('ie:ssa useampi alkio');
-%         pause;
-%         ie=ie(1);   % Take only the first index.
         y0=ye(1,:); % And the first row of ye as well.
         te=te(1);
         
@@ -216,15 +213,6 @@ while(t_span(1) < tvect(end))
         nt = length(t);
     end
     
-%     if(~isempty(ye))
-%         difference = Dplims-ye(2*nSec+6:3*nSec+4);
-%         ie = [ie;(find(diff(difference) < 0))'];
-%         ie=sort(ie);
-%         difference = diff(ie);
-%         difference = [2;difference];
-%         ie=ie(difference ~= 1);
-%         clear difference;   
-%     end
     % Set the initial step of ode to one second, so the first step of
     % solver after the event will not be too big.
     options = odeset(options, 'InitialStep', 1);
@@ -397,6 +385,7 @@ function dy = chamberODE(t,y)
 
 
     CX     = initials.coag_on; % Coagulation switch.
+    coag_possible = CX;
     
     % Get the coagulation mode (coagulation or agglomeration).
     % 1 = coagulation
@@ -405,6 +394,8 @@ function dy = chamberODE(t,y)
     
     NA = 6.022e23; % Avogadro constant
     
+    % If dilu_coeff is defined as vector, interpolate it to find the value of
+    % dilu_coeff for the current t.
     if initials.dilu_vect_on, 
         Dilu = interp1(Dilu(:,1),Dilu(:,2),t,'linear',0);
     end
@@ -418,20 +409,12 @@ function dy = chamberODE(t,y)
     % Nucleation:
     dy = obj.add_nucleation(dy, y,t, part_source);
     
-%     if(initials.part_source_is_vect)
-%         for i=1:length(part_source(1,1,:))
-%             part_source_temp = interp1(part_source(:,1,i), part_source(:,2:3,i), t,'linear',0);
-%             index = part_source_temp(2);
-%             dy(1+index) = dy(1+index)+part_source_temp(1);
-%         end
-% %     else % Korjaa: index yms, part_source on aina vektori tai nolla
-% %         dy(1+index) = dy(1+index)+part_source(1);
-%     end
-    
-    
-    
+    % Calculation of coagulation kernels:
     if(all(diff(y(2*nSec+6:3*nSec+5))>0))
-        CX = 1;
+        % Calculate the coagulation kernels only if the diameter vector is
+        % increasing. In this case it is possible to calculate the
+        % coagulation, so set coag_possible to 1.
+        coag_possible = 1;
         % Make coagulation kernel. Different functions for coagulation and
         % agglomeration.
         kk=zeros(nSec,length(y((2*nSec+6):(3*nSec+5)))); % Preallocate
@@ -445,8 +428,11 @@ function dy = chamberODE(t,y)
             end
         end
     else
-        CX = 0;
+        % If diameter vector is not increasing, coagulation is not possible
+        % (because coagulationMatrix() will return NaN and Inf).
+        coag_possible = 0;
     end
+        
     % Show the time evolution in Matlab command window:
     time = t
     
@@ -484,40 +470,27 @@ function dy = chamberODE(t,y)
         end
         
         % coagulation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
-        if CX,    
-        % calculate a coagulation matrix
-        % this tells how to partition the particles 
-        cM = obj.coagulationMatrix(y((2*nSec+6):(3*nSec+5)),i);
-        for j = 1:i,
-            if i == j
-                dy(j+1) = dy(j+1)-y(i+1).*y(j+1).*kk(i,j); % loss             
-                dy(2:(nSec+1)) = dy(2:(nSec+1))+cM(j,:)'.*0.5.*y(i+1).*y(j+1).*kk(i,j); % gain
-            else
-                dy(i+1) = dy(i+1)-y(i+1).*y(j+1).*kk(i,j); %loss
-                dy(j+1) = dy(j+1)-y(i+1).*y(j+1).*kk(i,j); %loss           
-                dy(2:(nSec+1)) = dy(2:(nSec+1))+cM(j,:)'.*y(i+1).*y(j+1).*kk(i,j); % gain
+        if (CX && coag_possible)    
+            % calculate a coagulation matrix
+            % this tells how to partition the particles 
+            cM = obj.coagulationMatrix(y((2*nSec+6):(3*nSec+5)),i);
+            for j = 1:i,
+                if i == j
+                    dy(j+1) = dy(j+1)-y(i+1).*y(j+1).*kk(i,j); % loss             
+                    dy(2:(nSec+1)) = dy(2:(nSec+1))+cM(j,:)'.*0.5.*y(i+1).*y(j+1).*kk(i,j); % gain
+                else
+                    dy(i+1) = dy(i+1)-y(i+1).*y(j+1).*kk(i,j); %loss
+                    dy(j+1) = dy(j+1)-y(i+1).*y(j+1).*kk(i,j); %loss           
+                    dy(2:(nSec+1)) = dy(2:(nSec+1))+cM(j,:)'.*y(i+1).*y(j+1).*kk(i,j); % gain
+                end
             end
-        end
         end %if CX
         % end coagulation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         % condensation %%%%
-%         if(y(i+1) > 0)
         if(y(i+1) ~= 0)
             dy = obj.add_condensation(dy, y, initials, i);
         end
-
-%         
-%         Kn = (2.*lambda)./y(2*nSec+4+i); % Knudsen number
-%         betam = (Kn+1)./((0.377.*Kn)+1+(4/(3.*alfa)).*(Kn.^2)+(4/(3.*alfa)).*Kn);
-%     
-%         % I is the flux of molecules to the particle phase    
-%         I = 2.*pi.*max([y(2*nSec+4+i) 0]).*1e2.*diffu.*(y(1)-Csat).*betam; %1/s
-%         
-%         % Move the variable diameters by condensation.
-%         dy(2*nSec+4+i) = dy(2*nSec+4+i)+(2.*mv.*I)./(pi.*rool.*y(2*nSec+4+i).^2.*NA.*1e6); % particle diameter (m/s)
-%         dy(1) = dy(1) - y(i+1).*I;
-        % end condensation %%%%
         
         % wall losses and sedimentation according to T. Anttila model...fitted
         % by M. Dal Maso; only usable for SAPPHIR chamber!!
@@ -545,7 +518,6 @@ function[value,isterminal,direction] = events(t,y)
     Dps = y(2*nSec+6:3*nSec+4);
     limits = Dplims';
     
-%     value = limits-Dps+eps(Dps); % Run ode45 as long as Dp(i) <= Dplim(i)
     value = limits-Dps; % Run ode45 as long as Dp(i) < Dplim(i). When value <= 0, ode45 is terminated.
     
     % Add y(3*nSec+6) to the end of value vector. This value indicates if
