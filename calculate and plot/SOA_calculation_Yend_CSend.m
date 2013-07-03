@@ -80,7 +80,7 @@ end
 Yend = Yend';
 error_of_Yend = (Yend-Y)./Y;
 
-%% calculate and plot fraction of ELVOC forming aerosol = Y and fraction of ELVOC lost to wall Mvwall/deltaP
+%% calculate and loglog fraction of ELVOC forming aerosol = Y and fraction of ELVOC lost to wall Mvwall/deltaP
 Wall_loss = zeros(1,length(deltaP_mass));
 for i4 = 1:length(deltaP_mass)    
     % if deltaP_mass = 0, Y = inf or NaN
@@ -91,7 +91,7 @@ for i4 = 1:length(deltaP_mass)
     end    
 end
 
-%% calculate Yend_real(CSend) and plot
+%% calculate Yend_real(CSend) and loglog
 % file is current file, i is current run and tau is time place of Ymax
 if file == 1
     if i < 10
@@ -105,7 +105,7 @@ elseif file == 3
     tau = 88; % 0.6042days
 end
 
-% what is plot symbol (mark)
+% what is loglog symbol (mark)
 if file == 1
     if (i == 5) || (i == 7)
         mark = '.';        
@@ -145,8 +145,8 @@ if (5<=i && i<=6) || (17<=i && i<=18)
     CSend_90s = CS(tau);  
     CSsave_90s(count1) = CSend_90s; 
     h8 = figure(8);
-    % plot wall_sink = 1/90s
-    h_CS(count1) = plot(CSend_90s, Yend_real_90s, mark);
+    % loglog wall_sink = 1/90s
+    h_CS(count1) = loglog(CSend_90s, Yend_real_90s, mark);
     handle1 = xlabel('CS_{end} (s^{-1})');
     handle2 = ylabel('Y_{end}','rotation',90);    
     hold on;
@@ -158,8 +158,8 @@ elseif (7<=i && i<=8) || (19<=i && i<=20)
     CSend_900s = CS(tau);    
     CSsave_900s(count2) = CSend_900s;
     h9 = figure(9);
-    % plot wall_sink = 1/900s
-    h2_CS(count2) = plot(CSend_900s, Yend_real_900s, mark);
+    % loglog wall_sink = 1/900s
+    h2_CS(count2) = loglog(CSend_900s, Yend_real_900s, mark);
     handle1 = xlabel('CS_{end} (s^{-1})');
     handle2 = ylabel('Y_{end}','rotation',90);    
     hold on;
@@ -199,47 +199,47 @@ end
 %     end
 % end % legend
 
-%% plot
-% % plot deltaMoa and deltaP
+%% loglog
+% % loglog deltaMoa and deltaP
 % h1=figure(2);
 % hold on;
-% plot(tim/(24*3600),deltaMoa,'b*')
+% loglog(tim/(24*3600),deltaMoa,'b*')
 % %hold on;
-% %plot(tim,deltaMoa2,'m*')
+% %loglog(tim,deltaMoa2,'m*')
 % % hold on
-% % plot(tim,deltaP,'r*')
+% % loglog(tim,deltaP,'r*')
 % hold on;
-% plot(tim/(24*3600),deltaP_mass,'r')
+% loglog(tim/(24*3600),deltaP_mass,'r')
 % 
-% % plot Y(t) and Yend
+% % loglog Y(t) and Yend
 % h2=figure(3);
 % hold on;
-% plot(tim/(24*3600), Y, 'c*')
+% loglog(tim/(24*3600), Y, 'c*')
 % hold on;
-% plot(tim/(24*3600), Yend, 'r.')
+% loglog(tim/(24*3600), Yend, 'r.')
 % 
-% % plot Y(Moa)
+% % loglog Y(Moa)
 % h3=figure(4);
 % hold on;
-% plot(deltaMoa/(24*3600),Y,'m*')
+% loglog(deltaMoa/(24*3600),Y,'m*')
 % 
 % % h4=figure(4);
 % % hold on;
-% % plot(tim/(24*3600),chamb(i).output_data.Mdilu,'c*')
+% % loglog(tim/(24*3600),chamb(i).output_data.Mdilu,'c*')
 % 
 % h5=figure(5);
-% plot(tim/(24*3600), Y, 'g*')
+% loglog(tim/(24*3600), Y, 'g*')
 % hold on;
-% plot(tim/(24*3600), Wall_loss, 'r*')
+% loglog(tim/(24*3600), Wall_loss, 'r*')
 % 
 % h6=figure(6);
-% plot(tim/(24*3600), Y/alfa, 'g*')
+% loglog(tim/(24*3600), Y/alfa, 'g*')
 % hold on;
-% plot(tim/(24*3600), Wall_loss/alfa, 'r*')
+% loglog(tim/(24*3600), Wall_loss/alfa, 'r*')
 % 
-% % plot (Yend-Y)/Y
+% % loglog (Yend-Y)/Y
 % h7 = figure(7);
-% plot(tim/(24*3600),error_of_Yend,'*')
+% loglog(tim/(24*3600),error_of_Yend,'*')
 
 %% create folder and save pictures into it
 % % make directory
@@ -263,30 +263,30 @@ end % file
 
 %% edit figures Yend_real(CSend)
 
-% add theoretical plot
+% add theoretical loglog
 figure(8);
 title('\alpha = 0.3 and \gamma = 1/90s');
 hold on;
-CSarea_90s = 0:max(CSsave_90s)/100:max(CSsave_90s);
+CSarea_90s = 1e-5:max(CSsave_90s)/100:max(CSsave_90s);
 Yend_kaava_90s = alfa./(1+(1/90)./CSarea_90s);
-h_CS(count1) = plot(CSarea_90s, Yend_kaava_90s, 'r');
+h_CS(count1) = loglog(CSarea_90s, Yend_kaava_90s, 'r');
 % fit data
 fitted_90s = fit_formula_mp(CSsave_90s',Yend_real_save_90s',max(CSsave_90s));
 % edit legend 
 hleg1 = legend([h_CS,(fitted_90s.pict_fit)'],'1','2','3','4','5','6','7','8','9','10','11','12','\alpha /[1+( \gamma /CSend)]',fitted_90s.leg_name1,fitted_90s.leg_name2);
 set(hleg1,'Location','EastOutside')
 
-% add theoretical plot
+% add theoretical loglog
 figure(9);
 title('\alpha = 0.3 and \gamma = 1/900s');
 hold on;
-CSarea_900s = 0:max(CSsave_900s)/100:max(CSsave_900s);
+CSarea_900s = 1e-5:max(CSsave_900s)/100:max(CSsave_900s);
 Yend_kaava_900s = alfa./(1+(1/900)./CSarea_900s);
-h2_CS(count2) = plot(CSarea_900s, Yend_kaava_900s, 'r');
+h2_CS(count2) = loglog(CSarea_900s, Yend_kaava_900s, 'r');
 % fit data
 fitted_900s = fit_formula_mp(CSsave_900s',Yend_real_save_900s',max(CSsave_900s));
 % edit legend 
-hleg2 = legend(h2_CS,'1','2','3','4','5','6','7','8','9','10','\alpha /[1+( \gamma /CSend)]');
+hleg2 = legend([h2_CS,(fitted_90s.pict_fit)'],'1','2','3','4','5','6','7','8','9','10','\alpha /[1+( \gamma /CSend)]',fitted_900s.leg_name1,fitted_900s.leg_name2);
 set(hleg2,'Location','EastOutside')
 
 

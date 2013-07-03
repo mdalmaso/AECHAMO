@@ -14,7 +14,7 @@ custom2 = '0.3.*(1/(1+b./x))';
 f2 = fittype(custom2 ,'options',s2)
 
 
-x0 = 0:0.001:(xmax*1.1);
+x0 = 1e-5:0.001:(xmax*1.1);
 
 
 
