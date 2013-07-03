@@ -115,6 +115,7 @@ y0 = [initials.Cvap0 N Dp AE_Wall AE_dilu Vap_dilu Vap_Wall Dp_variable eps];
 % Error tolerance options for ode45:
 absTol = ones(size(y0)).*1e-6; % Preallocate the tolerance vector.
 absTol(1) = initials.Cvap_tol; % Vapor concentration tolerance
+absTol(1) = 2.6e4;
 absTol(2:initials.sections+1) = initials.N_tol; % Particle concentration tolerance
 absTol(initials.sections+2:(2*initials.sections+1)) = initials.Dp_tol; % Particle diameter tolerance
 absTol(2*initials.sections+6:(3*initials.sections+5)) = initials.Dp_tol; % Particle diameter tolerance
@@ -123,7 +124,7 @@ absTol(2*initials.sections+6:(3*initials.sections+5)) = initials.Dp_tol; % Parti
 % Apply ode45 options: the tolerance settings and the function 'events' as
 % Event-function.
 options = odeset('absTol',absTol,'Events',@events, 'NonNegative', 1:initials.sections+1,'NonNegative', 2*initials.sections+6:3*initials.sections+5); 
-
+options = odeset(options, 'relTol',10);
 
 % Summary:
 % concentrations: Y(2:nSec+1)

@@ -1,12 +1,14 @@
+% 10d test, SOA formation
+
 #
 fixed_sections = 1;
 sedi_on = 0;
 coag_on = 1;
 dilu_on = 1;
-dilu_coeff = [0];
+dilu_coeff = [1/(3*24*3600)];
 
 vap_wallsink_on = 1;
-vap_wallsink  = [0];
+vap_wallsink  = [1/90];
 
 Dp_min = -9;
 Dp_max = -5;
