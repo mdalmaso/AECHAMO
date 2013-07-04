@@ -30,16 +30,16 @@ if mass_on == 0
     out.leg_name1 = ['fit ' custom ' with a = ' a_string ' ja b = ' b_string];
     out.leg_name2 = ['fit ' custom2 ' with b = ' b2_string];
 
-% if x = Mass
+% if x = Vtot
 elseif mass_on == 1
     % a vapaa
     s=fitoptions('Method','NonLinearLeastSquares','Startpoint',[0.1  100 ],'upper',[0.40 1e3],'lower',[0.03 10]);
-    custom = 'a*(1/(1+b./x^0.63))';
+    custom = 'a*(1/(1+b./(1e6.*1.84.*1e6.*x)^0.63))';
     f = fittype(custom,'options',s);
 
     % a kiinnitetty a = 0.3;
     s2=fitoptions('Method','NonLinearLeastSquares','Startpoint', 100 ,'upper',1e3,'lower',10);
-    custom2 = '0.3.*(1/(1+b./x^0.63))';
+    custom2 = '0.3.*(1/(1+b./(1e6.*1.84.*1e6.*x)^0.63))';
     f2 = fittype(custom2 ,'options',s2);
 
     log_xmax = log10(xmax*1.1);

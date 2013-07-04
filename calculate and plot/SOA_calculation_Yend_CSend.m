@@ -297,7 +297,7 @@ title('\alpha = 0.3 and \gamma = 1/900s');
 figure(10);
 hold on;
 Vtot_area_90s = 1e-22:max(Vtot_end_save_90s)/100:max(Vtot_end_save_90s)*1.1;
-Yend_kaava_Vtot_90s = alfa./(1+(1/90)./((roo.*1e6.*Vtot_area_90s).^0.63));
+Yend_kaava_Vtot_90s = alfa./(1+(1/90)./((1e6.*roo.*1e6.*Vtot_area_90s).^0.63)); % mass in kg
 h_Vtot(count1) = loglog(Vtot_area_90s, Yend_kaava_Vtot_90s, 'r');
 % fit data
 fitted_Vtot_90s = fit_formula_mp(Vtot_end_save_90s',Yend_real_save_90s',max(Vtot_end_save_90s),1);
@@ -314,7 +314,7 @@ title('\alpha = 0.3 and \gamma = 1/90s');
 figure(11);
 hold on;
 Vtot_area_900s = 1e-22:max(Vtot_end_save_900s)/100:max(Vtot_end_save_900s)*1.1;
-Yend_kaava_Vtot_900s = alfa./(1+(1/900)./((roo.*1e6.*Vtot_area_900s).^0.63));
+Yend_kaava_Vtot_900s = alfa./(1+(1/900)./((1e6.*roo.*1e6.*Vtot_area_900s).^0.63)); %µg
 h2_Vtot(count2) = loglog(Vtot_area_900s, Yend_kaava_Vtot_900s, 'r');
 % fit data
 fitted_Vtot_900s = fit_formula_mp(Vtot_end_save_900s',Yend_real_save_900s',max(Vtot_end_save_900s),1);
@@ -328,7 +328,7 @@ yhandle900_V = ylabel('Y_{end}','rotation',90);
 title('\alpha = 0.3 and \gamma = 1/900s');
 
 %% save pictures
-% saveas(h8,'Yend(CSend)_90s.fig')
-% saveas(h9,'Yend(CSend)_900s.fig')
-% saveas(h10,'Yend(Vtotend)_90s.fig')
-% saveas(h11,'Yend(Vtotend)_900s.fig')
+saveas(h8,'Yend(CSend)_90s.fig')
+saveas(h9,'Yend(CSend)_900s.fig')
+saveas(h10,'Yend(Vtotend)_90s.fig')
+saveas(h11,'Yend(Vtotend)_900s.fig')
