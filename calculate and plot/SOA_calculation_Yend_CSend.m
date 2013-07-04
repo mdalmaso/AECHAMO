@@ -39,11 +39,11 @@ end
 %% i is index of run
 for i = runs    
 %% calculate deltaMoa
-Vtot = chamb(i).output_data.Vtot; % m3
+Vtot = chamb(i).output_data.Vtot; % m3/cm3
 tim = chamb(i).output_data.tim;
 deltaVtot = Vtot - Vtot(1);
 %deltaMoa2(i2) = chamb(i).output_data.Mtot(i2) - chamb(i).output_data.Mtot(1); 
-Moa = roo.*1e6*Vtot;
+Moa = roo.*1e6*Vtot; % g/cm3
 deltaMoa = roo*1e6*deltaVtot + chamb(i).output_data.Mdilu; % syntynyt aerosoli g/cm3 ilmaa 
 
 %% calculate deltaP
@@ -169,6 +169,28 @@ if (5<=i && i<=6) || (17<=i && i<=18)
     h_Vtot(count1) = loglog(Vtot_end_90s, Yend_real_90s, mark);      
     hold on;
     
+    % plot CS
+    h12=figure(12);
+    plot(tim(1:145),CS(1:145),mark);
+    handle1 = xlabel('time (s)');
+    set(handle1,'Fontsize',9,'Fontname','Computermodern')
+    handle2 = ylabel('CS (s^{-1})','rotation',90);
+    set(handle2,'Fontsize',9,'Fontname','Computermodern')
+    hold on;
+    % add title
+    title('\alpha = 0.3 and \gamma = 1/90s');
+    
+    % plot Moa
+    h14=figure(14);
+    plot(tim(1:145),Moa(1:145),mark);
+    handle1 = xlabel('time (s)');
+    set(handle1,'Fontsize',9,'Fontname','Computermodern')
+    handle2 = ylabel('Moa (gcm^{-3})','rotation',90);
+    set(handle2,'Fontsize',9,'Fontname','Computermodern')
+    hold on;
+    % add title
+    title('\alpha = 0.3 and \gamma = 1/90s');
+    
     count1 = count1 + 1;     
     
 % calc Yend and Vtot if gamma = 1/900s
@@ -192,6 +214,28 @@ elseif (7<=i && i<=8) || (19<=i && i<=20)
     h2_Vtot(count2) = loglog(Vtot_end_900s, Yend_real_900s, mark);      
     hold on;
     
+    % plot CS
+    h13=figure(13);
+    plot(tim(1:145),CS(1:145),mark);
+    handle1 = xlabel('time (s)');
+    set(handle1,'Fontsize',9,'Fontname','Computermodern')
+    handle2 = ylabel('CS (s^{-1})','rotation',90);
+    set(handle2,'Fontsize',9,'Fontname','Computermodern')
+    hold on;
+    % add title
+    title('\alpha = 0.3 and \gamma = 1/900s');
+    
+    % plot Moa
+    h15=figure(15);
+    plot(tim(1:145),Moa(1:145),mark);
+    handle1 = xlabel('time (s)');
+    set(handle1,'Fontsize',9,'Fontname','Computermodern')
+    handle2 = ylabel('Moa (gcm^{-3})','rotation',90);
+    set(handle2,'Fontsize',9,'Fontname','Computermodern')
+    hold on;
+    % add title
+    title('\alpha = 0.3 and \gamma = 1/900s');
+
     count2 = count2 + 1;
 end
 
@@ -258,7 +302,7 @@ end % i
 end % file
 
 %% edit figures Yend_real(CSend)
-
+Loc = 'SouthEast';
 % add theoretical loglog to fig8
 figure(8);
 hold on;
@@ -269,7 +313,7 @@ h_CS(count1) = loglog(CSarea_90s, Yend_kaava_90s, 'r');
 fitted_90s = fit_formula_mp(CSsave_90s',Yend_real_save_90s',max(CSsave_90s),0);
 % edit legend 
 hleg1 = legend([h_CS,(fitted_90s.pict_fit)'],'1','2','3','4','5','6','7','8','9','10','11','12','\alpha /[1+( \gamma /CSend)]',fitted_90s.leg_name1,fitted_90s.leg_name2);
-set(hleg1,'Location','EastOutside')
+set(hleg1,'Location',Loc)
 % add labels
 xhandle90 = xlabel('CS_{end} (s^{-1})');
 yhandle90 = ylabel('Y_{end}','rotation',90); 
@@ -286,7 +330,7 @@ h2_CS(count2) = loglog(CSarea_900s, Yend_kaava_900s, 'r');
 fitted_900s = fit_formula_mp(CSsave_900s',Yend_real_save_900s',max(CSsave_900s),0);
 % edit legend 
 hleg2 = legend([h2_CS,(fitted_90s.pict_fit)'],'1','2','3','4','5','6','7','8','9','10','\alpha /[1+( \gamma /CSend)]',fitted_900s.leg_name1,fitted_900s.leg_name2);
-set(hleg2,'Location','EastOutside')
+set(hleg2,'Location',Loc)
 % add labels
 xhandle900 = xlabel('CS_{end} (s^{-1})');
 yhandle900 = ylabel('Y_{end}','rotation',90); 
@@ -303,7 +347,7 @@ h_Vtot(count1) = loglog(Vtot_area_90s, Yend_kaava_Vtot_90s, 'r');
 fitted_Vtot_90s = fit_formula_mp(Vtot_end_save_90s',Yend_real_save_90s',max(Vtot_end_save_90s),1);
 % edit legend 
 hleg3 = legend([h_Vtot,(fitted_Vtot_90s.pict_fit)'],'1','2','3','4','5','6','7','8','9','10','11','12','\alpha /[1+( \gamma / M^{0.63})]',fitted_Vtot_90s.leg_name1,fitted_Vtot_90s.leg_name2);
-set(hleg3,'Location','EastOutside')
+set(hleg3,'Location',Loc)
 % add labels
 xhandle90_V = xlabel('Vtot_{end} (m^{3})');
 yhandle90_V = ylabel('Y_{end}','rotation',90); 
@@ -314,13 +358,13 @@ title('\alpha = 0.3 and \gamma = 1/90s');
 figure(11);
 hold on;
 Vtot_area_900s = 1e-22:max(Vtot_end_save_900s)/100:max(Vtot_end_save_900s)*1.1;
-Yend_kaava_Vtot_900s = alfa./(1+(1/900)./((1e6.*roo.*1e6.*Vtot_area_900s).^0.63)); %µg
+Yend_kaava_Vtot_900s = alfa./(1+(1/900)./((1e6.*roo.*1e6.*Vtot_area_900s).^0.63)); % mass in µg
 h2_Vtot(count2) = loglog(Vtot_area_900s, Yend_kaava_Vtot_900s, 'r');
 % fit data
 fitted_Vtot_900s = fit_formula_mp(Vtot_end_save_900s',Yend_real_save_900s',max(Vtot_end_save_900s),1);
 % edit legend 
 hleg4 = legend([h2_Vtot,(fitted_Vtot_900s.pict_fit)'],'1','2','3','4','5','6','7','8','9','10','\alpha /[1+( \gamma / M^{0.63})]',fitted_Vtot_900s.leg_name1,fitted_Vtot_900s.leg_name2);
-set(hleg4,'Location','EastOutside')
+set(hleg4,'Location',Loc)
 % add labels
 xhandle900_V = xlabel('Vtot_{end} (m^{3})');
 yhandle900_V = ylabel('Y_{end}','rotation',90); 
@@ -332,3 +376,7 @@ saveas(h8,'Yend(CSend)_90s.fig')
 saveas(h9,'Yend(CSend)_900s.fig')
 saveas(h10,'Yend(Vtotend)_90s.fig')
 saveas(h11,'Yend(Vtotend)_900s.fig')
+saveas(h12,'CS(t)_90s.fig')
+saveas(h13,'CS(t)_900s.fig')
+saveas(h14,'Moa(t)_90s.fig')
+saveas(h15,'Moa(t)_900s.fig')

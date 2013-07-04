@@ -27,19 +27,21 @@ if mass_on == 0
     a_string = num2str(out.coeff_r(1));
     b_string = num2str(out.coeff_r(2));
     b2_string = num2str(out.coeff_r2(1));
-    out.leg_name1 = ['fit ' custom ' with a = ' a_string ' ja b = ' b_string];
-    out.leg_name2 = ['fit ' custom2 ' with b = ' b2_string];
+    out.leg_name1 =  sprintf(['fit a = ' a_string ' ja \n b = ' b_string]);
+    out.leg_name2 =  sprintf(['fit b = ' b2_string]);
+%     out.leg_name1 = ['fit ' custom ' with a = ' a_string ' ja b = ' b_string];
+%     out.leg_name2 = ['fit ' custom2 ' with b = ' b2_string];
 
 % if x = Vtot
 elseif mass_on == 1
     % a vapaa
-    s=fitoptions('Method','NonLinearLeastSquares','Startpoint',[0.1  100 ],'upper',[0.40 1e3],'lower',[0.03 10]);
-    custom = 'a*(1/(1+b./(1e6.*1.84.*1e6.*x)^0.63))';
+    s=fitoptions('Method','NonLinearLeastSquares','Startpoint',[0.1  100 ],'upper',[1 1e3],'lower',[0.003 0.00000010]);
+    custom = 'a*(1/(1+b./(1e6.*1.84.*1e6.*x)^0.63))'; % mass in µg
     f = fittype(custom,'options',s);
 
     % a kiinnitetty a = 0.3;
-    s2=fitoptions('Method','NonLinearLeastSquares','Startpoint', 100 ,'upper',1e3,'lower',10);
-    custom2 = '0.3.*(1/(1+b./(1e6.*1.84.*1e6.*x)^0.63))';
+    s2=fitoptions('Method','NonLinearLeastSquares','Startpoint', 100 ,'upper',1e3,'lower',0.00000010);
+    custom2 = '0.3.*(1/(1+b./(1e6.*1.84.*1e6.*x)^0.63))'; % mass in µg
     f2 = fittype(custom2 ,'options',s2);
 
     log_xmax = log10(xmax*1.1);
@@ -56,8 +58,10 @@ elseif mass_on == 1
     a_string = num2str(out.coeff_r(1));
     b_string = num2str(out.coeff_r(2));
     b2_string = num2str(out.coeff_r2(1));
-    out.leg_name1 = ['fit ' custom ' with a = ' a_string ' ja b = ' b_string];
-    out.leg_name2 = ['fit ' custom2 ' with b = ' b2_string];
+    out.leg_name1 =  sprintf(['fit a = ' a_string ' ja \n b = ' b_string]);
+    out.leg_name2 =  sprintf(['fit b = ' b2_string]);
+%     out.leg_name1 =  sprintf(['fit ' custom ' with \n a = ' a_string ' ja b = ' b_string]);
+%     out.leg_name2 =  sprintf(['fit ' custom2 ' with \n b = ' b2_string]);
 
 end
 
