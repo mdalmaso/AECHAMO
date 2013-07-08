@@ -1,6 +1,6 @@
 ajoja = 24;
 
-for i = [1:24]
+for i = [1:32]
     chamb(i).plot('original')
      chamb(i).mass_conserv_check
 end

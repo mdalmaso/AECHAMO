@@ -4,7 +4,7 @@ NA = 6.022e23; % 1/mol
 alfa = 0.3;
 
 %% calculate and plot deltaMoa
-i = 18;
+i = 21;
 Vtot = chamb(i).output_data.Vtot; % m3
 tim = chamb(i).output_data.tim;
 
@@ -70,7 +70,7 @@ plot(deltaMoa/(24*3600),Y,'m*')
 
 %% calculate CS, Yend and plot Yend
 
-CS = CS_tot_Y( chamb(i).output_data.Y, chamb(i).initials.sections, tim );
+CS = CS_tot_Y( chamb(i).output_data.Y, chamb(i).initials.sections, tim,1 );
 
 if chamb(i).initials.vap_wallsink_on ~= 0
     Yend = alfa./(1+(chamb(i).initials.vap_wallsink)./CS);
