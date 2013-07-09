@@ -1,4 +1,4 @@
-function [ CS_tot, CS_prime ] = CS_tot_Y( Y,nSec, t )
+function [ CS_tot, CS_prime ] = CS_tot_Y( Y,nSec, t, plot_on )
 % Calculates CS vector from Y matrix, sectionnumber and time vector for each time-step 
 % and plots CS(t)
 
@@ -18,6 +18,7 @@ for i = 1:length(t)
 
 end
 
+if plot_on ~= 0
 % Get the number of open figures:
 figs=findall(0,'type','figure');
 num_figs = length(figs);
@@ -31,8 +32,9 @@ set(handle1,'Fontsize',9,'Fontname','Computermodern')
 handle2 = ylabel('CS (s^{-1})','rotation',90);
 set(handle2,'Fontsize',9,'Fontname','Computermodern')
 
-% save figure 
-saveas(h,'CS(t).fig')
+% % save figure 
+% saveas(h,'CS(t).fig')
+end
 
 end
 
