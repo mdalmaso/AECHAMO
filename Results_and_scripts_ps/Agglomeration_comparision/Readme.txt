@@ -1,0 +1,2 @@
+run_20130708T140815 Jakauman kehittyminen koagulaatiossa vapaamolekyylialueella.
+Koagulaatiokernelinä on käytetty vapaamolekyylialueen kaavaa.
