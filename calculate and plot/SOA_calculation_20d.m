@@ -4,7 +4,7 @@ NA = 6.022e23; % 1/mol
 alfa = 0.3;
 
 %% calculate and plot deltaMoa
-i = 1;
+i = 21;
 Vtot = chamb(i).output_data.Vtot; % m3
 tim = chamb(i).output_data.tim;
 
@@ -70,7 +70,7 @@ plot(deltaMoa/(24*3600),Y,'m*')
 
 %% calculate CS, Yend and plot Yend
 
-CS = CS_tot_Y( chamb(i).output_data.Y, chamb(i).initials.sections, tim );
+CS = CS_tot_Y( chamb(i).output_data.Y, chamb(i).initials.sections, tim,1 );
 
 if chamb(i).initials.vap_wallsink_on ~= 0
     Yend = alfa./(1+(chamb(i).initials.vap_wallsink)./CS);
@@ -81,6 +81,13 @@ end
 figure(2);
 hold on;
 plot(tim/(24*3600), Yend, 'r.')
+
+%% calculate (Yend-Y)/Y and plot it
+
+Yend = Yend';
+error_of_Yend = (Yend-Y)./Y;
+h7 = figure(7);
+plot(tim/(24*3600),error_of_Yend,'*')
 
 %% calculate and plot fraction of ELVOC forming aerosol = Y and fraction of ELVOC lost to wall Mvwall/deltaP
 
@@ -103,10 +110,20 @@ plot(tim/(24*3600), Y/alfa, 'g*')
 hold on;
 plot(tim/(24*3600), Wall_loss/alfa, 'r*')
 
-%% save pictures
+%% create folder and save pictures into it
 
-saveas(h1,'deltaP_deltaMoa).fig')
-saveas(h2,'Y(t).fig')
-saveas(h3,'Y(deltaMoa).fig')
-saveas(h5,'YandMvwall.fig')
-saveas(h6,'YandMvwall_alfa.fig')
+name = 'Run0';
+str = num2str(i);
+new_name = strrep(name, '0', str);
+mkdir(new_name)
+
+saveas(h1,[new_name '/deltaP_deltaMoa.fig'])
+saveas(h2,[new_name '/Y(t).fig'])
+saveas(h3,[new_name '/Y(deltaMoa).fig'])
+saveas(h5,[new_name '/YandMvwall.fig'])
+saveas(h6,[new_name '/YandMvwall_alfa.fig'])
+saveas(h7,[new_name '/error_of_Yend.fig'])
+
+% save CS
+h4 = figure(4);
+saveas(h4,[new_name '/CS(t).fig'])
