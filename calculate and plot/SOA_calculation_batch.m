@@ -28,10 +28,10 @@ for file = 1:2
 % data files and runs for calc
 if file == 1
     runs = 1:32;
-    load('K:\603_L\60304\Users\Poikkimäki\GitHub\AECHAMO\Results and scripts_mp\SOA formation\Batch\10nm\run_20130705T204109.mat')
+    load('K:\603_L\60304\Users\Poikkimäki\GitHub\AECHAMO\Results and scripts_mp\SOA formation\Batch\10nm_60sect\run_20130710T205749.mat')
 elseif file == 2
     runs = 1:32;
-    load('K:\603_L\60304\Users\Poikkimäki\GitHub\AECHAMO\Results and scripts_mp\SOA formation\Batch\80nm_isoM\run_20130708T141228.mat')
+    load('K:\603_L\60304\Users\Poikkimäki\GitHub\AECHAMO\Results and scripts_mp\SOA formation\Batch\80nm_isoM_60sect\run_20130710T200107.mat')
 end
 %% i is index of run
 for i = runs    
