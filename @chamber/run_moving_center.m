@@ -224,13 +224,16 @@ while(t_span(1) < tvect(end))
             % nucleate into an empty section. If this happens, the diameter
             % of the section must be moved to correspond the diameter of
             % nucleating particles.
-            
-            % Index of the section where particles nucleate is stored in
-            % initials.part_source, as well as the diameter of nucleating
-            % particles.
-            index = initials.part_source(1,3,1);
-            diam = initials.part_source(1,4,1);
-            y0(2*nSec+5+index) = diam;
+            for j=1:length(initials.part_source(1,1,:))                
+                % Index of the section where particles nucleate is stored in
+                % initials.part_source, as well as the diameter of nucleating
+                % particles.
+                index = initials.part_source(1,3,j);
+                diam = initials.part_source(1,4,j);
+                if(y0(1+index) < eps)
+                    y0(2*nSec+5+index) = diam;
+                end
+            end
             
             % Set the value of y(3*nSec+6) back to eps to indicate that the
             % diameter of the section is now all right.
