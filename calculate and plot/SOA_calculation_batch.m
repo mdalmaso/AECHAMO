@@ -108,78 +108,79 @@ end
 % what is loglog symbol (mark) its different for runs and files and same
 % for diff gamma but same other values
 
-if file == 1
-    if (i == 1) || (i == 2)
-        mark = '.';        
-    elseif (i == 3) || (i == 4)
-        mark = 'o';
-    elseif (i == 5) || (i == 6)
-        mark = 'x';
-    elseif (i == 7) || (i == 8)  
-        mark = '+';
-    elseif (i == 9) || (i == 10)
-        mark = '*';
-    elseif (i == 11) || (i == 12)
-        mark = 's';
-    elseif (i == 13) || (i == 14)
-        mark = 'd';
-    elseif (i == 15) || (i == 16)  
-        mark = 'v';
-    elseif (i == 17) || (i == 18)
-        mark = 'k.';
-    elseif (i == 19) || (i == 20)
-        mark = 'ko';
-    elseif (i == 21) || (i == 22)
-        mark = 'kx';
-    elseif (i == 23) || (i == 24)  
-        mark = 'k+';
-    elseif (i == 25) || (i == 26)  
-        mark = 'k*';
-    elseif (i == 27) || (i == 28)
-        mark = 'ks';        
-    elseif (i == 29) || (i == 30)
-        mark = 'kd';
-    elseif (i == 31) || (i == 32)
-        mark = 'kv';
-    end
-elseif file == 2
-    if (i == 1) || (i == 2)
-        mark = 'r.';        
-    elseif (i == 3) || (i == 4)
-        mark = 'ro';
-    elseif (i == 5) || (i == 6)
-        mark = 'rx';
-    elseif (i == 7) || (i == 8)  
-        mark = 'r+';
-    elseif (i == 9) || (i == 10)
-        mark = 'r*';
-    elseif (i == 11) || (i == 12)
-        mark = 'rs';
-    elseif (i == 13) || (i == 14)
-        mark = 'rd';
-    elseif (i == 15) || (i == 16)  
-        mark = 'rv';
-    elseif (i == 17) || (i == 18)
-        mark = 'm.';
-    elseif (i == 19) || (i == 20)
-        mark = 'mo';
-    elseif (i == 21) || (i == 22)
-        mark = 'mx';
-    elseif (i == 23) || (i == 24)  
-        mark = 'm+';
-    elseif (i == 25) || (i == 26)  
-        mark = 'm*';
-    elseif (i == 27) || (i == 28)
-        mark = 'ms';        
-    elseif (i == 29) || (i == 30)
-        mark = 'md';
-    elseif (i == 31) || (i == 32)
-        mark = 'mv';
-    end
-end % mark
+% if file == 1
+%     if (i == 1) || (i == 2)
+%         mark = '.';        
+%     elseif (i == 3) || (i == 4)
+%         mark = 'o';
+%     elseif (i == 5) || (i == 6)
+%         mark = 'x';
+%     elseif (i == 7) || (i == 8)  
+%         mark = '+';
+%     elseif (i == 9) || (i == 10)
+%         mark = '*';
+%     elseif (i == 11) || (i == 12)
+%         mark = 's';
+%     elseif (i == 13) || (i == 14)
+%         mark = 'd';
+%     elseif (i == 15) || (i == 16)  
+%         mark = 'v';
+%     elseif (i == 17) || (i == 18)
+%         mark = 'k.';
+%     elseif (i == 19) || (i == 20)
+%         mark = 'ko';
+%     elseif (i == 21) || (i == 22)
+%         mark = 'kx';
+%     elseif (i == 23) || (i == 24)  
+%         mark = 'k+';
+%     elseif (i == 25) || (i == 26)  
+%         mark = 'k*';
+%     elseif (i == 27) || (i == 28)
+%         mark = 'ks';        
+%     elseif (i == 29) || (i == 30)
+%         mark = 'kd';
+%     elseif (i == 31) || (i == 32)
+%         mark = 'kv';
+%     end
+% elseif file == 2
+%     if (i == 1) || (i == 2)
+%         mark = 'r.';        
+%     elseif (i == 3) || (i == 4)
+%         mark = 'ro';
+%     elseif (i == 5) || (i == 6)
+%         mark = 'rx';
+%     elseif (i == 7) || (i == 8)  
+%         mark = 'r+';
+%     elseif (i == 9) || (i == 10)
+%         mark = 'r*';
+%     elseif (i == 11) || (i == 12)
+%         mark = 'rs';
+%     elseif (i == 13) || (i == 14)
+%         mark = 'rd';
+%     elseif (i == 15) || (i == 16)  
+%         mark = 'rv';
+%     elseif (i == 17) || (i == 18)
+%         mark = 'm.';
+%     elseif (i == 19) || (i == 20)
+%         mark = 'mo';
+%     elseif (i == 21) || (i == 22)
+%         mark = 'mx';
+%     elseif (i == 23) || (i == 24)  
+%         mark = 'm+';
+%     elseif (i == 25) || (i == 26)  
+%         mark = 'm*';
+%     elseif (i == 27) || (i == 28)
+%         mark = 'ms';        
+%     elseif (i == 29) || (i == 30)
+%         mark = 'md';
+%     elseif (i == 31) || (i == 32)
+%         mark = 'mv';
+%     end
+% end % mark
 
 % calc Yend and Vtot if gamma = 1/500s
 if mod(i,2) == 0
+    mark = 'k+';
 %i is even     
     % Yend at right time and save every value to vector
     Yend_real_900s = Y(tau);
@@ -195,10 +196,10 @@ if mod(i,2) == 0
     h9 = figure(9);     
     h2_CS(count2) = semilogx(CSend_900s, Yend_real_900s, mark);       
     hold on;
-    % loglog Yend(Vtot_end)(one point each time)
-    h11 = figure(11);
-    h2_Vtot(count2) = semilogx(Vtot_end_900s, Yend_real_900s, mark);      
-    hold on;
+%     % loglog Yend(Vtot_end)(one point each time)
+%     h11 = figure(11);
+%     h2_Vtot(count2) = semilogx(Vtot_end_900s, Yend_real_900s, mark);      
+%     hold on;
     
 %     % plot CS
 %     h13=figure(13);
@@ -226,6 +227,7 @@ if mod(i,2) == 0
     
 % calc Yend and Vtot if gamma = 1/50s
 else 
+    mark = 'kx';
   %i is odd  
     
     % Yend at right time and save every value to vector
@@ -242,10 +244,10 @@ else
     h8 = figure(9);
     h_CS(count1) = semilogx(CSend_90s, Yend_real_90s, mark);      
     hold on;
-    % loglog Yend(Vtot_end)(one point each time)
-    h10 = figure(11);
-    h_Vtot(count1) = semilogx(Vtot_end_90s, Yend_real_90s, mark);      
-    hold on;
+%     % loglog Yend(Vtot_end)(one point each time)
+%     h10 = figure(11);
+%     h_Vtot(count1) = semilogx(Vtot_end_90s, Yend_real_90s, mark);      
+%     hold on;
     
 %     % plot CS
 %     h12=figure(12);
@@ -372,7 +374,7 @@ h2_CS(count2) = loglog(CSarea_900s, Yend_kaava_900s, 'r--');
 % fit data
 fitted_900s = fit_formula_mp(CSsave_900s',Yend_real_save_900s',0,1);
 % edit legend 
-hleg2 = legend([h2_CS(end),(fitted_900s.pict_fit)',h_CS(end),(fitted_90s.pict_fit)'],'\alpha /[1+(\gamma /CS_{end})]',fitted_900s.leg_name1,fitted_900s.leg_name2,'\alpha /[1+(\gamma /CS_{end})]',fitted_90s.leg_name1,fitted_90s.leg_name2);
+hleg2 = legend([h2_CS(1),h2_CS(end),(fitted_900s.pict_fit)',h_CS(1),h_CS(end),(fitted_90s.pict_fit)'],'data \gamma = 0.002',['fit \alpha = 0.3     \gamma = 0.002'],fitted_900s.leg_name1,fitted_900s.leg_name2,'data \gamma = 0.02',['fit \alpha = 0.3     \gamma = 0.02'],fitted_90s.leg_name1,fitted_90s.leg_name2);
 %         '10nm,3ng/m^3,10ppb',      '                     50ppb','                     100ppb','                     200ppb',...
 %         '       15ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
 %         '       30ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
@@ -382,8 +384,9 @@ hleg2 = legend([h2_CS(end),(fitted_900s.pict_fit)',h_CS(end),(fitted_90s.pict_fi
 %         '       10\mug/m^3,10ppb', '                     50ppb','                     100ppb','                     200ppb',...
 %         '       30\mug/m^3,10ppb', '                     50ppb','                     100ppb','                     200ppb',...
         
-set(hleg2,'Location',Loc)
-legend(hleg2,'hide')
+%hleg2 = legend([fitted_90s.pict_fit(1),fitted_900s.pict_fit(1)],'\gamma = 1/50s','\gamma = 1/500s');
+set(hleg2,'Location',Loc,'Fontsize',8)
+%legend(hleg2,'hide')
 legend(hleg2,'boxoff')
 % add labels
 xhandle900 = xlabel('CS_{end} (s^{-1})');
@@ -392,73 +395,73 @@ yhandle900 = ylabel('Y_{end}','rotation',90);
 % add title
 %title('\alpha = 0.3 and \gamma = 1/500s');
 %fix axis
-axis([7e-4 2e-1 0 0.3]);
+axis([7.5e-4 5e-1 0 0.3]);
 set(gca,'YTick',[0,0.1,0.2,0.3])
 
-TextBox('\gamma = 1/50s',[20 20 5 0],figure(9))
+%TextBox('\gamma = 1/50s',[20 20 5 0],figure(9))
 matlab2tikz('Yend_CSend.tikz');
 
-% add theoretical loglog to fig10
-figure(11);
-hold on;
-Vtot_area_90s = min(Vtot_end_save_90s)*0.9:max(Vtot_end_save_90s)/100:max(Vtot_end_save_90s)*1.1;
-Yend_kaava_Vtot_90s = alfa./(1+(1/50)./(2e-4.*(1.0e4.^0.37).*(1e6.*1e6.*roo.*1e6.*Vtot_area_90s).^0.63)); % mass in kg
-h_Vtot(count1) = loglog(Vtot_area_90s, Yend_kaava_Vtot_90s, 'r');
-% fit data
-fitted_Vtot_90s = fit_formula_mp(Vtot_end_save_90s',Yend_real_save_90s',1,1);
-% edit legend 
-hleg3 = legend([h_Vtot,(fitted_Vtot_90s.pict_fit)'],...
-        '10nm,3ng/m^3,10ppb',      '                     50ppb','                     100ppb','                     200ppb',...
-        '       15ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
-        '       30ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
-        '      100ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
-        '80nm,1\mug/m^3,10ppb',    '                     50ppb','                     100ppb','                     200ppb',... 
-        '         5\mug/m^3,10ppb','                     50ppb','                     100ppb','                     200ppb',...
-        '       10\mug/m^3,10ppb', '                     50ppb','                     100ppb','                     200ppb',...
-        '       30\mug/m^3,10ppb', '                     50ppb','                     100ppb','                     200ppb',...
-        '\alpha /[1+( \gamma / M^{0.63})]',fitted_Vtot_90s.leg_name1,fitted_Vtot_90s.leg_name2);
-set(hleg3,'Location',Loc)
-% add labels
-xhandle90_V = xlabel('Vtot_{end} (m^{3})');
-yhandle90_V = ylabel('Y_{end}','rotation',90); 
-% add title
-title('\alpha = 0.3 and \gamma = 1/50s');
-
-% add theoretical loglog to fig11
-figure(11);
-hold on;
-Vtot_area_900s = min(Vtot_end_save_900s)*0.9:max(Vtot_end_save_900s)/100:max(Vtot_end_save_900s)*1.1;
-Yend_kaava_Vtot_900s = alfa./(1+(1/500)./(2e-4.*(1.0e4.^0.37).*(1e6.*1e6.*roo.*1e6.*Vtot_area_900s).^0.63)); % mass in µg/m3
-h2_Vtot(count2) = loglog(Vtot_area_900s, Yend_kaava_Vtot_900s, 'r');
-% fit data
-fitted_Vtot_900s = fit_formula_mp(Vtot_end_save_900s',Yend_real_save_900s',1,0);
-% edit legend 
-hleg4 = legend([h2_Vtot,(fitted_Vtot_900s.pict_fit)'],...
-        '10nm,3ng/m^3,10ppb',      '                     50ppb','                     100ppb','                     200ppb',...
-        '       15ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
-        '       30ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
-        '      100ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
-        '80nm,1\mug/m^3,10ppb',    '                     50ppb','                     100ppb','                     200ppb',... 
-        '         5\mug/m^3,10ppb','                     50ppb','                     100ppb','                     200ppb',...
-        '       10\mug/m^3,10ppb', '                     50ppb','                     100ppb','                     200ppb',...
-        '       30\mug/m^3,10ppb', '                     50ppb','                     100ppb','                     200ppb',...
-        '\alpha /[1+( \gamma / M^{0.63})]',fitted_Vtot_900s.leg_name1,fitted_Vtot_900s.leg_name2);
-set(hleg4,'Location',Loc)
-% add labels
-xhandle900_V = xlabel('Vtot_{end} (m^{3})');
-yhandle900_V = ylabel('Y_{end}','rotation',90); 
-% add title
-title('\alpha = 0.3 and \gamma = 1/500s');
-%fix axis
-%axis([1e-18 1e-15 1e-1 1])
+% % add theoretical loglog to fig10
+% figure(11);
+% hold on;
+% Vtot_area_90s = min(Vtot_end_save_90s)*0.9:max(Vtot_end_save_90s)/100:max(Vtot_end_save_90s)*1.1;
+% Yend_kaava_Vtot_90s = alfa./(1+(1/50)./(2e-4.*(1.0e4.^0.37).*(1e6.*1e6.*roo.*1e6.*Vtot_area_90s).^0.63)); % mass in kg
+% h_Vtot(count1) = loglog(Vtot_area_90s, Yend_kaava_Vtot_90s, 'r');
+% % fit data
+% fitted_Vtot_90s = fit_formula_mp(Vtot_end_save_90s',Yend_real_save_90s',1,1);
+% % edit legend 
+% hleg3 = legend([h_Vtot,(fitted_Vtot_90s.pict_fit)'],...
+%         '10nm,3ng/m^3,10ppb',      '                     50ppb','                     100ppb','                     200ppb',...
+%         '       15ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
+%         '       30ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
+%         '      100ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
+%         '80nm,1\mug/m^3,10ppb',    '                     50ppb','                     100ppb','                     200ppb',... 
+%         '         5\mug/m^3,10ppb','                     50ppb','                     100ppb','                     200ppb',...
+%         '       10\mug/m^3,10ppb', '                     50ppb','                     100ppb','                     200ppb',...
+%         '       30\mug/m^3,10ppb', '                     50ppb','                     100ppb','                     200ppb',...
+%         '\alpha /[1+( \gamma / M^{0.63})]',fitted_Vtot_90s.leg_name1,fitted_Vtot_90s.leg_name2);
+% set(hleg3,'Location',Loc)
+% % add labels
+% xhandle90_V = xlabel('Vtot_{end} (m^{3})');
+% yhandle90_V = ylabel('Y_{end}','rotation',90); 
+% % add title
+% title('\alpha = 0.3 and \gamma = 1/50s');
+% 
+% % add theoretical loglog to fig11
+% figure(11);
+% hold on;
+% Vtot_area_900s = min(Vtot_end_save_900s)*0.9:max(Vtot_end_save_900s)/100:max(Vtot_end_save_900s)*1.1;
+% Yend_kaava_Vtot_900s = alfa./(1+(1/500)./(2e-4.*(1.0e4.^0.37).*(1e6.*1e6.*roo.*1e6.*Vtot_area_900s).^0.63)); % mass in µg/m3
+% h2_Vtot(count2) = loglog(Vtot_area_900s, Yend_kaava_Vtot_900s, 'r');
+% % fit data
+% fitted_Vtot_900s = fit_formula_mp(Vtot_end_save_900s',Yend_real_save_900s',1,0);
+% % edit legend 
+% hleg4 = legend([h2_Vtot,(fitted_Vtot_900s.pict_fit)'],...
+%         '10nm,3ng/m^3,10ppb',      '                     50ppb','                     100ppb','                     200ppb',...
+%         '       15ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
+%         '       30ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
+%         '      100ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
+%         '80nm,1\mug/m^3,10ppb',    '                     50ppb','                     100ppb','                     200ppb',... 
+%         '         5\mug/m^3,10ppb','                     50ppb','                     100ppb','                     200ppb',...
+%         '       10\mug/m^3,10ppb', '                     50ppb','                     100ppb','                     200ppb',...
+%         '       30\mug/m^3,10ppb', '                     50ppb','                     100ppb','                     200ppb',...
+%         '\alpha /[1+( \gamma / M^{0.63})]',fitted_Vtot_900s.leg_name1,fitted_Vtot_900s.leg_name2);
+% set(hleg4,'Location',Loc)
+% % add labels
+% xhandle900_V = xlabel('Vtot_{end} (m^{3})');
+% yhandle900_V = ylabel('Y_{end}','rotation',90); 
+% % add title
+% title('\alpha = 0.3 and \gamma = 1/500s');
+% %fix axis
+% %axis([1e-18 1e-15 1e-1 1])
 
 
 %% save pictures
-saveas(h8,'Yend(CSend)_50s.fig')
-saveas(h9,'Yend(CSend)_500s.fig')
-saveas(h10,'Yend(Vtotend)_50s.fig')
-saveas(h11,'Yend(Vtotend)_500s.fig')
-saveas(h12,'CS(t)_50s.fig')
-saveas(h13,'CS(t)_500s.fig')
-saveas(h14,'Moa(t)_50s.fig')
-saveas(h15,'Moa(t)_500s.fig')
+% saveas(h8,'Yend(CSend)_50s.fig')
+% saveas(h9,'Yend(CSend)_500s.fig')
+% saveas(h10,'Yend(Vtotend)_50s.fig')
+% saveas(h11,'Yend(Vtotend)_500s.fig')
+% saveas(h12,'CS(t)_50s.fig')
+% saveas(h13,'CS(t)_500s.fig')
+% saveas(h14,'Moa(t)_50s.fig')
+% saveas(h15,'Moa(t)_500s.fig')

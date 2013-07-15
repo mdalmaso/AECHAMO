@@ -35,8 +35,8 @@ if mass_on == 0
     b_string = num2str(out.coeff_r(2));
     b2_string = num2str(out.coeff_r2(1));
     a2_string = num2str(a);
-    out.leg_name1 =  ['fit \alpha = ' a_string ' and \gamma = ' b_string];
-    out.leg_name2 =  ['fit \alpha = ' a2_string 'fit \gamma = ' b2_string];
+    out.leg_name1 =  ['fit \alpha = ' a_string  ' \gamma = ' b_string];
+    out.leg_name2 =  ['fit \alpha =      ' a2_string ' \gamma = ' b2_string];
 %     out.leg_name1 = ['fit ' custom ' with a = ' a_string ' ja b = ' b_string];
 %     out.leg_name2 = ['fit ' custom2 ' with b = ' b2_string];
 
