@@ -1,5 +1,5 @@
 
-day=29;
+day=18;
 
 % time_start = v(2,1)+(day-18)+0.5832;
 time_start = datenum(2009,9,day,0,0,0);
@@ -40,6 +40,11 @@ data.inflow = matrixdata(:,14).*(1000/60); % cm^3/s
 data.dilu = matrixdata(:,16).*(1000/60); % cm^3/s
 data.MT_rc = matrixdata(:,10); % ppb
 data.isoprene_plant = matrixdata(:,13); % ppb
+min_isoprene = min(matrixdata(:,13));
+if(min_isoprene < 0)
+    data.isoprene_plant = data.isoprene_plant + abs(min_isoprene);
+end
+
 
 V_pc=1.46e6; % cm^3
 NA = 6.022e23; % 1/mol
@@ -51,15 +56,16 @@ N_mt_rc = data.MT_rc.*mol_in_cm3.*NA./1e9; % 1/cm^3
 N_isoprene = N_tot.*data.isoprene_plant./1e9;
 
 alfa = 0.6;
+beta = 0.95;
 
 % alfa=0.5;
 cond_vap_rc = alfa.*N_mt_rc; % Mitattu MT-konsentr. kertaa alfa.
 
-Q=alfa.*N_mt./V_pc; % 1/s*1/cm^3 = 1/(cm^3s)
+% Q=alfa.*N_mt./V_pc; % 1/s*1/cm^3 = 1/(cm^3s)
 
 % test:
 % Q=alfa.*(N_mt+N_isoprene)./V_pc;
-% Q=(alfa.*N_mt + beta.*N_isoprene)./V_pc;
+Q=(alfa.*N_mt + beta.*N_isoprene)./V_pc;
 
 dilu = data.dilu./V_pc;
 
