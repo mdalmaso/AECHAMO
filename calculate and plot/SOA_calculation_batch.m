@@ -210,18 +210,18 @@ if mod(i,2) == 0
 %     set(handle2,'Fontsize',9,'Fontname','Computermodern')
 %     hold on;
 %     % add title
-%     title('\alpha = 0.3 and \gamma = 1/500s');
+%     %title('\alpha = 0.3 and \gamma = 1/500s');
 %     
 %     % plot Moa
 %     h15=figure(15);
 %     loglog(tim,Moa.*1e12,mark);
 %     handle1 = xlabel('time (s)');
 %     set(handle1,'Fontsize',9,'Fontname','Computermodern')
-%     handle2 = ylabel('Moa (\mu gm^{-3})','rotation',90);
+%     handle2 = ylabel('M_{OA} (\mugm^{-3})','rotation',90);
 %     set(handle2,'Fontsize',9,'Fontname','Computermodern')
 %     hold on;
 %     % add title
-%     title('\alpha = 0.3 and \gamma = 1/500s');
+%     %title('\alpha = 0.3 and \gamma = 1/500s');
 
     count2 = count2 + 1;
     
@@ -258,22 +258,77 @@ else
 %     set(handle2,'Fontsize',9,'Fontname','Computermodern')
 %     hold on;
 %     % add title
-%     title('\alpha = 0.3 and \gamma = 1/50s');
+%     %title('\alpha = 0.3 and \gamma = 1/50s');
 %     
 %     % plot Moa
 %     h14=figure(14);
 %     loglog(tim,Moa.*1e12,mark);
 %     handle1 = xlabel('time (s)');
 %     set(handle1,'Fontsize',9,'Fontname','Computermodern')
-%     handle2 = ylabel('Moa (\mu gm^{-3})','rotation',90);
+%     handle2 = ylabel('M_{OA} (\mugm^{-3})','rotation',90);
 %     set(handle2,'Fontsize',9,'Fontname','Computermodern')
 %     hold on;
 %     % add title
-%     title('\alpha = 0.3 and \gamma = 1/50s');
+%     %title('\alpha = 0.3 and \gamma = 1/50s');
     
     count1 = count1 + 1;     
 end
 
+%% plot final CS and Moa examples
+lw = 1;
+if file == 1
+    if (i == 3)        
+        % plot CS
+        h30=figure(30);
+        CS3 = loglog(tim,CS,'k-','LineWidth',lw);
+        hold on;  
+        % plot Moa
+        h31=figure(31);
+        M3 = loglog(tim,Moa.*1e12,'k-','LineWidth',lw);
+        hold on;    
+    elseif (i == 4)
+        % plot CS
+        h30=figure(30);
+        CS4 = loglog(tim,CS,'k--','LineWidth',lw);        
+        hold on;  
+        % plot Moa
+        h31=figure(31);
+        M4 = loglog(tim,Moa.*1e12,'k--','LineWidth',lw);        
+        hold on;
+    end
+elseif file == 2
+    if (i == 23) 
+        % plot CS
+        h30=figure(30);
+        CS31 = loglog(tim,CS,'k-.','LineWidth',lw);
+        hold on;  
+        % plot Moa
+        h31=figure(31);
+        M31 = loglog(tim,Moa.*1e12,'k-.','LineWidth',lw);
+        hold on;    
+    elseif (i == 24)
+        % plot CS
+        h30=figure(30);
+        CS32 = loglog(tim,CS,'k:','LineWidth',lw);
+        handle1 = xlabel('time (s)');
+        handle2 = ylabel('CS (s^{-1})','rotation',90);
+        hold on;  
+        axis([5e1 4e4 8e-5 1.5e-1])
+        matlab2tikz('CS_time.tikz','checkForUpdates',false,'showInfo', false);
+        % plot Moa
+        h31=figure(31);
+        M32 = loglog(tim,Moa.*1e12,'k:','LineWidth',lw);
+        handle1 = xlabel('time (s)');
+        handle2 = ylabel('M_{OA} (\mugm^{-3})','rotation',90);    
+        hold on;
+        axis([5e1 4e4 4e-3 2.5e2]) 
+        matlab2tikz('Moa_time.tikz','checkForUpdates',false,'showInfo', false);
+    end
+end 
+% leg_name_CS = [CS3 CS4 CS31 CS32];
+% leg_name_M = [M3 M4 M31 M32];
+% figure(30);
+% legend(leg_name_CS,'
 %% loglog
 % % loglog deltaMoa and deltaP
 % h1=figure(2);
@@ -344,7 +399,7 @@ figure(9);
 hold on;
 CSarea_90s = min(CSsave_90s)*0.9:max(CSsave_90s)/100:max(CSsave_90s)*1.1;
 Yend_kaava_90s = alfa./(1+(1/50)./CSarea_90s);
-h_CS(count1) = loglog(CSarea_90s, Yend_kaava_90s, 'r');
+h_CS(count1) = loglog(CSarea_90s, Yend_kaava_90s, 'r','LineWidth',lw);
 % fit data
 fitted_90s = fit_formula_mp(CSsave_90s',Yend_real_save_90s',0,0);
 % edit legend 
@@ -370,7 +425,7 @@ figure(9);
 hold on;
 CSarea_900s = min(CSsave_900s)*0.9:max(CSsave_900s)/100:max(CSsave_900s)*1.1;
 Yend_kaava_900s = alfa./(1+(1/500)./CSarea_900s);
-h2_CS(count2) = loglog(CSarea_900s, Yend_kaava_900s, 'r--');
+h2_CS(count2) = loglog(CSarea_900s, Yend_kaava_900s, 'r--','LineWidth',lw);
 % fit data
 fitted_900s = fit_formula_mp(CSsave_900s',Yend_real_save_900s',0,1);
 % edit legend 
@@ -399,7 +454,7 @@ axis([7.5e-4 5e-1 0 0.3]);
 set(gca,'YTick',[0,0.1,0.2,0.3])
 
 %TextBox('\gamma = 1/50s',[20 20 5 0],figure(9))
-matlab2tikz('Yend_CSend.tikz');
+matlab2tikz('Yend_CSend.tikz','checkForUpdates',false,'showInfo', false);
 
 % % add theoretical loglog to fig10
 % figure(11);

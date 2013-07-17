@@ -4,7 +4,7 @@ NA = 6.022e23; % 1/mol
 alfa = 0.3;
 
 %% calculate and plot deltaMoa
-i = 21;
+i = 12;
 Vtot = chamb(i).output_data.Vtot; % m3
 tim = chamb(i).output_data.tim;
 

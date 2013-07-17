@@ -1,4 +1,6 @@
 function [out] = fit_formula_mp(x,y,mass_on,dashed)
+%linewidth
+lw=1;
 % fit ap data
 xmin = min(x);
 xmax = max(x);
@@ -27,9 +29,9 @@ if mass_on == 0
     %plot(x,y,'ks')
     hold on;
     if dashed ~= 0
-        out.pict_fit = plot(x0,feval(r,x0),'k--',x0,feval(r2,x0),'b--');
+        out.pict_fit = plot(x0,feval(r,x0),'k--',x0,feval(r2,x0),'b--','LineWidth',lw);
     else
-        out.pict_fit = plot(x0,feval(r,x0),'k-',x0,feval(r2,x0),'b-');
+        out.pict_fit = plot(x0,feval(r,x0),'k-',x0,feval(r2,x0),'b-','LineWidth',lw);
     end
     a_string = num2str(out.coeff_r(1));
     b_string = num2str(out.coeff_r(2));
@@ -63,7 +65,7 @@ elseif mass_on == 1
 
     %plot(x,y,'ks')
     hold on;
-    out.pict_fit = plot(x0,feval(r,x0),'k-',x0,feval(r2,x0),'b-');
+    out.pict_fit = plot(x0,feval(r,x0),'k-',x0,feval(r2,x0),'b-','LineWidth',lw);
     a_string = num2str(out.coeff_r(1));
     b_string = num2str(out.coeff_r(2));
     b2_string = num2str(out.coeff_r2(1));
