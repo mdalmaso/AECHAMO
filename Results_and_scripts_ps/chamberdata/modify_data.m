@@ -46,26 +46,26 @@ if(min_isoprene < 0)
 end
 
 
-V_pc=1.46e6; % cm^3
+V_pc=1.45e6; % cm^3
 NA = 6.022e23; % 1/mol
 mol_in_cm3 = 41.6*1e-6; % mol/cm^3
 inflow_mols = data.inflow.*mol_in_cm3; % cm^3/s*mol/cm^3 = mol/s
 N_tot = inflow_mols.*NA; % mol/s*1/mol = 1/s Includes all molecules
 N_mt = N_tot.*data.MT_plant./1e9; % 1/s
-N_mt_rc = data.MT_rc.*mol_in_cm3.*NA./1e9; % 1/cm^3
+N_mt_rc = data.MT_rc.*2.505152e10; % ppb*1/cm3 = 1/cm3
 N_isoprene = N_tot.*data.isoprene_plant./1e9;
 
-alfa = 0.6;
-beta = 0.95;
+alfa = 0.33;
+% alfa = 1.0;
 
 % alfa=0.5;
 cond_vap_rc = alfa.*N_mt_rc; % Mitattu MT-konsentr. kertaa alfa.
 
-% Q=alfa.*N_mt./V_pc; % 1/s*1/cm^3 = 1/(cm^3s)
+Q=alfa.*N_mt./V_pc; % 1/s*1/cm^3 = 1/(cm^3s)
 
 % test:
 % Q=alfa.*(N_mt+N_isoprene)./V_pc;
-Q=(alfa.*N_mt + beta.*N_isoprene)./V_pc;
+% Q=(alfa.*N_mt + beta.*N_isoprene)./V_pc;
 
 dilu = data.dilu./V_pc;
 

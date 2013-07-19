@@ -47,16 +47,17 @@ data.dilu = matrixdata(:,16).*(1000/60); % cm^3/s
 data.MT_rc = matrixdata(:,10); % ppb
 data.isoprene_plant = matrixdata(:,13); % ppb
 
-V_pc=1.46e6; % cm^3
+V_pc=1.45e6; % cm^3
 NA = 6.022e23; % 1/mol
 mol_in_cm3 = 41.6*1e-6; % mol/cm^3
 inflow_mols = data.inflow.*mol_in_cm3; % cm^3/s*mol/cm^3 = mol/s
 N_tot = inflow_mols.*NA; % mol/s*1/mol = 1/s Includes all molecules
 N_mt = N_tot.*data.MT_plant./1e9; % 1/s
-N_mt_rc = data.MT_rc.*mol_in_cm3.*NA./1e9; % 1/cm^3
+N_mt_rc = data.MT_rc.*2.505152e10; % ppb*1/cm3 = 1/cm3
 N_isoprene = N_tot.*data.isoprene_plant./1e9;
 
-alfa = 0.57;
+alfa = 0.83;
+
 % beta = 0.6;
 
 % alfa=0.5;
