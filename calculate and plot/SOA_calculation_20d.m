@@ -1,10 +1,10 @@
-roo = 1.84; % Particle density (g/cm3)
-M = 100; %g/mol
+roo = 1.4; % Particle density (g/cm3)
+M = 300; %g/mol
 NA = 6.022e23; % 1/mol
 alfa = 0.3;
 
 %% calculate and plot deltaMoa
-i = 12;
+i = 1;
 Vtot = chamb(i).output_data.Vtot; % m3
 tim = chamb(i).output_data.tim;
 

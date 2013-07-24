@@ -7,13 +7,13 @@ xmax = max(x);
 % if x = CS
 if mass_on == 0
     % a vapaa
-    s=fitoptions('Method','NonLinearLeastSquares','Startpoint',[0.1  0.1],'upper',[0.40 1],'lower',[0.03 0.001]);
+    s=fitoptions('Method','NonLinearLeastSquares','Startpoint',[0.1  0.1],'upper',[1 10],'lower',[0.003 0.0000001]);
     custom = 'a.*(1/(1+b./x))';
     f = fittype(custom,'options',s);
 
     % a kiinnitetty 
     a = 0.3;
-    s2=fitoptions('Method','NonLinearLeastSquares','Startpoint', 0.1 ,'upper',1,'lower',0.001);
+    s2=fitoptions('Method','NonLinearLeastSquares','Startpoint', 0.1 ,'upper',10,'lower',0.0000001);
     custom2 = '0.3.*(1/(1+b./x))';
     f2 = fittype(custom2 ,'options',s2);
     
