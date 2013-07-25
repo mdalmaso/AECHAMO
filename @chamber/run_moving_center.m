@@ -495,7 +495,7 @@ function dy = chamberODE(t,y)
         
         % wall losses and sedimentation according to T. Anttila model...fitted
         % by M. Dal Maso; only usable for SAPPHIR chamber!!
-        if initials.sedi_on,
+        if (initials.sedi_on && coag_possible)
             beta = obj.sapphir_beta2(y(2*nSec+5+i),T);
             %beta = 3.5e-5; % 0th order approx
             dy(i+1) = dy(i+1)-beta.*y(i+1);
