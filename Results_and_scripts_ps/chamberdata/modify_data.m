@@ -1,6 +1,5 @@
 
-day=18;
-
+day=29;
 % time_start = v(2,1)+(day-18)+0.5832;
 time_start = datenum(2009,9,day,0,0,0);
 
@@ -34,6 +33,7 @@ matrixdata = a(ind_first:ind_last,:);
 
 data.time = time_a;
 data.cpc = matrixdata(:,6);
+data.mcpc = matrixdata(:,7);
 data.CS = matrixdata(:,8);
 data.MT_plant = matrixdata(:,12); % ppb
 data.inflow = matrixdata(:,14).*(1000/60); % cm^3/s

@@ -56,7 +56,7 @@ N_mt = N_tot.*data.MT_plant./1e9; % 1/s
 N_mt_rc = data.MT_rc.*2.505152e10; % ppb*1/cm3 = 1/cm3
 N_isoprene = N_tot.*data.isoprene_plant./1e9;
 
-alfa = 0.83;
+alfa = 0.33;
 
 % beta = 0.6;
 
