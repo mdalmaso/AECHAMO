@@ -6,7 +6,19 @@ for i = [1:32]
 end
 
 
-chamb(1).plot('dist')
+% jakaumaa eri kohdista
+for ajo = 1:32
+%chamb(ajo).plot('original','dist')
+sect = chamb(ajo).initials.sections;
+semilogx(chamb(ajo).output_data.distr_original(10,sect+3:2*sect+2),chamb(1).output_data.distr_original(10,3:sect+2),'r.-')
+hold on
+semilogx(chamb(ajo).output_data.distr_original(2,sect+3:2*sect+2),chamb(1).output_data.distr_original(2,3:sect+2),'.-')
+hold on
+semilogx(chamb(ajo).output_data.distr_original(100,sect+3:2*sect+2),chamb(1).output_data.distr_original(100,3:sect+2),'g.-')
+hold on
+semilogx(chamb(ajo).output_data.distr_original(600,sect+3:2*sect+2),chamb(1).output_data.distr_original(600,3:sect+2),'m.-')
+hold on
+end
 
 CS = zeros(2881,ajoja);
 for i = 1:ajoja
