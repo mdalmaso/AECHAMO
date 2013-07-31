@@ -83,7 +83,7 @@ end
 % Check the particle source as well.
 if(isscalar(initials.part_source) == 0)  % Is it an array?
     % Check that there are three columns in part_source:
-    [rows cols]=size(initials.part_source);
+    [rows, cols, depth]=size(initials.part_source);
     if(cols ~=3)
         error('set_initials: The argument ''part_source'' must consist of three columns.');
     end

@@ -224,13 +224,16 @@ while(t_span(1) < tvect(end))
             % nucleate into an empty section. If this happens, the diameter
             % of the section must be moved to correspond the diameter of
             % nucleating particles.
-            
-            % Index of the section where particles nucleate is stored in
-            % initials.part_source, as well as the diameter of nucleating
-            % particles.
-            index = initials.part_source(1,3,1);
-            diam = initials.part_source(1,4,1);
-            y0(2*nSec+5+index) = diam;
+            for j=1:length(initials.part_source(1,1,:))                
+                % Index of the section where particles nucleate is stored in
+                % initials.part_source, as well as the diameter of nucleating
+                % particles.
+                index = initials.part_source(1,3,j);
+                diam = initials.part_source(1,4,j);
+                if(y0(1+index) < eps)
+                    y0(2*nSec+5+index) = diam;
+                end
+            end
             
             % Set the value of y(3*nSec+6) back to eps to indicate that the
             % diameter of the section is now all right.
@@ -240,16 +243,27 @@ while(t_span(1) < tvect(end))
         
         % Otherwise particles just need to be moved to another section.
         elseif(y0(1+ie(i)) > 0)    % Is there particles in section?
+            
+            % Check the direction where particles are to moved. If
+            % limits(ie)-Dp(ie) < 0, Dp is growing and must be moved to the
+            % next section, so the direction must be +1, and the section is
+            % ie+direction (=ie+1). Otherwise the particles are moved to the
+            % section below, and direction is -1, and still the target
+            % section is ie+direction (=ie-1).
+            direction = -sign(Dplims(ie(i))-y0(2*nSec+5+ie(i)));
+            
             Ni1=y0(1+ie(i));   % Number of particles in section ie
-            Ni2=y0(1+ie(i)+1); % Number of particles in section ie+1
+            Ni2=y0(1+ie(i)+direction); % Number of particles in section ie+direction
             Ntot = Ni1+Ni2;
             v1 = pi/6*y0(2*nSec+5+ie(i))^3*Ni1;    % Total vol of particles in section ie
-            v2 = pi/6*y0(2*nSec+1+5+ie(i))^3*Ni2;  % Total vol of particles in section ie+1
+            v2 = pi/6*y0(2*nSec+direction+5+ie(i))^3*Ni2;  % Total vol of particles in section ie+direction
+            
             vtot = (v1+v2)/Ntot;           % Average vol of particles in section ie+1 when the particles from ie are moved there.
             if(vtot > 0)
-                y0(2*nSec+5+1+ie(i)) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
+                y0(2*nSec+5+direction+ie(i)) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
             end
-            y0(1+ie(i)+1)=Ntot; % Add particles from section ie to ie+1
+            
+            y0(1+ie(i)+direction)=Ntot; % Add particles from section ie to ie+direction
             y0(1+ie(i)) = 0;       % Delete particles from section ie.
             
             % Reset the diameter of the section that has now zero
@@ -492,7 +506,7 @@ function dy = chamberODE(t,y)
         
         % wall losses and sedimentation according to T. Anttila model...fitted
         % by M. Dal Maso; only usable for SAPPHIR chamber!!
-        if initials.sedi_on,
+        if (initials.sedi_on && coag_possible)
             beta = obj.sapphir_beta2(y(2*nSec+5+i),T);
             %beta = 3.5e-5; % 0th order approx
             dy(i+1) = dy(i+1)-beta.*y(i+1);
@@ -513,10 +527,22 @@ end  % End function chamberODE
 function[value,isterminal,direction] = events(t,y)
     nSec = initials.sections;
     
-    Dps = y(2*nSec+6:3*nSec+4);
-    limits = Dplims';
+    Dps = y(2*nSec+6:3*nSec+5);
     
-    value = limits-Dps; % Run ode45 as long as Dp(i) < Dplim(i). When value <= 0, ode45 is terminated.
+    % limits(i) is the upper limit of Dp(i) and the lower limit of Dp(i+1)
+    limits = Dplims'; 
+    
+    val_1 = limits-Dps(1:end-1); % Goes below zero if Dp(i) > limits(i)
+    val_2 = Dps(2:end)-limits;   % Goes below zero if Dp(i+1) < limits(i)
+
+    indices_1 = find(val_1 < 0); % Find the indices of negative elements.
+    indices_2 = find(val_2 < 0); % Find the indices of negative elements.
+    
+    value=ones(length(val_1),1); % Set the event's values initially as ones.
+    
+    % Add the negative values of val_1 and val_2 to value vector.
+    value(indices_1) = val_1(indices_1); 
+    value(indices_2) = val_2(indices_2);
     
     % Add y(3*nSec+6) to the end of value vector. This value indicates if
     % particles are to nucleate into an empty section. If this happens, ode
@@ -525,7 +551,7 @@ function[value,isterminal,direction] = events(t,y)
     value = [value; y(3*nSec+6)];
     
     isterminal = ones(length(value),1);
-    direction = ones(length(value),1).*(-1);
+    direction = zeros(length(value),1);
 end
 
 

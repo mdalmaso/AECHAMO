@@ -1,0 +1,19 @@
+[x, y] = ginput(6)
+for i=1:6
+A=find(dist_new(:,1) >= x(i));
+x_indices(i) = A(1);
+end
+
+for i=1:6
+A=find(dist_new(x_indices(i),28:end)>=y(i));
+y_indices(i)=A(1);
+end
+
+xs=x_indices(1):length(dist_new(:,1));
+ys=interp1(x_indices,y_indices,xs);
+ys=round(ys);
+ys(isnan(ys))=19;
+dist_new = kamdist;
+for i=1:length(xs)
+dist_new(xs(i),3:ys(i)+2)=0;
+end
