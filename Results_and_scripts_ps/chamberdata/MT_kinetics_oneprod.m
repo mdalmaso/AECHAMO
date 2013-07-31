@@ -28,12 +28,15 @@ subplot(311)
 plot(time,PC,'g.')
 hold on
 plot(time,RC,'b.')
+datetick('x','keeplimits');
 hold off
 legend('Plant','Recation')
 subplot(312)
 plot(time,CS,'r.')
+datetick('x','keeplimits');
 subplot(313)
 plot(time,MCPC,'k.')
+datetick('x','keeplimits');
 
 clear ix time RC PC CS MCPC outflow PC_flow
 % refine the time selection
@@ -56,12 +59,15 @@ subplot(311)
 plot(time,PC,'g.')
 hold on
 plot(time,RC,'b.')
+datetick('x','keeplimits');
 hold off
 legend('Plant','Recation')
 subplot(312)
 plot(time,O3,'r.')
+datetick('x','keeplimits');
 subplot(313)
 plot(time,MCPC,'k.')
+datetick('x','keeplimits');
 
 [UVx yy] = ginput(2);
 

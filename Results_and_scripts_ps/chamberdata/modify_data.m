@@ -1,5 +1,5 @@
 
-day=29;
+day=23;
 % time_start = v(2,1)+(day-18)+0.5832;
 time_start = datenum(2009,9,day,0,0,0);
 
