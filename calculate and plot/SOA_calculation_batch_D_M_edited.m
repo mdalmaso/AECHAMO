@@ -674,8 +674,31 @@ fig32 = semilogx(Vtot_3ng_50s, Yend_3ng_50s, mark_3ng_50s, ...
                 Vtot_10000ng_500s, Yend_10000ng_500s, mark_10000ng_500s, ...
                 Vtot_30000ng_500s, Yend_30000ng_500s, mark_30000ng_500s);
             
-% fits and legends            
+% fits and legends
 
+% fitted vectors
+Vtot1_50s = [Vtot_3ng_50s Vtot_1000ng_50s];
+Vtot2_50s = [Vtot_15ng_50s Vtot_5000ng_50s];
+Vtot3_50s = [Vtot_30ng_50s Vtot_10000ng_50s];
+Vtot4_50s = [Vtot_100ng_50s Vtot_30000ng_50s];
+
+Yend1_50s = [Yend_3ng_50s Yend_1000ng_50s];
+Yend2_50s = [Yend_15ng_50s Yend_5000ng_50s];
+Yend3_50s = [Yend_30ng_50s Yend_10000ng_50s];
+Yend4_50s = [Yend_100ng_50s Yend_30000ng_50s];
+
+Vtot1_500s = [Vtot_3ng_500s Vtot_1000ng_500s];
+Vtot2_500s = [Vtot_15ng_500s Vtot_5000ng_500s];
+Vtot3_500s = [Vtot_30ng_500s Vtot_10000ng_500s];
+Vtot4_500s = [Vtot_100ng_500s Vtot_30000ng_500s];
+
+Yend1_500s = [Yend_3ng_500s Yend_1000ng_500s];
+Yend2_500s = [Yend_15ng_500s Yend_5000ng_500s];
+Yend3_500s = [Yend_30ng_500s Yend_10000ng_500s];
+Yend4_500s = [Yend_100ng_500s Yend_30000ng_500s];
+
+hold on;
+fitted_Vtot1_50s = fit_formula_mp(Vtot1_50s',Yend1_50s',1,0);
 
 %% save pictures
 % saveas(h8,'Yend(CSend)_50s.fig')
