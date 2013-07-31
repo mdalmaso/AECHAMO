@@ -458,7 +458,7 @@ elseif file == 2
         handl2 = ylabel('CS (s^{-1})','rotation',90);
         hold on;  
         %axis([5e1 4e4 8e-5 1.5e-1])
-        matlab2tikz('CS_time.tikz','checkForUpdates',false,'showInfo', false);
+        matlab2tikz('CS_time.tikz','checkForUpdates',false,'showInfo', false, 'height', '\fheight', 'width', '\fwidth' );
         % plot Moa
         h31=figure(31);
         M32 = loglog(tim,Moa.*1e12,'k:','LineWidth',lw);
@@ -466,7 +466,7 @@ elseif file == 2
         handle2 = ylabel('M_{OA} (\mugm^{-3})','rotation',90);    
         hold on;
         %axis([5e1 4e4 4e-3 2.5e2]) 
-        matlab2tikz('Moa_time.tikz','checkForUpdates',false,'showInfo', false);
+        matlab2tikz('Moa_time.tikz','checkForUpdates',false,'showInfo', false, 'height', '\fheight', 'width', '\fwidth' );
     end
 end 
 % leg_name_CS = [CS3 CS4 CS31 CS32];
@@ -598,7 +598,7 @@ yhandle900 = ylabel('Y_{end}','rotation',90);
 %set(gca,'YTick',[0,0.1,0.2,0.3])
 
 %TextBox('\gamma = 1/50s',[20 20 5 0],figure(9))
-matlab2tikz('Yend_CSend.tikz','checkForUpdates',false,'showInfo', false);
+matlab2tikz('Yend_CSend.tikz','checkForUpdates',false,'showInfo', false, 'height', '\fheight', 'width', '\fwidth' );
 
 % add theoretical loglog to fig10
 figure(11);
@@ -699,6 +699,14 @@ Yend4_500s = [Yend_100ng_500s Yend_30000ng_500s];
 
 hold on;
 fitted_Vtot1_50s = fit_formula_mp(Vtot1_50s',Yend1_50s',1,0);
+fitted_Vtot2_50s = fit_formula_mp(Vtot2_50s',Yend2_50s',1,0);
+fitted_Vtot3_50s = fit_formula_mp(Vtot3_50s',Yend3_50s',1,0);
+fitted_Vtot4_50s = fit_formula_mp(Vtot4_50s',Yend4_50s',1,0);
+
+fitted_Vtot1_500s = fit_formula_mp(Vtot1_500s',Yend1_500s',1,0);
+fitted_Vtot2_500s = fit_formula_mp(Vtot2_500s',Yend2_500s',1,0);
+fitted_Vtot3_500s = fit_formula_mp(Vtot3_500s',Yend3_500s',1,0);
+fitted_Vtot4_500s = fit_formula_mp(Vtot4_500s',Yend4_500s',1,0);
 
 %% save pictures
 % saveas(h8,'Yend(CSend)_50s.fig')
