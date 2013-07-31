@@ -66,13 +66,13 @@ elseif mass_on == 1
     %plot(x,y,'ks')
     hold on;
     if dashed == 0
-        out.pict_fit = plot(x0,feval(r,x0),'k-',x0,feval(r2,x0),'b-','LineWidth',lw);
+        out.pict_fit = plot(x0,feval(r,x0),'k-','LineWidth',lw);
     elseif dashed == 1
-        out.pict_fit = plot(x0,feval(r,x0),'k--',x0,feval(r2,x0),'b--','LineWidth',lw);
+        out.pict_fit = plot(x0,feval(r,x0),'k--','LineWidth',lw);
     elseif dashed == 2
-        out.pict_fit = plot(x0,feval(r,x0),'k:',x0,feval(r2,x0),'b:','LineWidth',lw);
+        out.pict_fit = plot(x0,feval(r,x0),'k:','LineWidth',lw);
     elseif dashed == 3
-        out.pict_fit = plot(x0,feval(r,x0),'k-.',x0,feval(r2,x0),'b-.','LineWidth',lw);        
+        out.pict_fit = plot(x0,feval(r,x0),'k-.','LineWidth',lw);        
     end   
     a_string = num2str(out.coeff_r(1));
     b_string = num2str(out.coeff_r(2));
