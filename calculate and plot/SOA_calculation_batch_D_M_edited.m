@@ -10,6 +10,22 @@ alfa = 0.3;
 % initiate variables 
 count1 = 1;
 count2 = 1;
+c1 = 1;
+c2 = 1;
+c3 = 1;
+c4 = 1;
+c5 = 1;
+c6 = 1;
+c7 = 1;
+c8 = 1;
+c10 = 1;
+c20 = 1;
+c30 = 1;
+c40 = 1;
+c50 = 1;
+c60 = 1;
+c70 = 1;
+c80 = 1;
 
 Yend_real_save_90s = zeros(1,12);
 CSsave_90s = zeros(1,12);
@@ -24,14 +40,47 @@ h2_CS =zeros(1,11);
 h_Vtot = zeros(1,13);
 h2_Vtot = zeros(1,11);
 
+Vtot_3ng_50s = zeros(1,4);
+Yend_3ng_50s = zeros(1,4);
+Vtot_15ng_50s = zeros(1,4);
+Yend_15ng_50s = zeros(1,4);
+Vtot_30ng_50s = zeros(1,4);
+Yend_30ng_50s = zeros(1,4);
+Vtot_100ng_50s = zeros(1,4);
+Yend_100ng_50s = zeros(1,4);
+Vtot_1000ng_50s = zeros(1,4);
+Yend_1000ng_50s = zeros(1,4);
+Vtot_5000ng_50s = zeros(1,4);
+Yend_5000ng_50s = zeros(1,4);
+Vtot_10000ng_50s = zeros(1,4);
+Yend_10000ng_50s = zeros(1,4);
+Vtot_30000ng_50s = zeros(1,4);
+Yend_30000ng_50s = zeros(1,4);
+Vtot_3ng_500s = zeros(1,4);
+Yend_3ng_500s = zeros(1,4);
+Vtot_15ng_500s = zeros(1,4);
+Yend_15ng_500s = zeros(1,4);
+Vtot_30ng_500s = zeros(1,4);
+Yend_30ng_500s = zeros(1,4);
+Vtot_100ng_500s = zeros(1,4);
+Yend_100ng_500s = zeros(1,4);
+Vtot_1000ng_500s = zeros(1,4);
+Yend_1000ng_500s = zeros(1,4);
+Vtot_5000ng_500s = zeros(1,4);
+Yend_5000ng_500s = zeros(1,4);
+Vtot_10000ng_500s = zeros(1,4);
+Yend_10000ng_500s = zeros(1,4);
+Vtot_30000ng_500s = zeros(1,4);
+Yend_30000ng_500s = zeros(1,4);
+
 for file = 1:2
 % data files and runs for calc
 if file == 1
     runs = 1:32;
-    load('K:\603_L\60304\Users\Poikkimäki\GitHub\AECHAMO\Results and scripts_mp\SOA formation\Batch\Fixed_diff_molemass\10nm\fixed correct lambda\run_20130723T161001.mat')
+    load('K:\603_L\60304\Users\Poikkimäki\GitHub\AECHAMO\Results and scripts_mp\SOA formation\Batch\Fixed_diff_molemass\10nm\fixed correct lambda\fixed correct density\run_20130726T203251.mat')
 elseif file == 2
     runs = 1:32;
-    load('K:\603_L\60304\Users\Poikkimäki\GitHub\AECHAMO\Results and scripts_mp\SOA formation\Batch\Fixed_diff_molemass\80nm\fixed correct lambda\run_20130723T154011.mat')
+    load('K:\603_L\60304\Users\Poikkimäki\GitHub\AECHAMO\Results and scripts_mp\SOA formation\Batch\Fixed_diff_molemass\80nm\fixed correct lambda\fixed correct density\run_20130726T200039.mat')
 end
 %% i is index of run
 for i = runs    
@@ -85,10 +134,10 @@ end
 Yend = Yend';
 error_of_Yend = (Yend-Y)./Y;
 
-%% calculate and loglog fraction of ELVOC forming aerosol = Y and fraction of ELVOC lost to wall Mvwall/deltaP
+%% calculate fraction of ELVOC forming aerosol = Y and fraction of ELVOC lost to wall Mvwall/deltaP
 Wall_loss = zeros(1,length(deltaP_mass));
 for i4 = 1:length(deltaP_mass)    
-    % if deltaP_mass = 0, Y = inf or NaN
+    % if deltaP_mass = 0, Y = inf or NaN -> now Y = 0
     if deltaP_mass(i4) ~= 0
         Wall_loss(i4) = chamb(i).output_data.Mvwall(i4)/deltaP_mass(i4);
     else
@@ -108,79 +157,79 @@ end
 % what is loglog symbol (mark) its different for runs and files and same
 % for diff gamma but same other values
 
-% if file == 1
-%     if (i == 1) || (i == 2)
-%         mark = '.';        
-%     elseif (i == 3) || (i == 4)
-%         mark = 'o';
-%     elseif (i == 5) || (i == 6)
-%         mark = 'x';
-%     elseif (i == 7) || (i == 8)  
-%         mark = '+';
-%     elseif (i == 9) || (i == 10)
-%         mark = '*';
-%     elseif (i == 11) || (i == 12)
-%         mark = 's';
-%     elseif (i == 13) || (i == 14)
-%         mark = 'd';
-%     elseif (i == 15) || (i == 16)  
-%         mark = 'v';
-%     elseif (i == 17) || (i == 18)
-%         mark = 'k.';
-%     elseif (i == 19) || (i == 20)
-%         mark = 'ko';
-%     elseif (i == 21) || (i == 22)
-%         mark = 'kx';
-%     elseif (i == 23) || (i == 24)  
-%         mark = 'k+';
-%     elseif (i == 25) || (i == 26)  
-%         mark = 'k*';
-%     elseif (i == 27) || (i == 28)
-%         mark = 'ks';        
-%     elseif (i == 29) || (i == 30)
-%         mark = 'kd';
-%     elseif (i == 31) || (i == 32)
-%         mark = 'kv';
-%     end
-% elseif file == 2
-%     if (i == 1) || (i == 2)
-%         mark = 'r.';        
-%     elseif (i == 3) || (i == 4)
-%         mark = 'ro';
-%     elseif (i == 5) || (i == 6)
-%         mark = 'rx';
-%     elseif (i == 7) || (i == 8)  
-%         mark = 'r+';
-%     elseif (i == 9) || (i == 10)
-%         mark = 'r*';
-%     elseif (i == 11) || (i == 12)
-%         mark = 'rs';
-%     elseif (i == 13) || (i == 14)
-%         mark = 'rd';
-%     elseif (i == 15) || (i == 16)  
-%         mark = 'rv';
-%     elseif (i == 17) || (i == 18)
-%         mark = 'm.';
-%     elseif (i == 19) || (i == 20)
-%         mark = 'mo';
-%     elseif (i == 21) || (i == 22)
-%         mark = 'mx';
-%     elseif (i == 23) || (i == 24)  
-%         mark = 'm+';
-%     elseif (i == 25) || (i == 26)  
-%         mark = 'm*';
-%     elseif (i == 27) || (i == 28)
-%         mark = 'ms';        
-%     elseif (i == 29) || (i == 30)
-%         mark = 'md';
-%     elseif (i == 31) || (i == 32)
-%         mark = 'mv';
-%     end
-% end % mark
+if file == 1
+    if (i == 1) || (i == 2)
+        mark = '.';        
+    elseif (i == 3) || (i == 4)
+        mark = 'o';
+    elseif (i == 5) || (i == 6)
+        mark = 'x';
+    elseif (i == 7) || (i == 8)  
+        mark = '+';
+    elseif (i == 9) || (i == 10)
+        mark = '*';
+    elseif (i == 11) || (i == 12)
+        mark = 's';
+    elseif (i == 13) || (i == 14)
+        mark = 'd';
+    elseif (i == 15) || (i == 16)  
+        mark = 'v';
+    elseif (i == 17) || (i == 18)
+        mark = 'k.';
+    elseif (i == 19) || (i == 20)
+        mark = 'ko';
+    elseif (i == 21) || (i == 22)
+        mark = 'kx';
+    elseif (i == 23) || (i == 24)  
+        mark = 'k+';
+    elseif (i == 25) || (i == 26)  
+        mark = 'k*';
+    elseif (i == 27) || (i == 28)
+        mark = 'ks';        
+    elseif (i == 29) || (i == 30)
+        mark = 'kd';
+    elseif (i == 31) || (i == 32)
+        mark = 'kv';
+    end
+elseif file == 2
+    if (i == 1) || (i == 2)
+        mark = 'r.';        
+    elseif (i == 3) || (i == 4)
+        mark = 'ro';
+    elseif (i == 5) || (i == 6)
+        mark = 'rx';
+    elseif (i == 7) || (i == 8)  
+        mark = 'r+';
+    elseif (i == 9) || (i == 10)
+        mark = 'r*';
+    elseif (i == 11) || (i == 12)
+        mark = 'rs';
+    elseif (i == 13) || (i == 14)
+        mark = 'rd';
+    elseif (i == 15) || (i == 16)  
+        mark = 'rv';
+    elseif (i == 17) || (i == 18)
+        mark = 'm.';
+    elseif (i == 19) || (i == 20)
+        mark = 'mo';
+    elseif (i == 21) || (i == 22)
+        mark = 'mx';
+    elseif (i == 23) || (i == 24)  
+        mark = 'm+';
+    elseif (i == 25) || (i == 26)  
+        mark = 'm*';
+    elseif (i == 27) || (i == 28)
+        mark = 'ms';        
+    elseif (i == 29) || (i == 30)
+        mark = 'md';
+    elseif (i == 31) || (i == 32)
+        mark = 'mv';
+    end
+end % mark
 
 % calc Yend and Vtot if gamma = 1/500s
 if mod(i,2) == 0
-    mark = 'k+';
+    mark2 = 'k+';
 %i is even     
     % Yend at right time and save every value to vector
     Yend_real_900s = Y(tau);
@@ -192,9 +241,57 @@ if mod(i,2) == 0
     Vtot_end_900s = Vtot(tau);
     Vtot_end_save_900s(count2) = Vtot_end_900s;
     
+    % different mass lines
+    if file == 1
+        if  (i == 2) || (i == 4) || (i == 6) || (i == 8)  
+            mark_3ng_500s = 'b+';
+            Vtot_3ng_500s(c1) = Vtot(tau);
+            Yend_3ng_500s(c1) = Y(tau);
+            c1 = c1 + 1;
+        elseif (i == 10) || (i == 12) || (i == 14) || (i == 16)  
+            mark_15ng_500s = 'bx';
+            Vtot_15ng_500s(c2) = Vtot(tau);
+            Yend_15ng_500s(c2) = Y(tau);
+            c2 = c2 + 1;
+        elseif (i == 18) || (i == 20) || (i == 22) || (i == 24)  
+            mark_30ng_500s = 'bd';
+            Vtot_30ng_500s(c3) = Vtot(tau);
+            Yend_30ng_500s(c3) = Y(tau);
+            c3 = c3 + 1;
+        elseif (i == 26) || (i == 28) || (i == 30) || (i == 32)
+            mark_100ng_500s = 'bv';
+            Vtot_100ng_500s(c4) = Vtot(tau);
+            Yend_100ng_500s(c4) = Y(tau);
+            c4 = c4 + 1;
+        end
+    elseif file == 2
+        if  (i == 2) || (i == 4) || (i == 6) || (i == 8)  
+            mark_1000ng_500s = 'r+';
+            Vtot_1000ng_500s(c5) = Vtot(tau);
+            Yend_1000ng_500s(c5) = Y(tau);
+            c5 = c5 + 1;
+        elseif (i == 10) || (i == 12) || (i == 14) || (i == 16)  
+            mark_5000ng_500s = 'rx';
+            Vtot_5000ng_500s(c6) = Vtot(tau);
+            Yend_5000ng_500s(c6) = Y(tau);
+            c6 = c6 + 1;
+        elseif (i == 18) || (i == 20) || (i == 22) || (i == 24)  
+            mark_10000ng_500s = 'rd';
+            Vtot_10000ng_500s(c7) = Vtot(tau);
+            Yend_10000ng_500s(c7) = Y(tau);
+            c7 = c7 + 1;
+        elseif (i == 26) || (i == 28) || (i == 30) || (i == 32)
+            mark_30000ng_500s = 'rv';
+            Vtot_30000ng_500s(c8) = Vtot(tau);
+            Yend_30000ng_500s(c8) = Y(tau);
+            c8 = c8 + 1;
+        end
+    end
+    
+    
     % loglog Yend(CSend) (one point each time)
     h9 = figure(9);     
-    h2_CS(count2) = semilogx(CSend_900s, Yend_real_900s, mark);       
+    h2_CS(count2) = semilogx(CSend_900s, Yend_real_900s, mark2);       
     hold on;
     % loglog Yend(Vtot_end)(one point each time)
     h11 = figure(11);
@@ -227,7 +324,7 @@ if mod(i,2) == 0
     
 % calc Yend and Vtot if gamma = 1/50s
 else 
-    mark = 'kx';
+    mark1 = 'kx';
   %i is odd  
     
     % Yend at right time and save every value to vector
@@ -240,9 +337,56 @@ else
     Vtot_end_90s = Vtot(tau);
     Vtot_end_save_90s(count1) = Vtot_end_90s;
     
+    % different mass lines
+    if file == 1
+        if  (i == 1) || (i == 3) || (i == 5) || (i == 7)  
+            mark_3ng_50s = 'b.';
+            Vtot_3ng_50s(c10) = Vtot(tau);
+            Yend_3ng_50s(c10) = Y(tau);
+            c10 = c10 + 1;
+        elseif (i == 9) || (i == 11) || (i == 13) || (i == 15)  
+            mark_15ng_50s = 'b*';
+            Vtot_15ng_50s(c20) = Vtot(tau);
+            Yend_15ng_50s(c20) = Y(tau);
+            c20 = c20 + 1;
+        elseif (i == 17) || (i == 19) || (i == 21) || (i == 23)  
+            mark_30ng_50s = 'bo';
+            Vtot_30ng_50s(c30) = Vtot(tau);
+            Yend_30ng_50s(c30) = Y(tau);
+            c30 = c30 + 1;
+        elseif (i == 25) || (i == 27) || (i == 29) || (i == 31)
+            mark_100ng_50s = 'bs';
+            Vtot_100ng_50s(c40) = Vtot(tau);
+            Yend_100ng_50s(c40) = Y(tau);
+            c40 = c40 + 1;
+        end
+    elseif file == 2
+        if  (i == 1) || (i == 3) || (i == 5) || (i == 7)   
+            mark_1000ng_50s = 'r.';
+            Vtot_1000ng_50s(c50) = Vtot(tau);
+            Yend_1000ng_50s(c50) = Y(tau);
+            c50 = c50 + 1;
+        elseif (i == 9) || (i == 11) || (i == 13) || (i == 15)   
+            mark_5000ng_50s = 'r*';
+            Vtot_5000ng_50s(c60) = Vtot(tau);
+            Yend_5000ng_50s(c60) = Y(tau);
+            c60 = c60 + 1;
+        elseif (i == 17) || (i == 19) || (i == 21) || (i == 23)   
+            mark_10000ng_50s = 'ro';
+            Vtot_10000ng_50s(c70) = Vtot(tau);
+            Yend_10000ng_50s(c70) = Y(tau);
+            c70 = c70 + 1;
+        elseif (i == 25) || (i == 27) || (i == 29) || (i == 31)
+            mark_30000ng_50s = 'rs';
+            Vtot_30000ng_50s(c80) = Vtot(tau);
+            Yend_30000ng_50s(c80) = Y(tau);
+            c80 = c80 + 1;
+        end
+    end
+    
     % loglog Yend(CSend)(one point each time)
     h8 = figure(9);
-    h_CS(count1) = semilogx(CSend_90s, Yend_real_90s, mark);      
+    h_CS(count1) = semilogx(CSend_90s, Yend_real_90s, mark1);      
     hold on;
     % loglog Yend(Vtot_end)(one point each time)
     h10 = figure(11);
@@ -310,8 +454,8 @@ elseif file == 2
         % plot CS
         h30=figure(30);
         CS32 = loglog(tim,CS,'k:','LineWidth',lw);
-        handle1 = xlabel('time (s)');
-        handle2 = ylabel('CS (s^{-1})','rotation',90);
+        handl1 = xlabel('time (s)');
+        handl2 = ylabel('CS (s^{-1})','rotation',90);
         hold on;  
         %axis([5e1 4e4 8e-5 1.5e-1])
         matlab2tikz('CS_time.tikz','checkForUpdates',false,'showInfo', false);
@@ -509,6 +653,28 @@ yhandle900_V = ylabel('Y_{end}','rotation',90);
 %title('\alpha = 0.3 and \gamma = 1/500s');
 %fix axis
 %axis([1e-18 1e-15 1e-1 1])
+
+%% semilogx different N, Vtot
+
+figure(32);
+fig32 = semilogx(Vtot_3ng_50s, Yend_3ng_50s, mark_3ng_50s, ... 
+                Vtot_15ng_50s, Yend_15ng_50s, mark_15ng_50s, ...
+                Vtot_30ng_50s, Yend_30ng_50s, mark_30ng_50s, ...
+                Vtot_100ng_50s, Yend_100ng_50s, mark_100ng_50s, ...
+                Vtot_1000ng_50s, Yend_1000ng_50s, mark_1000ng_50s, ...
+                Vtot_5000ng_50s, Yend_5000ng_50s, mark_5000ng_50s, ...
+                Vtot_10000ng_50s, Yend_10000ng_50s, mark_10000ng_50s, ...
+                Vtot_30000ng_50s, Yend_30000ng_50s, mark_30000ng_50s, ...
+                Vtot_3ng_500s, Yend_3ng_500s, mark_3ng_500s, ...
+                Vtot_15ng_500s, Yend_15ng_500s, mark_15ng_500s, ...
+                Vtot_30ng_500s, Yend_30ng_500s, mark_30ng_500s, ...
+                Vtot_100ng_500s, Yend_100ng_500s, mark_100ng_500s, ...
+                Vtot_1000ng_500s, Yend_1000ng_500s, mark_1000ng_500s, ...
+                Vtot_5000ng_500s, Yend_5000ng_500s, mark_5000ng_500s, ...
+                Vtot_10000ng_500s, Yend_10000ng_500s, mark_10000ng_500s, ...
+                Vtot_30000ng_500s, Yend_30000ng_500s, mark_30000ng_500s);
+            
+% fits and legends            
 
 
 %% save pictures
