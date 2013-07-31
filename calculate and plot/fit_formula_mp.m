@@ -1,6 +1,6 @@
 function [out] = fit_formula_mp(x,y,mass_on,dashed)
 %linewidth
-lw=1;
+lw=1.3;
 % fit ap data
 xmin = min(x);
 xmax = max(x);
@@ -45,12 +45,12 @@ if mass_on == 0
 % if x = Vtot
 elseif mass_on == 1
     % a vapaa
-    s=fitoptions('Method','NonLinearLeastSquares','Startpoint',[0.1  100 ],'upper',[1 1e3],'lower',[0.003 0.00000010]);
+    s=fitoptions('Method','NonLinearLeastSquares','Startpoint',[0.1  100 ],'upper',[1 1e4],'lower',[0.0003 0.00000000010]);
     custom = 'a*(1/(1+b./(1e6.*1e6.*1.4.*1e6.*x)^0.63))'; % mass in µg/m3
     f = fittype(custom,'options',s);
 
     % a kiinnitetty a = 0.3;
-    s2=fitoptions('Method','NonLinearLeastSquares','Startpoint', 100 ,'upper',1e3,'lower',0.00000010);
+    s2=fitoptions('Method','NonLinearLeastSquares','Startpoint', 100 ,'upper',1e4,'lower',0.00000000010);
     custom2 = '0.3.*(1/(1+b./(1e6.*1e6.*1.4.*1e6.*x)^0.63))'; % mass in µg/m3
     f2 = fittype(custom2 ,'options',s2);
 
@@ -65,7 +65,15 @@ elseif mass_on == 1
 
     %plot(x,y,'ks')
     hold on;
-    out.pict_fit = plot(x0,feval(r,x0),'k-',x0,feval(r2,x0),'b-','LineWidth',lw);
+    if dashed == 0
+        out.pict_fit = plot(x0,feval(r,x0),'k-',x0,feval(r2,x0),'b-','LineWidth',lw);
+    elseif dashed == 1
+        out.pict_fit = plot(x0,feval(r,x0),'k--',x0,feval(r2,x0),'b--','LineWidth',lw);
+    elseif dashed == 2
+        out.pict_fit = plot(x0,feval(r,x0),'k:',x0,feval(r2,x0),'b:','LineWidth',lw);
+    elseif dashed == 3
+        out.pict_fit = plot(x0,feval(r,x0),'k-.',x0,feval(r2,x0),'b-.','LineWidth',lw);        
+    end   
     a_string = num2str(out.coeff_r(1));
     b_string = num2str(out.coeff_r(2));
     b2_string = num2str(out.coeff_r2(1));
