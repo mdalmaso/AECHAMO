@@ -131,14 +131,6 @@ for i=1:cols
             total_num = total_num * dep;
             ranges(j) = dep;
             j=j+1;
-    elseif(ro > 1)
-            variables(j).param_name=settings(i).param_name;
-            % Param_value is a vector of multiple rows:
-            variables(j).param_value=settings(i).param_value;
-%             total_num = total_num * ro;
-%             ranges(j) = ro;
-            ranges(j) = 1;
-            j=j+1;
     else
             constants(k).param_name=settings(i).param_name;
             constants(k).param_value = settings(i).param_value;
@@ -204,8 +196,7 @@ else
         chamb(obj_index).set_params(constants(i).param_name,constants(i).param_value);
     end
     for i=1:length(indices)
-        [ro col dep] = size(variables(i).param_value);
-        if(col > 1 && (strcmp(variables(i).param_name,'gas_source') || strcmp(variables(i).param_name,'part_source') || (strcmp(variables(i).param_name,'dilu_coeff'))))
+        if((strcmp(variables(i).param_name,'gas_source') || strcmp(variables(i).param_name,'part_source') || (strcmp(variables(i).param_name,'dilu_coeff'))))
             chamb(obj_index).set_params(variables(i).param_name,variables(i).param_value(:,:,indices(i)));
         else
             chamb(obj_index).set_params(variables(i).param_name,variables(i).param_value(indices(i),:));

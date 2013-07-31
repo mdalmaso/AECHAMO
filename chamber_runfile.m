@@ -57,12 +57,12 @@ end
 s = warning('error', 'MATLAB:ode45:IntegrationTolNotMet');
 for i=1:rows
     tic
-%     try 
+    try 
         chamb_temp(i).run;
-%     catch
-%         err_information=lasterror;
-%         chamb_temp(i).error_messages = err_information.message;
-%     end
+    catch
+        err_information=lasterror;
+        chamb_temp(i).error_messages = err_information.message;
+    end
     elapsed_temp(i) = toc;
     out_filename_temp{i} = strcat('temp_', datestr(now,30),'.mat');
     save(out_filename_temp{i},'chamb_temp','elapsed_temp');
