@@ -276,7 +276,7 @@ if mod(i,2) == 0
             Ntot_15ng_500s(c2) = Ntot(tau);
             c2 = c2 + 1;
         elseif (i == 18) || (i == 20) || (i == 22) || (i == 24)  
-            mark_30ng_500s = 'kd';
+            mark_30ng_500s = 'k^';
             Vtot_30ng_500s(c3) = Vtot(tau);
             Yend_30ng_500s(c3) = Y(tau);
             Ntot_30ng_500s(c3) = Ntot(tau);
@@ -302,7 +302,7 @@ if mod(i,2) == 0
             Ntot_5000ng_500s(c6) = Ntot(tau);
             c6 = c6 + 1;
         elseif (i == 18) || (i == 20) || (i == 22) || (i == 24)  
-            mark_10000ng_500s = 'kd';
+            mark_10000ng_500s = 'k^';
             Vtot_10000ng_500s(c7) = Vtot(tau);
             Yend_10000ng_500s(c7) = Y(tau);
             Ntot_10000ng_500s(c7) = Ntot(tau);
@@ -801,7 +801,7 @@ fitted_Vtot4_500s = fit_formula_mp(Vtot4_500s',Yend4_500s',1,7,mean(Ntot_30000ng
 % legends and axes
 
 hleg2 = legend([(fig32)',fitted_Vtot1_50s.pict_fit,fitted_Vtot2_50s.pict_fit,fitted_Vtot3_50s.pict_fit,fitted_Vtot4_50s.pict_fit,fitted_Vtot1_500s.pict_fit,fitted_Vtot2_500s.pict_fit,fitted_Vtot3_500s.pict_fit,fitted_Vtot4_500s.pict_fit],'data \gamma = 0.002, M_0 = 1','data \gamma = 0.002, M_0 = 5','data \gamma = 0.002, M_0 = 10','data \gamma = 0.002, M_0 = 30','data \gamma = 0.02, M_0 = 1','data \gamma = 0.02, M_0 = 5','data \gamma = 0.02, M_0 = 10','data \gamma = 0.02, M_0 = 30',fitted_Vtot1_50s.leg_name1,fitted_Vtot2_50s.leg_name1,fitted_Vtot3_50s.leg_name1,fitted_Vtot4_50s.leg_name1,fitted_Vtot1_500s.leg_name1,fitted_Vtot2_500s.leg_name1,fitted_Vtot3_500s.leg_name1,fitted_Vtot4_500s.leg_name1);
-Loc = 'NorthOutside';
+Loc = 'NorthWest';
 set(hleg2,'Location',Loc,'Fontsize',8)
 %legend(hleg2,'hide')
 legend(hleg2,'boxoff')
@@ -812,7 +812,7 @@ yhandle9 = ylabel('Y_{end}','rotation',90);
 % add title
 %title('\alpha = 0.3 and \gamma = 1/500s');
 %fix axis
-axis([2e-18 5e-16 0 0.30000001])
+axis([5e-19 5e-16 0 0.30000001])
 set(gca,'YTick',[0,0.1,0.2,0.3])
 
 %TextBox('\gamma = 1/50s',[20 20 5 0],figure(9))
