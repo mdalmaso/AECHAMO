@@ -6,6 +6,7 @@ roo = 1.4; % Particle density (g/cm3)
 M = 300; %g/mol precursor molar mass
 NA = 6.022e23; % 1/mol
 alfa = 0.3;
+ms = 8;
 
 %% initiate variables 
 count1 = 1;
@@ -318,7 +319,7 @@ if mod(i,2) == 0
     
     % loglog Yend(CSend) (one point each time)
     h9 = figure(9);     
-    h2_CS(count2) = semilogx(CSend_900s, Yend_real_900s, mark2);       
+    h2_CS(count2) = semilogx(CSend_900s, Yend_real_900s, mark2,'MarkerSize',ms);       
     hold on;
 %     % loglog Yend(Vtot_end)(one point each time)
 %     h11 = figure(11);
@@ -421,7 +422,7 @@ else
     
     % loglog Yend(CSend)(one point each time)
     h8 = figure(9);
-    h_CS(count1) = semilogx(CSend_90s, Yend_real_90s, mark1);      
+    h_CS(count1) = semilogx(CSend_90s, Yend_real_90s, mark1,'MarkerSize',ms);      
     hold on;
 %     % loglog Yend(Vtot_end)(one point each time)
 %     h10 = figure(11);
@@ -454,7 +455,7 @@ else
 end
 
 %% plot final CS and Moa examples
-lw = 1.3;
+lw = 1.5;
 if file == 1
     if (i == 3)        
         % plot CS
@@ -500,7 +501,7 @@ elseif file == 2
         handle1 = xlabel('time (s)');
         handle2 = ylabel('M_{OA} (\mugm^{-3})','rotation',90);    
         hold on;
-        axis([5e1 4e4 4e-3 6e2]) 
+        axis([5e1 4e4 4e-3 1e3]) 
         matlab2tikz('Moa_time.tikz','checkForUpdates',false,'showInfo', false, 'height', '\fheight', 'width', '\fwidth' );
     end
 end 
@@ -629,8 +630,8 @@ yhandle900 = ylabel('Y_{end}','rotation',90);
 % add title
 %title('\alpha = 0.3 and \gamma = 1/500s');
 %fix axis
-axis([1e-3 5e-1 0 0.3]);
-%set(gca,'YTick',[0,0.1,0.2,0.3])
+axis([1e-3 5e-1 0 0.30000001]);
+set(gca,'YTick',[0,0.1,0.2,0.3])
 
 %TextBox('\gamma = 1/50s',[20 20 5 0],figure(9))
 matlab2tikz('Yend_CSend.tikz','checkForUpdates',false,'showInfo', false, 'height', '\fheight', 'width', '\fwidth' );
@@ -717,7 +718,7 @@ fig32 = semilogx(Vtot_1000ng_50s, Yend_1000ng_50s, mark_1000ng_50s, ...
                 Vtot_1000ng_500s, Yend_1000ng_500s, mark_1000ng_500s, ...
                 Vtot_5000ng_500s, Yend_5000ng_500s, mark_5000ng_500s, ...
                 Vtot_10000ng_500s, Yend_10000ng_500s, mark_10000ng_500s, ...
-                Vtot_30000ng_500s, Yend_30000ng_500s, mark_30000ng_500s);
+                Vtot_30000ng_500s, Yend_30000ng_500s, mark_30000ng_500s,'MarkerSize',ms);
             
 % fig32 = semilogx(Vtot_3ng_50s, Yend_3ng_50s, mark_3ng_50s, ... 
 %                 Vtot_15ng_50s, Yend_15ng_50s, mark_15ng_50s, ...
@@ -782,15 +783,15 @@ Yend4_500s = Yend_30000ng_500s;
 
 % fit
 hold on;
-fitted_Vtot1_50s = fit_formula_mp(Vtot1_50s',Yend1_50s',1,0);
-fitted_Vtot2_50s = fit_formula_mp(Vtot2_50s',Yend2_50s',1,1);
-fitted_Vtot3_50s = fit_formula_mp(Vtot3_50s',Yend3_50s',1,2);
-fitted_Vtot4_50s = fit_formula_mp(Vtot4_50s',Yend4_50s',1,3);
+fitted_Vtot1_50s = fit_formula_mp(Vtot1_50s',Yend1_50s',1,0,mean(Ntot_1000ng_50s));
+fitted_Vtot2_50s = fit_formula_mp(Vtot2_50s',Yend2_50s',1,1,mean(Ntot_5000ng_50s));
+fitted_Vtot3_50s = fit_formula_mp(Vtot3_50s',Yend3_50s',1,2,mean(Ntot_10000ng_50s));
+fitted_Vtot4_50s = fit_formula_mp(Vtot4_50s',Yend4_50s',1,3,mean(Ntot_30000ng_50s));
 
-fitted_Vtot1_500s = fit_formula_mp(Vtot1_500s',Yend1_500s',1,4);
-fitted_Vtot2_500s = fit_formula_mp(Vtot2_500s',Yend2_500s',1,5);
-fitted_Vtot3_500s = fit_formula_mp(Vtot3_500s',Yend3_500s',1,6);
-fitted_Vtot4_500s = fit_formula_mp(Vtot4_500s',Yend4_500s',1,7);
+fitted_Vtot1_500s = fit_formula_mp(Vtot1_500s',Yend1_500s',1,4,mean(Ntot_1000ng_500s));
+fitted_Vtot2_500s = fit_formula_mp(Vtot2_500s',Yend2_500s',1,5,mean(Ntot_5000ng_500s));
+fitted_Vtot3_500s = fit_formula_mp(Vtot3_500s',Yend3_500s',1,6,mean(Ntot_10000ng_500s));
+fitted_Vtot4_500s = fit_formula_mp(Vtot4_500s',Yend4_500s',1,7,mean(Ntot_30000ng_500s));
 
 % % % theoretical fit
 % % Vtot1_area_50s = min(Vtot1_50s)*0.9:max(Vtot1_50s)/100:max(Vtot1_50s)*1.1;
@@ -799,11 +800,12 @@ fitted_Vtot4_500s = fit_formula_mp(Vtot4_500s',Yend4_500s',1,7);
 
 % legends and axes
 
-hleg2 = legend([(fig32)',fitted_Vtot1_50s.pict_fit,fitted_Vtot2_50s.pict_fit,fitted_Vtot3_50s.pict_fit,fitted_Vtot4_50s.pict_fit,fitted_Vtot1_500s.pict_fit,fitted_Vtot2_500s.pict_fit,fitted_Vtot3_500s.pict_fit,fitted_Vtot4_500s.pict_fit],'data \gamma = 0.002, M_0 = 1','data \gamma = 0.002, M_0 = 5','data \gamma = 0.002, M_0 = 10','data \gamma = 0.002, M_0 = 30','data \gamma = 0.02, M_0 = 1','data \gamma = 0.02, M_0 = 5','data \gamma = 0.02, M_0 = 10','data \gamma = 0.02, M_0 = 30',fitted_Vtot1_50s.leg_name1,fitted_Vtot2_50s.leg_name1,fitted_Vtot3_50s.leg_name1,fitted_Vtot4_50s.leg_name1,fitted_Vtot1_500s.leg_name1,fitted_Vtot2_500s.leg_name1,fitted_Vtot3_500s.leg_name1,fitted_Vtot4_500s.leg_name1);
-Loc = 'NorthWest';
-set(hleg2,'Location',Loc,'Fontsize',8)
-%legend(hleg2,'hide')
-legend(hleg2,'boxoff')
+hleg2 = [{'data \gamma = 0.002, M_0 = 1','data \gamma = 0.002, M_0 = 5','data \gamma = 0.002, M_0 = 10','data \gamma = 0.002, M_0 = 30','data \gamma = 0.02, M_0 = 1','data \gamma = 0.02, M_0 = 5','data \gamma = 0.02, M_0 = 10','data \gamma = 0.02, M_0 = 30',fitted_Vtot1_50s.leg_name1,fitted_Vtot2_50s.leg_name1,fitted_Vtot3_50s.leg_name1,fitted_Vtot4_50s.leg_name1,fitted_Vtot1_500s.leg_name1,fitted_Vtot2_500s.leg_name1,fitted_Vtot3_500s.leg_name1,fitted_Vtot4_500s.leg_name1}];
+% % % % % % % % % Loc = 'NorthOutside';
+% % % % % % % % % set(hleg2,'Location',Loc,'Fontsize',8)
+% % % % % % % % % %legend(hleg2,'hide')
+% % % % % % % % % legend(hleg2,'boxoff')
+columnlegend(2,hleg2,'Location','NorthOutside','boxoff');
 % add labels
 xhandle9 = xlabel('V_{end} (m^3/cm^3)');
 yhandle9 = ylabel('Y_{end}','rotation',90); 
@@ -811,8 +813,8 @@ yhandle9 = ylabel('Y_{end}','rotation',90);
 % add title
 %title('\alpha = 0.3 and \gamma = 1/500s');
 %fix axis
-axis([2e-18 5e-16 0 0.3])
-%set(gca,'YTick',[0,0.1,0.2,0.3])
+axis([2e-18 5e-16 0 0.30000001])
+set(gca,'YTick',[0,0.1,0.2,0.3])
 
 %TextBox('\gamma = 1/50s',[20 20 5 0],figure(9))
 matlab2tikz('Yend_Vend.tikz','checkForUpdates',false,'showInfo', false, 'height', '\fheight', 'width', '\fwidth' );
