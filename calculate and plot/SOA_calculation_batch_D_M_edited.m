@@ -1,13 +1,13 @@
 clear all;
 close all;
 
-% constants
+%% constants
 roo = 1.4; % Particle density (g/cm3)
 M = 300; %g/mol precursor molar mass
 NA = 6.022e23; % 1/mol
 alfa = 0.3;
 
-% initiate variables 
+%% initiate variables 
 count1 = 1;
 count2 = 1;
 c1 = 1;
@@ -73,6 +73,24 @@ Yend_10000ng_500s = zeros(1,4);
 Vtot_30000ng_500s = zeros(1,4);
 Yend_30000ng_500s = zeros(1,4);
 
+Ntot_3ng_50s = zeros(1,4);
+Ntot_15ng_50s = zeros(1,4);
+Ntot_30ng_50s = zeros(1,4);
+Ntot_100ng_50s = zeros(1,4);
+Ntot_1000ng_50s = zeros(1,4);
+Ntot_5000ng_50s = zeros(1,4);
+Ntot_10000ng_50s = zeros(1,4);
+Ntot_30000ng_50s = zeros(1,4);
+Ntot_3ng_500s = zeros(1,4);
+Ntot_15ng_500s = zeros(1,4);
+Ntot_30ng_500s = zeros(1,4);
+Ntot_100ng_500s = zeros(1,4);
+Ntot_1000ng_500s = zeros(1,4);
+Ntot_5000ng_500s = zeros(1,4);
+Ntot_10000ng_500s = zeros(1,4);
+Ntot_30000ng_500s = zeros(1,4);
+
+%% calc and plot starts
 for file = 1:2
 % data files and runs for calc
 if file == 1
@@ -85,6 +103,7 @@ end
 %% i is index of run
 for i = runs    
 %% calculate deltaMoa
+Ntot = chamb(i).output_data.Ntot; % 1/cm3
 Vtot = chamb(i).output_data.Vtot; % m3/cm3
 tim = chamb(i).output_data.tim;
 deltaVtot = Vtot - Vtot(1);
@@ -244,46 +263,54 @@ if mod(i,2) == 0
     % different mass lines
     if file == 1
         if  (i == 2) || (i == 4) || (i == 6) || (i == 8)  
-            mark_3ng_500s = 'b+';
+            mark_3ng_500s = 'k+';
             Vtot_3ng_500s(c1) = Vtot(tau);
             Yend_3ng_500s(c1) = Y(tau);
+            Ntot_3ng_500s(c1) = Ntot(tau);
             c1 = c1 + 1;
         elseif (i == 10) || (i == 12) || (i == 14) || (i == 16)  
-            mark_15ng_500s = 'bx';
+            mark_15ng_500s = 'kx';
             Vtot_15ng_500s(c2) = Vtot(tau);
             Yend_15ng_500s(c2) = Y(tau);
+            Ntot_15ng_500s(c2) = Ntot(tau);
             c2 = c2 + 1;
         elseif (i == 18) || (i == 20) || (i == 22) || (i == 24)  
-            mark_30ng_500s = 'bd';
+            mark_30ng_500s = 'kd';
             Vtot_30ng_500s(c3) = Vtot(tau);
             Yend_30ng_500s(c3) = Y(tau);
+            Ntot_30ng_500s(c3) = Ntot(tau);
             c3 = c3 + 1;
         elseif (i == 26) || (i == 28) || (i == 30) || (i == 32)
-            mark_100ng_500s = 'bv';
+            mark_100ng_500s = 'kv';
             Vtot_100ng_500s(c4) = Vtot(tau);
             Yend_100ng_500s(c4) = Y(tau);
+            Ntot_100ng_500s(c4) = Ntot(tau);
             c4 = c4 + 1;
         end
     elseif file == 2
         if  (i == 2) || (i == 4) || (i == 6) || (i == 8)  
-            mark_1000ng_500s = 'r+';
+            mark_1000ng_500s = 'k+';
             Vtot_1000ng_500s(c5) = Vtot(tau);
             Yend_1000ng_500s(c5) = Y(tau);
+            Ntot_1000ng_500s(c5) = Ntot(tau);
             c5 = c5 + 1;
         elseif (i == 10) || (i == 12) || (i == 14) || (i == 16)  
-            mark_5000ng_500s = 'rx';
+            mark_5000ng_500s = 'kx';
             Vtot_5000ng_500s(c6) = Vtot(tau);
             Yend_5000ng_500s(c6) = Y(tau);
+            Ntot_5000ng_500s(c6) = Ntot(tau);
             c6 = c6 + 1;
         elseif (i == 18) || (i == 20) || (i == 22) || (i == 24)  
-            mark_10000ng_500s = 'rd';
+            mark_10000ng_500s = 'kd';
             Vtot_10000ng_500s(c7) = Vtot(tau);
             Yend_10000ng_500s(c7) = Y(tau);
+            Ntot_10000ng_500s(c7) = Ntot(tau);
             c7 = c7 + 1;
         elseif (i == 26) || (i == 28) || (i == 30) || (i == 32)
-            mark_30000ng_500s = 'rv';
+            mark_30000ng_500s = 'kv';
             Vtot_30000ng_500s(c8) = Vtot(tau);
             Yend_30000ng_500s(c8) = Y(tau);
+            Ntot_30000ng_500s(c8) = Ntot(tau);
             c8 = c8 + 1;
         end
     end
@@ -340,46 +367,54 @@ else
     % different mass lines
     if file == 1
         if  (i == 1) || (i == 3) || (i == 5) || (i == 7)  
-            mark_3ng_50s = 'b.';
+            mark_3ng_50s = 'k.';
             Vtot_3ng_50s(c10) = Vtot(tau);
             Yend_3ng_50s(c10) = Y(tau);
+            Ntot_3ng_50s(c10) = Ntot(tau);
             c10 = c10 + 1;
         elseif (i == 9) || (i == 11) || (i == 13) || (i == 15)  
-            mark_15ng_50s = 'b*';
+            mark_15ng_50s = 'k*';
             Vtot_15ng_50s(c20) = Vtot(tau);
             Yend_15ng_50s(c20) = Y(tau);
+            Ntot_15ng_50s(c20) = Ntot(tau);
             c20 = c20 + 1;
         elseif (i == 17) || (i == 19) || (i == 21) || (i == 23)  
-            mark_30ng_50s = 'bo';
+            mark_30ng_50s = 'ko';
             Vtot_30ng_50s(c30) = Vtot(tau);
             Yend_30ng_50s(c30) = Y(tau);
+            Ntot_30ng_50s(c30) = Ntot(tau);
             c30 = c30 + 1;
         elseif (i == 25) || (i == 27) || (i == 29) || (i == 31)
-            mark_100ng_50s = 'bs';
+            mark_100ng_50s = 'ks';
             Vtot_100ng_50s(c40) = Vtot(tau);
             Yend_100ng_50s(c40) = Y(tau);
+            Ntot_100ng_50s(c40) = Ntot(tau);
             c40 = c40 + 1;
         end
     elseif file == 2
         if  (i == 1) || (i == 3) || (i == 5) || (i == 7)   
-            mark_1000ng_50s = 'r.';
+            mark_1000ng_50s = 'k.';
             Vtot_1000ng_50s(c50) = Vtot(tau);
             Yend_1000ng_50s(c50) = Y(tau);
+            Ntot_1000ng_50s(c50) = Ntot(tau);
             c50 = c50 + 1;
         elseif (i == 9) || (i == 11) || (i == 13) || (i == 15)   
-            mark_5000ng_50s = 'r*';
+            mark_5000ng_50s = 'k*';
             Vtot_5000ng_50s(c60) = Vtot(tau);
             Yend_5000ng_50s(c60) = Y(tau);
+            Ntot_5000ng_50s(c60) = Ntot(tau);
             c60 = c60 + 1;
         elseif (i == 17) || (i == 19) || (i == 21) || (i == 23)   
-            mark_10000ng_50s = 'ro';
+            mark_10000ng_50s = 'ko';
             Vtot_10000ng_50s(c70) = Vtot(tau);
             Yend_10000ng_50s(c70) = Y(tau);
+            Ntot_10000ng_50s(c70) = Ntot(tau);
             c70 = c70 + 1;
         elseif (i == 25) || (i == 27) || (i == 29) || (i == 31)
-            mark_30000ng_50s = 'rs';
+            mark_30000ng_50s = 'ks';
             Vtot_30000ng_50s(c80) = Vtot(tau);
             Yend_30000ng_50s(c80) = Y(tau);
+            Ntot_30000ng_50s(c80) = Ntot(tau);
             c80 = c80 + 1;
         end
     end
@@ -573,7 +608,7 @@ h2_CS(count2) = loglog(CSarea_900s, Yend_kaava_900s, 'r--','LineWidth',lw);
 % fit data
 fitted_900s = fit_formula_mp(CSsave_900s',Yend_real_save_900s',0,1);
 % edit legend 
-hleg2 = legend([h2_CS(1),h2_CS(end),(fitted_900s.pict_fit)',h_CS(1),h_CS(end),(fitted_90s.pict_fit)'],'data \gamma = 0.002',['fit \alpha = 0.3     \gamma = 0.002'],fitted_900s.leg_name1,fitted_900s.leg_name2,'data \gamma = 0.02',['fit \alpha = 0.3     \gamma = 0.02'],fitted_90s.leg_name1,fitted_90s.leg_name2);
+hleg2 = legend([h2_CS(1),h2_CS(end),(fitted_900s.pict_fit)',h_CS(1),h_CS(end),(fitted_90s.pict_fit)'],'data \gamma = 0.002','fit \alpha = 0.3     \gamma = 0.002',fitted_900s.leg_name1,fitted_900s.leg_name2,'data \gamma = 0.02','fit \alpha = 0.3     \gamma = 0.02',fitted_90s.leg_name1,fitted_90s.leg_name2);
 %         '10nm,3ng/m^3,10ppb',      '                     50ppb','                     100ppb','                     200ppb',...
 %         '       15ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
 %         '       30ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
@@ -654,59 +689,113 @@ yhandle900_V = ylabel('Y_{end}','rotation',90);
 %fix axis
 %axis([1e-18 1e-15 1e-1 1])
 
+%% mean values for Nend
+
+mean1 = mean([Ntot_3ng_50s Ntot_1000ng_50s]);
+mean2 = mean([Ntot_15ng_50s Ntot_5000ng_50s]);
+mean3 = mean([Ntot_30ng_50s Ntot_10000ng_50s]);
+mean4 = mean([Ntot_100ng_50s Ntot_30000ng_50s]);
+
+mean5 = mean([Ntot_3ng_500s Ntot_1000ng_500s]);
+mean6 = mean([Ntot_15ng_500s Ntot_5000ng_500s]);
+mean7 = mean([Ntot_30ng_500s Ntot_10000ng_500s]);
+mean8 = mean([Ntot_100ng_500s Ntot_30000ng_500s]);
+
+double_mean1 = mean([mean1 mean5]);
+double_mean2 = mean([mean2 mean6]);
+double_mean3 = mean([mean3 mean7]);
+double_mean4 = mean([mean4 mean8]);
+
 %% semilogx different N, Vtot
 
 figure(32);
-fig32 = semilogx(Vtot_3ng_50s, Yend_3ng_50s, mark_3ng_50s, ... 
-                Vtot_15ng_50s, Yend_15ng_50s, mark_15ng_50s, ...
-                Vtot_30ng_50s, Yend_30ng_50s, mark_30ng_50s, ...
-                Vtot_100ng_50s, Yend_100ng_50s, mark_100ng_50s, ...
-                Vtot_1000ng_50s, Yend_1000ng_50s, mark_1000ng_50s, ...
+
+fig32 = semilogx(Vtot_1000ng_50s, Yend_1000ng_50s, mark_1000ng_50s, ...
                 Vtot_5000ng_50s, Yend_5000ng_50s, mark_5000ng_50s, ...
                 Vtot_10000ng_50s, Yend_10000ng_50s, mark_10000ng_50s, ...
                 Vtot_30000ng_50s, Yend_30000ng_50s, mark_30000ng_50s, ...
-                Vtot_3ng_500s, Yend_3ng_500s, mark_3ng_500s, ...
-                Vtot_15ng_500s, Yend_15ng_500s, mark_15ng_500s, ...
-                Vtot_30ng_500s, Yend_30ng_500s, mark_30ng_500s, ...
-                Vtot_100ng_500s, Yend_100ng_500s, mark_100ng_500s, ...
                 Vtot_1000ng_500s, Yend_1000ng_500s, mark_1000ng_500s, ...
                 Vtot_5000ng_500s, Yend_5000ng_500s, mark_5000ng_500s, ...
                 Vtot_10000ng_500s, Yend_10000ng_500s, mark_10000ng_500s, ...
                 Vtot_30000ng_500s, Yend_30000ng_500s, mark_30000ng_500s);
             
+% fig32 = semilogx(Vtot_3ng_50s, Yend_3ng_50s, mark_3ng_50s, ... 
+%                 Vtot_15ng_50s, Yend_15ng_50s, mark_15ng_50s, ...
+%                 Vtot_30ng_50s, Yend_30ng_50s, mark_30ng_50s, ...
+%                 Vtot_100ng_50s, Yend_100ng_50s, mark_100ng_50s, ...
+%                 Vtot_1000ng_50s, Yend_1000ng_50s, mark_1000ng_50s, ...
+%                 Vtot_5000ng_50s, Yend_5000ng_50s, mark_5000ng_50s, ...
+%                 Vtot_10000ng_50s, Yend_10000ng_50s, mark_10000ng_50s, ...
+%                 Vtot_30000ng_50s, Yend_30000ng_50s, mark_30000ng_50s, ...
+%                 Vtot_3ng_500s, Yend_3ng_500s, mark_3ng_500s, ...
+%                 Vtot_15ng_500s, Yend_15ng_500s, mark_15ng_500s, ...
+%                 Vtot_30ng_500s, Yend_30ng_500s, mark_30ng_500s, ...
+%                 Vtot_100ng_500s, Yend_100ng_500s, mark_100ng_500s, ...
+%                 Vtot_1000ng_500s, Yend_1000ng_500s, mark_1000ng_500s, ...
+%                 Vtot_5000ng_500s, Yend_5000ng_500s, mark_5000ng_500s, ...
+%                 Vtot_10000ng_500s, Yend_10000ng_500s, mark_10000ng_500s, ...
+%                 Vtot_30000ng_500s, Yend_30000ng_500s, mark_30000ng_500s);
+            
 % fits and legends
 
-% fitted vectors
-Vtot1_50s = [Vtot_3ng_50s Vtot_1000ng_50s];
-Vtot2_50s = [Vtot_15ng_50s Vtot_5000ng_50s];
-Vtot3_50s = [Vtot_30ng_50s Vtot_10000ng_50s];
-Vtot4_50s = [Vtot_100ng_50s Vtot_30000ng_50s];
+% fitted to be vectors
+Vtot1_50s = Vtot_1000ng_50s;
+Vtot2_50s = Vtot_5000ng_50s;
+Vtot3_50s = Vtot_10000ng_50s;
+Vtot4_50s = Vtot_30000ng_50s;
 
-Yend1_50s = [Yend_3ng_50s Yend_1000ng_50s];
-Yend2_50s = [Yend_15ng_50s Yend_5000ng_50s];
-Yend3_50s = [Yend_30ng_50s Yend_10000ng_50s];
-Yend4_50s = [Yend_100ng_50s Yend_30000ng_50s];
+Yend1_50s = Yend_1000ng_50s;
+Yend2_50s = Yend_5000ng_50s;
+Yend3_50s = Yend_10000ng_50s;
+Yend4_50s = Yend_30000ng_50s;
 
-Vtot1_500s = [Vtot_3ng_500s Vtot_1000ng_500s];
-Vtot2_500s = [Vtot_15ng_500s Vtot_5000ng_500s];
-Vtot3_500s = [Vtot_30ng_500s Vtot_10000ng_500s];
-Vtot4_500s = [Vtot_100ng_500s Vtot_30000ng_500s];
+Vtot1_500s = Vtot_1000ng_500s;
+Vtot2_500s = Vtot_5000ng_500s;
+Vtot3_500s = Vtot_10000ng_500s;
+Vtot4_500s = Vtot_30000ng_500s;
 
-Yend1_500s = [Yend_3ng_500s Yend_1000ng_500s];
-Yend2_500s = [Yend_15ng_500s Yend_5000ng_500s];
-Yend3_500s = [Yend_30ng_500s Yend_10000ng_500s];
-Yend4_500s = [Yend_100ng_500s Yend_30000ng_500s];
+Yend1_500s = Yend_1000ng_500s;
+Yend2_500s = Yend_5000ng_500s;
+Yend3_500s = Yend_10000ng_500s;
+Yend4_500s = Yend_30000ng_500s;
 
+% % fitted to be vectors
+% Vtot1_50s = [Vtot_3ng_50s Vtot_1000ng_50s];
+% Vtot2_50s = [Vtot_15ng_50s Vtot_5000ng_50s];
+% Vtot3_50s = [Vtot_30ng_50s Vtot_10000ng_50s];
+% Vtot4_50s = [Vtot_100ng_50s Vtot_30000ng_50s];
+% 
+% Yend1_50s = [Yend_3ng_50s Yend_1000ng_50s];
+% Yend2_50s = [Yend_15ng_50s Yend_5000ng_50s];
+% Yend3_50s = [Yend_30ng_50s Yend_10000ng_50s];
+% Yend4_50s = [Yend_100ng_50s Yend_30000ng_50s];
+% 
+% Vtot1_500s = [Vtot_3ng_500s Vtot_1000ng_500s];
+% Vtot2_500s = [Vtot_15ng_500s Vtot_5000ng_500s];
+% Vtot3_500s = [Vtot_30ng_500s Vtot_10000ng_500s];
+% Vtot4_500s = [Vtot_100ng_500s Vtot_30000ng_500s];
+% 
+% Yend1_500s = [Yend_3ng_500s Yend_1000ng_500s];
+% Yend2_500s = [Yend_15ng_500s Yend_5000ng_500s];
+% Yend3_500s = [Yend_30ng_500s Yend_10000ng_500s];
+% Yend4_500s = [Yend_100ng_500s Yend_30000ng_500s];
+
+% fit
 hold on;
 fitted_Vtot1_50s = fit_formula_mp(Vtot1_50s',Yend1_50s',1,0);
-fitted_Vtot2_50s = fit_formula_mp(Vtot2_50s',Yend2_50s',1,0);
-fitted_Vtot3_50s = fit_formula_mp(Vtot3_50s',Yend3_50s',1,0);
-fitted_Vtot4_50s = fit_formula_mp(Vtot4_50s',Yend4_50s',1,0);
+fitted_Vtot2_50s = fit_formula_mp(Vtot2_50s',Yend2_50s',1,1);
+fitted_Vtot3_50s = fit_formula_mp(Vtot3_50s',Yend3_50s',1,2);
+fitted_Vtot4_50s = fit_formula_mp(Vtot4_50s',Yend4_50s',1,3);
 
 fitted_Vtot1_500s = fit_formula_mp(Vtot1_500s',Yend1_500s',1,0);
-fitted_Vtot2_500s = fit_formula_mp(Vtot2_500s',Yend2_500s',1,0);
-fitted_Vtot3_500s = fit_formula_mp(Vtot3_500s',Yend3_500s',1,0);
-fitted_Vtot4_500s = fit_formula_mp(Vtot4_500s',Yend4_500s',1,0);
+fitted_Vtot2_500s = fit_formula_mp(Vtot2_500s',Yend2_500s',1,1);
+fitted_Vtot3_500s = fit_formula_mp(Vtot3_500s',Yend3_500s',1,2);
+fitted_Vtot4_500s = fit_formula_mp(Vtot4_500s',Yend4_500s',1,3);
+
+% % % theoretical fit
+% % Vtot1_area_50s = min(Vtot1_50s)*0.9:max(Vtot1_50s)/100:max(Vtot1_50s)*1.1;
+% % Yend_kaava_Vtot1_50s = alfa./(1+(1/500)./(2e-4.*(double_mean1.^0.37).*(1e6.*1e6.*roo.*1e6.*Vtot1_area_50s).^0.63)); % mass in µg
+% % h_Vtot1 = loglog(Vtot1_area_50s, Yend_kaava_Vtot1_50s, 'r');
 
 %% save pictures
 % saveas(h8,'Yend(CSend)_50s.fig')
