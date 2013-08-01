@@ -7,20 +7,20 @@
 \begin{tikzpicture}
 
 \begin{loglogaxis}[%
-width=4.52083333333333in,
-height=3.565625in,
+width=\fwidth,
+height=\fheight,
 scale only axis,
-xmin=10, xmax=100000,
+xmin=50, xmax=40000,
 xminorticks=true,
 xlabel={time (s)},
-ymin=1e-05, ymax=1,
+ymin=8e-05, ymax=0.15,
 yminorticks=true,
 ylabel={$\text{CS (s}^{\text{-1}}\text{)}$}
 ]
 \addplot [
 color=black,
 solid,
-line width=1.0pt,
+line width=1.5pt,
 forget plot
 ]
 table{
@@ -629,7 +629,7 @@ table{
 \addplot [
 color=black,
 dashed,
-line width=1.0pt,
+line width=1.5pt,
 forget plot
 ]
 table{
@@ -1238,7 +1238,7 @@ table{
 \addplot [
 color=black,
 dash pattern=on 1pt off 3pt on 3pt off 3pt,
-line width=1.0pt,
+line width=1.5pt,
 forget plot
 ]
 table{
@@ -1847,7 +1847,7 @@ table{
 \addplot [
 color=black,
 dotted,
-line width=1.0pt,
+line width=1.5pt,
 forget plot
 ]
 table{
