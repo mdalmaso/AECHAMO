@@ -11,6 +11,8 @@ function initialize(obj,varargin)
 %
 % THE PARAMETERS OF THE CHAMBER MODEL
 % 
+% For up-to-date list of parameters, see the documentation.
+% 
 % SWITCHES:
 % dilu_on           Defines whether the dilution is on or not. If
 %                   dilu_on = 0, there will not happen dilution in the

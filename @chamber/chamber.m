@@ -1,11 +1,3 @@
-% (c) Pauli Simonen 2013
-%
-% Version history:
-% 2013-05-24    0.1.0
-% 2013-05-31    0.1.1 Added method run_moving_center.
-% 2013-06-04    0.1.2 Splitted method initialize to methods set_params and
-%                     check_initials.
-
 classdef chamber < handle
 
 % Class chamber 
@@ -44,7 +36,7 @@ classdef chamber < handle
 % 
 % % Initialize chamb with default values, except for chamb.Ntot and chamb.T
 % % that are defined as chamb.Ntot = 1e6 and chamb.T = 300.
-% chamb.initialize('Ntot0',1e6,'T',300);
+% chamb.initialize('N',1e6,'T',300);
 % 
 % chamb.run; %Run the simulation.
 % 
@@ -56,6 +48,15 @@ classdef chamber < handle
 % % Plot the total particle concentration as a function of time:
 % plot(dat.tim, dat.Ntot);
 % 
+
+% (c) Pauli Simonen 2013
+%
+% Version history:
+% 2013-05-24    0.1.0
+% 2013-05-31    0.1.1 Added method run_moving_center.
+% 2013-06-04    0.1.2 Splitted method initialize to methods set_params and
+%                     check_initials.
+
     properties (Access = public)
         error_messages  % Contains warnings and errors during simulation.
     end
@@ -91,6 +92,9 @@ classdef chamber < handle
         
         % Makes a copy of a chamber object:
         function [new_object] = copy(object)
+            %Copies all the data of a chamber object and makes a new 
+            %chamber object using the copied values.
+            
             % Make a new object of the same class.
             new_object = feval(class(object));
  

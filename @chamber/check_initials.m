@@ -1,5 +1,12 @@
 function [] = check_initials(obj)
 %CHECK_INITIALS Checks the initial parameters and reports errors.
+% 
+%If the initial parameters are set using function chamber.initialize, there
+%is no need to check them with this function anymore, as the function
+%chamber.initialize has already done it.
+%
+%If the initial parameters are set using function chamber.set_params, the
+%parameters should be checked afterwards using this function.
 
 % (c) Pauli Simonen 2013
 %

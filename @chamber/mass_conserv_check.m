@@ -1,6 +1,6 @@
 function [] = mass_conserv_check( chamber )
 %MASS_CONSERV_CHECK Finds out if the mass is conserved during simulation.
-% Detailed explanation goes here
+
 
 initials = chamber.initials;
 output = chamber.output_data;

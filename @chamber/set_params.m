@@ -1,7 +1,9 @@
 function set_params(obj, varargin)
 % SET_PARAMS Sets the parameters for chamber object.
 %
-% Sets the initial parameters of the chamber object (obj).
+% Sets the initial parameters of the chamber object (obj) but does not
+% check the correctness of them.
+% For initializing the values, use method chamber.initialize instead!
 %
 % obj.set_params('field_name_1', value_1, ...
 %               'field_name_2', value_2, ...
@@ -10,8 +12,7 @@ function set_params(obj, varargin)
 % field_name_2 and field_name_n are replaced by values value_1, value_2 
 % and value_n, respectively. Other fields will not be changed.
 % 
-% A private function of class chamber, used by chamber.initialize.
-% For initializing the values, use method chamber.initialize!
+% This function is used by chamber.initialize.
 
 %
 % THE PARAMETERS OF THE CHAMBER MODEL
