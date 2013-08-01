@@ -72,12 +72,20 @@ elseif mass_on == 1
     elseif dashed == 2
         out.pict_fit = plot(x0,feval(r,x0),'k:','LineWidth',lw);
     elseif dashed == 3
-        out.pict_fit = plot(x0,feval(r,x0),'k-.','LineWidth',lw);        
+        out.pict_fit = plot(x0,feval(r,x0),'k-.','LineWidth',lw);  
+    elseif dashed == 4
+        out.pict_fit = plot(x0,feval(r,x0),'r-','LineWidth',lw);
+    elseif dashed == 5
+        out.pict_fit = plot(x0,feval(r,x0),'r--','LineWidth',lw);
+    elseif dashed == 6
+        out.pict_fit = plot(x0,feval(r,x0),'r:','LineWidth',lw);
+    elseif dashed == 7
+        out.pict_fit = plot(x0,feval(r,x0),'r-.','LineWidth',lw); 
     end   
     a_string = num2str(out.coeff_r(1));
     b_string = num2str(out.coeff_r(2));
     b2_string = num2str(out.coeff_r2(1));
-    out.leg_name1 =  sprintf(['fit a = ' a_string ' and \n b = ' b_string]);
+    out.leg_name1 =  sprintf(['fit \alpha = ' a_string ' and \n b = ' b_string]);
     out.leg_name2 =  sprintf(['fit b = ' b2_string]);
 %     out.leg_name1 =  sprintf(['fit ' custom ' with \n a = ' a_string ' ja b = ' b_string]);
 %     out.leg_name2 =  sprintf(['fit ' custom2 ' with \n b = ' b2_string]);
