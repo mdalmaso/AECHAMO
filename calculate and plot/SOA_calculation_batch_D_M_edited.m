@@ -800,12 +800,11 @@ fitted_Vtot4_500s = fit_formula_mp(Vtot4_500s',Yend4_500s',1,7,mean(Ntot_30000ng
 
 % legends and axes
 
-hleg2 = [{'data \gamma = 0.002, M_0 = 1','data \gamma = 0.002, M_0 = 5','data \gamma = 0.002, M_0 = 10','data \gamma = 0.002, M_0 = 30','data \gamma = 0.02, M_0 = 1','data \gamma = 0.02, M_0 = 5','data \gamma = 0.02, M_0 = 10','data \gamma = 0.02, M_0 = 30',fitted_Vtot1_50s.leg_name1,fitted_Vtot2_50s.leg_name1,fitted_Vtot3_50s.leg_name1,fitted_Vtot4_50s.leg_name1,fitted_Vtot1_500s.leg_name1,fitted_Vtot2_500s.leg_name1,fitted_Vtot3_500s.leg_name1,fitted_Vtot4_500s.leg_name1}];
-% % % % % % % % % Loc = 'NorthOutside';
-% % % % % % % % % set(hleg2,'Location',Loc,'Fontsize',8)
-% % % % % % % % % %legend(hleg2,'hide')
-% % % % % % % % % legend(hleg2,'boxoff')
-columnlegend(2,hleg2,'Location','NorthOutside','boxoff');
+hleg2 = legend([(fig32)',fitted_Vtot1_50s.pict_fit,fitted_Vtot2_50s.pict_fit,fitted_Vtot3_50s.pict_fit,fitted_Vtot4_50s.pict_fit,fitted_Vtot1_500s.pict_fit,fitted_Vtot2_500s.pict_fit,fitted_Vtot3_500s.pict_fit,fitted_Vtot4_500s.pict_fit],'data \gamma = 0.002, M_0 = 1','data \gamma = 0.002, M_0 = 5','data \gamma = 0.002, M_0 = 10','data \gamma = 0.002, M_0 = 30','data \gamma = 0.02, M_0 = 1','data \gamma = 0.02, M_0 = 5','data \gamma = 0.02, M_0 = 10','data \gamma = 0.02, M_0 = 30',fitted_Vtot1_50s.leg_name1,fitted_Vtot2_50s.leg_name1,fitted_Vtot3_50s.leg_name1,fitted_Vtot4_50s.leg_name1,fitted_Vtot1_500s.leg_name1,fitted_Vtot2_500s.leg_name1,fitted_Vtot3_500s.leg_name1,fitted_Vtot4_500s.leg_name1);
+Loc = 'NorthOutside';
+set(hleg2,'Location',Loc,'Fontsize',8)
+%legend(hleg2,'hide')
+legend(hleg2,'boxoff')
 % add labels
 xhandle9 = xlabel('V_{end} (m^3/cm^3)');
 yhandle9 = ylabel('Y_{end}','rotation',90); 
