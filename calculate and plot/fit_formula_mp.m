@@ -26,7 +26,11 @@ if mass_on == 0
     r2 = fit(x,y,f2);
     out.coeff_r = coeffvalues(r);
     out.coeff_r2 = coeffvalues(r2);
-
+    
+    %round coefficients to 4 desimals
+    out.coeff_r = round(out.coeff_r*10000)/10000;
+    out.coeff_r2 = round(out.coeff_r2*10000)/10000;
+    
     %plot(x,y,'ks')
     hold on;
     if dashed ~= 0
@@ -65,25 +69,29 @@ elseif mass_on == 1
     r2 = fit(x,y,f2);
     out.coeff_r = coeffvalues(r);
     out.coeff_r2 = coeffvalues(r2);
+    
+    %round coefficients to 4 desimals
+    out.coeff_r = round(out.coeff_r*10000)/10000;
+    out.coeff_r2 = round(out.coeff_r2*10000)/10000;
 
     %plot(x,y,'ks')
     hold on;
     if dashed == 0
-        out.pict_fit = plot(x0,feval(r,x0),'k-','LineWidth',lw);
+        out.pict_fit = plot(x0,feval(r,x0),'k-',x0,feval(r2,x0),'r-','LineWidth',lw);
     elseif dashed == 1
-        out.pict_fit = plot(x0,feval(r,x0),'k--','LineWidth',lw);
+        out.pict_fit = plot(x0,feval(r,x0),'k--',x0,feval(r2,x0),'r--','LineWidth',lw);
     elseif dashed == 2
-        out.pict_fit = plot(x0,feval(r,x0),'k:','LineWidth',lw);
+        out.pict_fit = plot(x0,feval(r,x0),'k:',x0,feval(r2,x0),'r:','LineWidth',lw);
     elseif dashed == 3
-        out.pict_fit = plot(x0,feval(r,x0),'k-.','LineWidth',lw);  
+        out.pict_fit = plot(x0,feval(r,x0),'k-.',x0,feval(r2,x0),'r-.','LineWidth',lw);  
     elseif dashed == 4
-        out.pict_fit = plot(x0,feval(r,x0),'b-','LineWidth',lw);
+        out.pict_fit = plot(x0,feval(r,x0),'b-',x0,feval(r2,x0),'m-','LineWidth',lw);
     elseif dashed == 5
-        out.pict_fit = plot(x0,feval(r,x0),'b--','LineWidth',lw);
+        out.pict_fit = plot(x0,feval(r,x0),'b--',x0,feval(r2,x0),'m--','LineWidth',lw);
     elseif dashed == 6
-        out.pict_fit = plot(x0,feval(r,x0),'b:','LineWidth',lw);
+        out.pict_fit = plot(x0,feval(r,x0),'b:',x0,feval(r2,x0),'m:','LineWidth',lw);
     elseif dashed == 7
-        out.pict_fit = plot(x0,feval(r,x0),'b-.','LineWidth',lw); 
+        out.pict_fit = plot(x0,feval(r,x0),'b-.',x0,feval(r2,x0),'m-.','LineWidth',lw); 
     end   
     a_string = num2str(out.coeff_r(1));
     b_string = num2str(out.coeff_r(2));
