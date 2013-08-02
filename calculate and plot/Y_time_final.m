@@ -1,9 +1,9 @@
 
 figure(30)
-figfig30= semilogx(tim,Y,'k-'); % run 11 80nm
+figfig30= semilogx(tim,Y,'k-','LineWidth',1.5); % run 11 80nm
 hold on;
 figure(30)
-figfig302 =semilogx(tim,Y,'k--'); % run 12 80nm
+figfig302 =semilogx(tim,Y,'k--','LineWidth',1.5); % run 12 80nm
 hold on;
 
 % leg=legend([figfig30 figfig302],'\tau = 1/\gamma = 50 s','\tau = 1/\gamma = 500 s');
