@@ -3,7 +3,7 @@ close all;
 
 %% constants
 roo = 1.4; % Particle density (g/cm3)
-M = 300; %g/mol precursor molar mass
+M = 137; %g/mol precursor molar mass
 NA = 6.022e23; % 1/mol
 alfa = 0.3;
 ms = 8;
@@ -578,7 +578,7 @@ Orient = 'vertical';
 figure(9);
 hold on;
 CSarea_90s = min(CSsave_90s)*0.9:max(CSsave_90s)/100:max(CSsave_90s)*1.1;
-Yend_kaava_90s = alfa./(1+(1/50)./CSarea_90s);
+Yend_kaava_90s = 0.657./(1+(1/50)./CSarea_90s);
 h_CS(count1) = loglog(CSarea_90s, Yend_kaava_90s, 'r','LineWidth',lw);
 % fit data
 fitted_90s = fit_formula_mp(CSsave_90s',Yend_real_save_90s',0,0);
@@ -604,12 +604,12 @@ yhandle90 = ylabel('Y_{end}','rotation',90);
 figure(9);
 hold on;
 CSarea_900s = min(CSsave_900s)*0.9:max(CSsave_900s)/100:max(CSsave_900s)*1.1;
-Yend_kaava_900s = alfa./(1+(1/500)./CSarea_900s);
+Yend_kaava_900s = 0.657./(1+(1/500)./CSarea_900s);
 h2_CS(count2) = loglog(CSarea_900s, Yend_kaava_900s, 'r--','LineWidth',lw);
 % fit data
 fitted_900s = fit_formula_mp(CSsave_900s',Yend_real_save_900s',0,1);
 % edit legend 
-hleg2 = legend([h2_CS(1),h2_CS(end),(fitted_900s.pict_fit)',h_CS(1),h_CS(end),(fitted_90s.pict_fit)'],'data \gamma = 0.002','fit \alpha = 0.3     \gamma = 0.002',fitted_900s.leg_name1,fitted_900s.leg_name2,'data \gamma = 0.02','fit \alpha = 0.3     \gamma = 0.02',fitted_90s.leg_name1,fitted_90s.leg_name2);
+hleg2 = legend([h2_CS(1),h2_CS(end),(fitted_900s.pict_fit)',h_CS(1),h_CS(end),(fitted_90s.pict_fit)'],'data \gamma = 0.002','fit \alpha = 0.657     \gamma = 0.002',fitted_900s.leg_name1,fitted_900s.leg_name2,'data \gamma = 0.02','fit \alpha = 0.657     \gamma = 0.02',fitted_90s.leg_name1,fitted_90s.leg_name2);
 %         '10nm,3ng/m^3,10ppb',      '                     50ppb','                     100ppb','                     200ppb',...
 %         '       15ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
 %         '       30ng/m^3,10ppb',   '                     50ppb','                     100ppb','                     200ppb',...
@@ -630,8 +630,8 @@ yhandle900 = ylabel('Y_{end}','rotation',90);
 % add title
 %title('\alpha = 0.3 and \gamma = 1/500s');
 %fix axis
-axis([1e-3 5e-1 0 0.30000001]);
-set(gca,'YTick',[0,0.1,0.2,0.3])
+axis([1e-3 5e-1 0 0.70000001]);
+set(gca,'YTick',[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7])
 
 %TextBox('\gamma = 1/50s',[20 20 5 0],figure(9))
 matlab2tikz('Yend_CSend.tikz','checkForUpdates',false,'showInfo', false, 'height', '\fheight', 'width', '\fwidth' );
@@ -812,8 +812,8 @@ yhandle9 = ylabel('Y_{end}','rotation',90);
 % add title
 %title('\alpha = 0.3 and \gamma = 1/500s');
 %fix axis
-axis([5e-19 5e-16 0 0.30000001])
-set(gca,'YTick',[0,0.1,0.2,0.3])
+axis([5e-19 5e-16 0 0.70000001])
+set(gca,'YTick',[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7])
 
 %TextBox('\gamma = 1/50s',[20 20 5 0],figure(9))
 matlab2tikz('Yend_Vend.tikz','checkForUpdates',false,'showInfo', false, 'height', '\fheight', 'width', '\fwidth' );

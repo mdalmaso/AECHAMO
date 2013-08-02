@@ -2,7 +2,7 @@ function [out] = fit_formula_mp(x,y,mass_on,dashed,N)
 %linewidth
 lw=1.5;
 % alpha
-a = 0.3;
+a = 0.657;
 % fit ap data
 xmin = min(x);
 xmax = max(x);
@@ -15,7 +15,7 @@ if mass_on == 0
 
     % a kiinnitetty     
     s2=fitoptions('Method','NonLinearLeastSquares','Startpoint', 0.1 ,'upper',10,'lower',0.0000001);
-    custom2 = '0.3.*(1/(1+b./x))';
+    custom2 = '0.657.*(1/(1+b./x))';
     f2 = fittype(custom2 ,'options',s2);
     
     log_xmin = log10(xmin*0.9);
@@ -58,7 +58,7 @@ elseif mass_on == 1
 
     % a kiinnitetty a = 0.3;
     s2=fitoptions('Method','NonLinearLeastSquares','Startpoint', 100 ,'upper',1e4,'lower',0.00000000010);
-    custom2 = ['0.3.*(1/(1+b./(2e-4*' N_string '^0.37*(1e6.*1e6.*1.4.*1e6.*x)^0.63)))']; % mass in µg/m3
+    custom2 = ['0.657.*(1/(1+b./(2e-4*' N_string '^0.37*(1e6.*1e6.*1.4.*1e6.*x)^0.63)))']; % mass in µg/m3
     f2 = fittype(custom2 ,'options',s2);
 
     log_xmin = log10(xmin*0.9);
