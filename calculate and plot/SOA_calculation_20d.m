@@ -1,7 +1,7 @@
 roo = 1.4; % Particle density (g/cm3)
 M = 300; %g/mol
 NA = 6.022e23; % 1/mol
-alfa = 0.3;
+alfa = 0.08;
 
 %% calculate and plot deltaMoa
 i = 1;
