@@ -67,9 +67,11 @@ figure(gcf)
 subplot(sub)
 
 % set time from seconds to hours
+time=time/3600;
 v(2:end,1) = v(2:end,1)/3600;
 
 %set time from hours to days
+time=time/24;
 v(2:end,1) = v(2:end,1)/24;
 
 semilogy(v(2:end,1),v(2:end,2),'or');
