@@ -2,6 +2,8 @@ roo = 1.4; % Particle density (g/cm3)
 M = 300; %g/mol
 NA = 6.022e23; % 1/mol
 alfa = 0.08;
+lw = 1.5;
+ms = 8;
 
 %% calculate and plot deltaMoa
 i = 1;
@@ -62,7 +64,7 @@ plot(tim/(24*3600), Y, 'c*')
 
 h3=figure(3);
 hold on;
-plot(deltaMoa/(24*3600),Y,'m*')
+plot(Moa*1e12,Y,'k-','LineWidth',lw,'MarkerSize',ms)
 
 % h4=figure(4);
 % hold on;
@@ -101,15 +103,17 @@ for i4 = 1:length(deltaP_mass)
 end
 
 h5=figure(5);
-plot(tim/(24*3600), Y, 'g*')
+plot(tim/(3600), Y, 'k-','LineWidth',lw,'MarkerSize',ms)
 hold on;
-plot(tim/(24*3600), Wall_loss, 'r*')
+plot(tim/(3600), Wall_loss, 'k--','LineWidth',lw,'MarkerSize',ms)
 
 h6=figure(6);
 plot(tim/(24*3600), Y/alfa, 'g*')
 hold on;
 plot(tim/(24*3600), Wall_loss/alfa, 'r*')
 
+h8=figure(8);
+plot(tim/(3600),Moa*1e12,'k-','LineWidth',lw,'MarkerSize',ms)
 %% create folder and save pictures into it
 
 name = 'Run0';
@@ -119,10 +123,11 @@ mkdir(new_name)
 
 saveas(h1,[new_name '/deltaP_deltaMoa.fig'])
 saveas(h2,[new_name '/Y(t).fig'])
-saveas(h3,[new_name '/Y(deltaMoa).fig'])
+saveas(h3,[new_name '/Y(Moa).fig'])
 saveas(h5,[new_name '/YandMvwall.fig'])
 saveas(h6,[new_name '/YandMvwall_alfa.fig'])
 saveas(h7,[new_name '/error_of_Yend.fig'])
+saveas(h8,[new_name '/Moa.fig'])
 
 % save CS
 h4 = figure(4);
