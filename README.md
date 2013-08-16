@@ -21,3 +21,5 @@ Results and scripts_mp\Chamber includes Batch reactor modelling results
 Test and bug fixing includes validation data
 
 mass2number.m transfers aerosol mass concentration to number consentration
+
+documentation_mp includes pdf and latex files of chamber and diurnal SOA formation studies
