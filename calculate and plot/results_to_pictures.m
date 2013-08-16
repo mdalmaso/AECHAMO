@@ -1,6 +1,6 @@
 ajoja = 24;
 
-for i = [1:32]
+for i = [1:8]
     chamb(i).plot('original')
      chamb(i).mass_conserv_check
 end
@@ -44,4 +44,15 @@ for i = 1:ajoja
    hold on;
    axis([0,9, 0, 8e-18])
 end
+
+% particle source
+h20 = figure(20);
+plot(tvect/3600,part_source(:,2),'k-','LineWidth',1.5,'MarkerSize',8)
+set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
+set(gca,'YTick',[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0], 'YTickLabel',{'0' ' ' ' ' ' ' ' ' '0.5' ' ' ' ' ' ' ' ' '1'})
+ylabel('J (cm^{-3}s^{-1})')
+xlabel('time')
+axis([0 96 -0.1 1.1])
+saveas(h20,'nucleation.fig') 
+matlab2tikz('nucleation.tikz','checkForUpdates',false,'showInfo', false, 'height', '\fheight', 'width', '\fwidth' );
 

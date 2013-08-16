@@ -1,0 +1,38 @@
+\begin{thebibliography}{}
+
+\bibitem[Dal~Maso et~al., 2002]{DalMaso2002}
+Dal~Maso, M., Kulmala, M., Lehtinen, K. E.~J., Mäkelä, J.~M., Aalto, P., and
+  O'Dowd, C.~D. (2002).
+\newblock Condensation and coagulation sinks and formation of nucleation mode
+  particles in coastal and boreal forest boundary layers.
+\newblock {\em Journal of Geophysical Research D: Atmospheres}, 107(19):1--10.
+
+\bibitem[Dormand and Prince, 1980]{Dormand1980}
+Dormand, J.~R. and Prince, P.~J. (1980).
+\newblock A family of embedded {R}unge-{K}utta formulae.
+\newblock {\em Journal of Computational and Applied Mathematics}, 6:19--26.
+
+\bibitem[Korhonen, 2004]{Korhonen2004}
+Korhonen, H. (2004).
+\newblock Model studies on the size distribution dynamics of atmospheric
+  aerosols.
+\newblock {\em Doctoral thesis. University of Helsinki.}
+
+\bibitem[Pirjola and Kulmala, 1998]{Pirjola1998}
+Pirjola, L. and Kulmala, M. (1998).
+\newblock Modelling the formation of {H$_2$SO$_4$-H$_2$O} particles in rural,
+  urban and marine conditions.
+\newblock {\em Atmospheric Research}, 46(3-4):321--347.
+
+\bibitem[Reid et~al., 1987]{Reid1987}
+Reid, R., Prausnitz, J., and Poling, B. (1987).
+\newblock {\em The properties of gases and liquids}.
+\newblock McGraw Hill Book Co., New York.
+
+\bibitem[Seinfeld and Pandis, 1998]{Seinfeld1998}
+Seinfeld, J.~H. and Pandis, S.~N. (1998).
+\newblock {\em Atmospheric Chemistry and Physics - From Air Pollution to
+  Climate Change}.
+\newblock John Wiley \& Sons, New York.
+
+\end{thebibliography}

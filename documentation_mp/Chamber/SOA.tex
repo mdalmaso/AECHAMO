@@ -1,0 +1,1299 @@
+\documentclass[12pt,a4paper,english]{tutthesis}
+
+\usepackage[english]{babel} % tavutus suomeksi, vaihda jos eri kieli
+\usepackage[small]{caption}% kuvatekstien kirjasinkoko ja asettelu
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}			%omia käskyjä voi lisätä tähän väliin, esim. \newcommand{\angs}{\textsl{\AA}}
+
+\usepackage{epstopdf}
+\captionsetup[figure]{labelfont={bf}}
+\captionsetup[table]{labelfont={bf}}
+
+
+%%värit
+%\usepackage[pdf]{pstricks}
+%\definecolor{green1}{RGB}{0,80,0}
+
+%%% Pgf plots, tikz ja kaikki muu mitä piirtäminen vaatii
+\usepackage{tikz,pgfplots}
+%\usetikzlibrary{shapes,snakes}
+\usepackage[version=3]{mhchem}
+\pgfplotsset{compat=newest} 
+\pgfplotsset{plot coordinates/math parser=false}
+\usepackage{pgfplotstable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{colortbl}
+
+%%matikka
+\usepackage{amsmath,amssymb}
+%multiple roots
+ \usepackage{letltxmacro}
+%\usepackage{mathtools}
+% lähteet
+\usepackage{natbib}
+
+% non-italic µ = \upmu
+\usepackage{upgreek}
+
+% chemical reactions
+\usepackage{chemfig}
+
+%\usepackage[...]{microtype}
+
+%\usepackage{pgfplots}
+%\usepackage{pgfplotstable}
+%
+%\usepgfplotslibrary{external} 
+%\tikzexternalize
+%\pgfplotsset{compat=newest}
+
+\usetikzlibrary{plotmarks}
+
+%%%
+\pagenumbering{Roman}
+% alkuvalmistelut loppuu
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\LetLtxMacro{\oldsqrt}{\sqrt} % makes all sqrts closed
+\renewcommand{\sqrt}[1][]{%
+  \def\DHLindex{#1}\mathpalette\DHLhksqrt}
+\def\DHLhksqrt#1#2{%
+  \setbox0=\hbox{$#1\oldsqrt[\DHLindex]{#2\,}$}\dimen0=\ht0
+  \advance\dimen0-0.2\ht0
+  \setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
+  {\box0\lower0.71pt\box2}}
+
+\thispagestyle{empty}
+
+\vspace*{-.5cm}\noindent
+
+\includegraphics[width=8cm]{tut-logo}
+
+\vspace{6.8cm}
+
+\noindent{\bf\large \textsf{Mikko Poikkimäki}}\\
+{\bf\large \textsf{SOA formation yields in chamber}}\\
+%\textsf{Research}
+
+\vspace{8.7cm} % jos kaksi otsikkoriviä vaihda -> 6.7cm, jos yksi 8.7cm
+
+\begin{flushright}
+  
+\begin{minipage}[c]{6.8cm}
+\begin{spacing}{1.0}
+%\textsf{Tarkastaja: }\\ 
+%\textsf{Jätetty tarkastettavaksi: }\\ 
+\textsf{Updated: 16.8.2013}\\ 
+\end{spacing}
+\end{minipage}
+\end{flushright}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\setcounter{page}{1} % tämä tarvitaan, jottei ensimmäinen sivu kansilehden jälkeen olisi numero 2.
+%\chapter*{ALKUSANAT}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\chapter*{TIIVISTELMÄ}
+%\begin{spacing}{1.0}
+%\textsf{TAMPEREEN TEKNILLINEN YLIOPISTO}\\
+%\textsf{Teknis-luonnontieteellinen koulutusohjelma}\\
+%{\bf \textsf{POIKKIMÄKI, MIKKO: Monoterpeenien vaikutus pilviytimien lukumäärään käyttäen sektionaalista aerosolimallia}}\\
+%\textsf{Kandidaatintyö, 29 sivua}\\
+%\textsf{Toukokuu 2013}\\
+%\textsf{Pääaine: Teknillinen fysiikka}\\
+%\textsf{Tarkastajat: Apulaisprofessori Miikka Dal Maso}\\ 
+%\textsf{Avainsanat: aerosoli, BVOC, havumetsä, ilmasto, kondensaatiokasvu, pilviydin, sektio\-naalinen malli}\\
+%\end{spacing}
+%
+%\noindent
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+%\chapter*{ABSTRACT}
+%\begin{spacing}{1.0}
+%\textsf{TAMPERE UNIVERSITY OF TECHNOLOGY}\\
+%\textsf{Bachelor's Degree Programme in Science and Engineering}\\
+%{\bf \textsf{POIKKIMÄKI, MIKKO: Monoterpene effect on cloudnuclei consentration using sectional aerosolmodel}}\\ % tätä täytyy vielä miettiä
+%\textsf{Bachelor of Science Thesis, xx pages, x Appendix pages}\\
+%\textsf{May 2013}\\
+%\textsf{Major: Advanced Engineering Physics}\\
+%\textsf{Examiner: Associate Professor Miikka Dal Maso}\\
+%\textsf{Keywords: }\\
+%\end{spacing}
+%
+%\noindent 
+%First paragraph
+%
+%\noindent
+%Second paragraph
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\renewcommand\contentsname{Table of contents} % poista jos kieli muu kuin suomi
+\tableofcontents
+%\newpage
+%\listoffigures
+%\listoftables
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+%\chapter*{TERMIT JA NIIDEN MÄÄRITELMÄT}
+%%\item [$$] 
+%
+%\section *{Latinalaiset symbolit}
+%\begin{termiluettelo}
+%\item [$$] 
+%
+%\end{termiluettelo} 
+%
+%\section*{Kreikkalaiset symbolit} % tarkasta aakkosjärjestys
+%\begin{termiluettelo}
+%
+%\end{termiluettelo} 
+%
+%\section*{Lyhenteet}
+%\begin{termiluettelo}
+%
+%\end{termiluettelo} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter. \ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{}{}}
+\lhead{\fancyplain{}{\leftmark}}
+
+% Tästä alkaa varsinainen teksti
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Introduction} % tutkimuksen nykytilan esittely
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Theory}
+
+\section{Diffusion in binary mixtures} 
+
+Diffusion illustrates mass convection in medium from greater consentration to lower consentration. Fick's law states diffusion flux 
+\begin{equation}
+  \label{eq:Fick}
+   J = -D_{AB} \cfrac{dn}{dx},
+	\end{equation}
+where $D_{AB}$ is binary diffusion coefficient and $n$ molecule number consentration.
+
+Diffusion coefficient for binary gasmixtures can be calculated from \citet{Reid1987}
+\begin{equation}
+  \label{eq:Dif}
+   D_{AB} = 0.001 \cdot T^{1.75} \cfrac{\sqrt[]{\cfrac{1}{M_{A}}+\cfrac{1}{M_{B}}}}{p(V_A^{1/3}+V_B^{1/3})^2},
+	\end{equation}
+where unit of diffusion coefficient is cm$^2$/s, temperature $T$ is Kelvin, molar masses $M$ are g/mol and pressure $p$ is bar. Diffusion volumes $V$ can be calculated from values for atomic diffusion volumes which are for carbon C 15.9, for hydrogen 2.31, for oxygen 6.11, for nitrogen 4.54, for heterocyclic ring -18.3 and for air 19.7.
+
+Diffusion related vapor mean free path according to \citet{Pirjola1998}
+\begin{equation}
+  \label{eq:lambda}
+   \lambda = \cfrac{3D_{AB}}{\overline{c}_A},
+\end{equation}
+where $\overline{c}_A$ is velocity of gas molecules
+\begin{equation}
+  \label{eq:cA}
+   \overline{c}_A = \sqrt[]{\cfrac{8RT}{\pi M_A}},
+\end{equation}
+where $R$ is ideal gas constant 8.31446 J/Kmol.
+
+For example C$_{10}$H$_{16}$O$_{10}$ molecule ($M_A \approx$ 300) with one heterocyclic ring, diffusion volume $V_A \approx$ 250. Diffusion coefficient of this molecule in air in temperature 290 K and pressure 1 atm is 0.0489 cm$^2$/s. Related mean free path $\lambda$ is 102.65 nm. Few more examples are presented in figure \ref{fig:DAB}.
+
+\begin{figure}[ht]
+\centering 
+		\newlength\fheight 
+    \newlength\fwidth
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\small]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{DAB.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+\draw[white] (.19,.9)--(.19,.9) 
+     node[right,
+     text width=2cm,align=center,text=black] 
+     {C$_{10}$H$_{14}$0$_9$};
+\draw[<-,thick,white] (.07,.84)--(.07,.84) 
+     node[right,
+     text width=2cm,align=center,text=black] 
+     {C$_{10}$H$_{16}$0$_{9}$};				
+\draw[<-,thick,white] (.27,.85)--(.27,.85) 
+     node[right,
+     text width=2cm,align=center,text=black] 
+     {C$_{10}$H$_{16}$0$_{10}$};
+\draw[<-,thick,white] (.37,.8) --(.37,.8) 
+     node[right,
+     text width=2cm,align=center,text=black] 
+     {C$_{10}$H$_{15}$N0$_{11}$};	
+\draw[<-,thick,white] (.7,.14) --(.7,.14) 
+     node[right,
+     text width=2cm,align=center,text=black] 
+     {C$_{20}$H$_{32}$0$_{12}$};
+\end{scope}
+\end{tikzpicture}
+\caption{Binary diffusion coefficients as function of molar mass for different organic vapors calculated from equation \ref{eq:Dif}.}
+\label{fig:DAB}
+\end{figure}
+
+Vapors in figure \ref{fig:DAB} are proposed to form SOA (Ehn et al. 2013).
+
+
+\subsection{Alternative}
+
+Mäkelä,J. kalvot
+
+vapor(A) and air (B) have dilute mixture. For this two gases binary mixture we have to determine free path $\lambda$ and diffusion coefficient $D$ for both components.
+
+vapormolecule diffusion coefficient in the air
+\begin{equation}
+  \label{eq:DAB1}
+   D_{AB} = \cfrac{3}{8\pi} \cfrac{[\pi k_B^3 T^3 (1+z_{AB})/(2m_A)]^{1/2}}{\rho \sigma_{AB}^2 \Omega_{AB}^{(1,1)}},
+\end{equation}
+
+and related vapor molecule free path
+\begin{equation}
+  \label{eq:lambdaAB}
+   \lambda_{AB} = \cfrac{32}{3\pi (1+z_{AB})} \cfrac{D_{AB}}{\overline{c}_A},
+\end{equation}
+before it collides next time to air molecule.
+
+Average collosion area
+\begin{equation}
+  \label{eq:sigmaAB}
+   \sigma_{AB} = \cfrac{\sigma_{A}+\sigma_{B}}{2},
+\end{equation}
+
+Ratio of molemasses
+\begin{equation}
+  \label{eq:zAB}
+   z_{AB} = \cfrac{M_A}{M_B},
+\end{equation}
+
+collision integral $\Omega_{AB}^{(1,1)}=1$ for hard spheres
+
+Chapman-Enskog 1939 for more info
+
+Chapman, Sydney, and Thomas George Cowling. The mathematical theory of non-uniform gases: an account of the kinetic theory of viscosity, thermal conduction and diffusion in gases. Cambridge university press, 1970.
+
+S. Chapman and T. G. Cowling, The Mathematical Theory of Nonuniform Gases (Cambridge University Press, Cambridge, 1952).
+
+Marrero, T.R. and Mason E.A. 1972 comment to Chapman-Enskog on page 8 section 2.2b
+
+Mass
+
+\begin{equation}
+  \label{eq:volume}
+   m = \rho V \Rightarrow V = \cfrac{m}{\rho},
+\end{equation}
+
+Otherwise
+
+\begin{equation}
+  \label{eq:mass}
+   m = nM = \cfrac{N}{N_A}M,
+\end{equation}
+
+Now considering one molecule ($N = $1)
+
+\begin{equation}
+  \label{eq:mass2}
+   m = nM = \cfrac{M}{N_A},
+\end{equation}
+
+Considering molecule as sphere, volume
+
+\begin{equation}
+  \label{eq:volume2}
+   V = \cfrac{\pi}{6} d_p^{3} \Rightarrow d_p = \sqrt[3]{\cfrac{6V}{\pi}},
+\end{equation}
+
+Equation \ref{eq:mass2} to equation \ref{eq:volume} 
+
+\begin{equation}
+  \label{eq:volume3}
+   V = \cfrac{M}{\rho N_A},
+\end{equation}
+
+Then equation \ref{eq:volume3} to equation \ref{eq:volume2}, diameter of spherical molecule
+
+\begin{equation}
+  \label{eq:dp}
+   d_p = \sqrt[3]{\cfrac{6M}{\pi \rho N_A}},
+\end{equation}
+
+Example for molecule which mass = 300 g/mol and density $\rho$ = 1.1 g/cm$^3$
+
+\begin{equation}
+  \label{eq:dp_example}
+   d_p = \sqrt[3]{\cfrac{6\cdot 300 \cdot 10^{-3} kg/mol}{\pi \cdot 1100 kg/m^3 \cdot 6.022\cdot 10^{23} 1/mol}} \approx 0.95 nm ,
+\end{equation}
+
+Example for sulfuracid H$_2$SO$_4$ molecule which mass =  98.08 g/mol and density $\rho$ = 1.84 g/cm$^3$
+
+\begin{equation}
+  \label{eq:dp_example2}
+   d_p = \sqrt[3]{\cfrac{6\cdot 98.08 \cdot 10^{-3} kg/mol}{\pi \cdot 1840 kg/m^3 \cdot 6.022\cdot 10^{23} 1/mol}} \approx 0.553 nm ,
+\end{equation}
+
+Example for airmolecule which mass = 29 g/mol and density 
+
+\begin{equation}
+  \label{eq:air_density}
+   \rho = \cfrac{Mp}{RT} = \cfrac{29 \cdot 10^{-3} kg/mol \cdot 101300 Pa}{8.31446 JK^{-1}mol^{-1} \cdot 290 K} = 1.22 g/cm^3
+\end{equation}
+
+
+\begin{equation}
+  \label{eq:dp_example3}
+   d_p = \sqrt[3]{\cfrac{6\cdot 29 \cdot 10^{-3} kg/mol}{\pi \cdot 1220 kg/m^3 \cdot 6.022\cdot 10^{23} 1/mol}} \approx 0.42 nm ,
+\end{equation}
+
+according to Mäkelä, J. $d_{p_{air}}$ = 0.37 nm
+
+
+Wikipedia
+S. Chapman, T. G. Cowling (1970) The Mathematical Theory of Non-uniform Gases: An Account of the Kinetic Theory of Viscosity, Thermal Conduction and Diffusion in Gases, Cambridge University Press (3rd edition), ISBN 052140844X.
+
+for rigid spheres
+\begin{equation}
+  \label{eq:DAB}
+   D_{AB} = \cfrac{3}{8n(d_1+d_2)^2} [\cfrac{ k_B T (m_1+m_2)}{2\pi m_1 m_2}]^{1/2},
+\end{equation}
+
+
+\section{Condensation sink} 
+
+Condensation sink represents rate how rapidly condensable vapor molecules condenses on existing aerosol in units 1/s. It can be calculated from
+
+\begin{equation}
+  \label{eq:CS}
+   CS = 2\pi D\int_0^\infty d_p\beta (d_p)n(d_p)\,\mathrm{d}d_p = 2\pi D\sum_{i}\beta d_{pi}N_i,
+	\end{equation}
+	
+where $d_{pi}$ is the diameter of a particle in size class $i$, $N_i$ is corresbonding particle number consentration \citep{DalMaso2002} and $D$ is diffusion coefficient of condensing vapor. Transition regime correction factor $\beta_m$ according to Fuchs and Sutugin (1971) is
+	
+	\begin{equation}
+  \label{eq:beta}
+   \beta _m = \cfrac{1+Kn}{1+\left(\cfrac{4}{3\alpha_m}+0.337\right)Kn+\cfrac{4}{3\alpha_m}Kn^2}
+	\end{equation}
+	
+	where $\alpha_m$ is the sticking coefficient which represents probability of molecule to stick in to the particle. Dimensioless Knudsen number is
+	
+	\begin{equation}
+  \label{eq:kn}
+   Kn = \cfrac{2\lambda}{d_p},
+	\end{equation}
+	
+	where $\lambda$ is the effective mean free path of the condensing vapor molecules in the gas. Knudsen number is the ratio of two lenght scales. Mean free path $\lambda$ characterizes the gas with respect to the transport of mass and particle diameter $d_p$ characterizes the droplet.
+	
+One can semiempirically represent condensation sink as a function of aerosol mass as follows
+
+\begin{equation}
+  \label{eq:CS_M}
+   CS = 2\cdot 10^{-4} \cdot N^{0.37} M^{0.63},
+	\end{equation}
+where $N$ is particle number and $M$ particle mass.
+	
+\section{Proposed chemical reaction of monoterpene, SLLV source}
+
+Monoterpene reaction with ozone produces SLLV product with mass yield of $\alpha$ and other products with mass yields of $\beta_i$
+\begin{equation}
+ \label{eq:MT2Cvap}
+\chemname{\chemfig{MT}
+\chemrel[\chemfig{k}][O$_3$]{->}\chemfig{\upalpha C_{vap}+\sum_{i}^{}\upbeta_i C_i}}{}
+\end{equation}
+Source of SLLV vapor is then
+\begin{equation}
+  \label{eq:Q}
+   Q = \alpha kP,
+\end{equation} 
+where $P = P_0 e^{-kt}$ is precursor (monoterpene) consentration and overall reaction rate $k = k'[0_3]$ is reaction rate of ozone times ozone consentration.
+
+Proposed SLLV product sinks
+\begin{figure}[ht] % selitys vielä saturaatiosta ja hiukkasmuodostuksen vaikutuksesta taustaan
+\centering
+\begin{tikzpicture}[thick,scale=2, every node/.style={scale=1.2}]
+	\node[scale=1] (MT) {MT};
+	\node (Cvap) [node distance=1.3cm, below of=MT]{$C_{vap}$};
+	\node (Moa) [node distance=1.3cm, left of=Cvap, below of=Cvap]{$M_{OA}$};
+	\node (Wall) [node distance=1.3cm, right of=Cvap, below of=Cvap]{};
+	
+	\draw[->] (MT) to node [right, scale=0.6]{k} (Cvap);
+	\draw[->] (Cvap) to node [left, scale=0.6]{CS} (Moa);
+	\draw[->] (Cvap) to node [right, scale=0.6]{$\gamma$} (Wall);	
+
+\end{tikzpicture}
+\label{fig:systeemikaavio}
+\caption{Proposed routes for monoterpene precursor MT reaction (rate $k$) SLLV product $C_{vap}$. To aerosol $M_{OA}$ with rate CS or to walls or other losses with rate $\gamma$}
+\end{figure}
+
+%\begin{figure}[h] % selitys vielä saturaatiosta ja hiukkasmuodostuksen vaikutuksesta taustaan
+%\centering
+%\begin{tikzpicture}[thick,scale=2, every node/.style={scale=1.2}]
+	%\node[scale=2.2] (T) {$T$};
+	%\node (A) [node distance=2cm, left of=T]{A};
+	%\node (BM) [node distance=2cm, below of=T]{BM};
+	%\node (CO2) [node distance=2cm, left of=BM]{CO$_2$};
+	%\node (Emt) [node distance=2cm, right of=BM]{$E_{MT}$};
+	%\node [scale=1.0] (NG) [node distance=2cm, right of=T]{NC};
+	%\node (Tausta) [node distance=2cm, right of=NG]{$N_{tausta}$};
+	%\node (Pilviydin) [node distance=2cm, above of=NG]{CCN};
+	%\node (Pilvet) [node distance=2cm, left of=T, above of=T]{Pilvet};
+	%\draw[->, dashed] (T) to node [left, scale=0.7]{+} (BM);
+	%\draw[->, dashed] (A) to node [above, scale=0.7]{+} (T);
+	%\draw[->, dashed] (CO2) to node[above, scale=0.7]{+} (T);
+	%\draw[->] (T) to node [left, scale=0.7]{+}(Emt);
+	%\draw[->, dashed] (CO2) to node [above, scale=0.7]{+} (BM);
+	%\draw[->, dashed] (BM) to node [below, scale=0.7]{+}(Emt);
+	%\draw[->] (Emt) to node [right, scale=0.7]{+}(NG);
+	%\draw[->, dashed] (NG) to node [below, scale=0.7]{+}(Tausta);
+	%\draw[->] (NG) to node [left, scale=0.7]{+}(Pilviydin);
+	%\draw[->] (Pilviydin) to node [above, scale=0.7]{+}(Pilvet);
+	%\draw[->] (Pilvet) to node [right, scale=0.7]{--}(T);
+	%\draw[->] (Pilviydin) to node [left, scale=0.7]{--}(T);
+	%\draw[->, dashed] (T) to node [below, scale=0.7]{+}(NG);
+	%\draw[->, dashed] (Tausta) to node [left, scale=0.7]{+}(Pilviydin);
+	%\draw[->, bend right] (Tausta) to node [right, scale=0.7]{--}(Pilviydin);
+ 	%\draw[->, bend left, dashed] (BM) to node [below, scale=0.7]{--} (CO2);
+%\end{tikzpicture}
+%\label{fig:systeemikaavio}
+%\caption{Oletettu ilmakehän takaisinkytkentäsysteemi, jossa tarkastellaan lämpötilan $T$ vaikutusta eri parametreihin ja näiden vaikutusta takaisin lämpötilaan sekä toisiinsa. Näitä parametreja ovat havumetsien absorbtio (A), hiilidioksidin määrä (CO$_2$), metsän biomassa (BM), monoterpeeniemissiot ($E_{MT}$), uusien hiukkasten muodostuminen ja kasvaminen (NC), taustahiukkaspitoisuus ($N_{tausta}$), pilviytimeen määrä (CCN) ja pilvien määrä. Yhtenäisillä viivoilla kuvataan vaikutuksia, joita pohditaan tutkimuksessa tarkemmin, ja katkoviivoilla kuvataan vaikutuksia, joihin ei paneuduta syvemmin. Plus- ja minus merkit kertovat oletetaanko vaikutus kasvattavaksi vai vähentäväksi.}
+%\end{figure}
+%
+%
+%
+%\citet{Guenther1995} esittelevät yhteyden lämpötilalle $T$ ja monoterpeeniemissionopeudelle
+%\begin{equation}
+  %\label{eq:EMT}
+   %E_{MT} = exp[\beta (T-T_{0})],
+%\end{equation}
+%missä $\beta$ (K$^{-1}$) on empiirinen kerroin ja $T_0$ on referenssilämpötila. Yhtälön \ref{eq:EMT} avulla saadaan lämpötilasta riippuva yhtälö monoterpeenipitoisuudelle
+%\begin{equation}
+  %\label{eq:cMT}
+   %C_{MT} = C_{MT_0}  exp[\beta (T-T_{0})],
+%\end{equation}
+%missä $C_{MT_0}$ on alkuarvo. Lämpötilan siis nähdään kasvattavan monoterpeeniemissioita.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Methods} 
+
+Particle size distribution varies in time through different processes as nucleation, condensation, coagulation, sedimentation and dilution. These changes can be modelled with general dynamic equation (GDE) \citep{Seinfeld1998}
+\begin{align}
+ \label{eq:CGDE}
+  \cfrac{\partial n(v,t)}{\partial t}
+  = \cfrac{1}{2}\int_0^v \mathrm K(v-q,q)n(v-q,t)\,\mathrm{d}q - n(v,t)\int_0^\infty \mathrm K(q,v)n(q,t)\,\mathrm{d}q
+  \notag\\
+     - \cfrac{\partial}{\partial v}[I(v)n(v,t)] + J_{0}\delta (v-v_{0}) + S(v) -R(v),
+\end{align}
+where $I$ is particle volume changing rate, $J_{0}$ is nucleation rate, $K$ is coagulation coefficient, $n$ is size distribution function, $R$ particle loss rate, $S$ particle sources emission rate, $t$ is time, $v$ and $q = v + dv$ are particle volumes and $\delta (v-v_{0})$ is Dirac's delta function which is one whenever $v = v_{0}$ and otherwise zero. Two first term of equation represents coagulation, third term condensation, fourth nucleation, fifth other particle sources and the last other particle sinks like deposition.
+%
+%\section{Sektionaalinen malli} % esimerkkikuva interpoloidusta ja todellisesta alkujakaumasta?
+%
+%Sektionaalisessa mallissa arvioidaan jatkuvaa hiukkaskokojakaumaa diskreetillä ja\-kaumalla, jossa on äärellinen määrä kokosektioita. Sektion sisältö karakterisoidaan sektion keskikoolla ja hiukkaslukumäärällä. Toisin sanoen hiukkaspopulaation ajatellaan olevan monodispersiivistä jokaisessa sektiossa. Mallin tarkkuus riippuu käytettyjen sektioiden määrästä \citep{Korhonen2004}.
+%
+%Erilaisia sektionaalisia malleja on kiinteä, liikkuva ja näiden yhdistelmä, liikkuvan keskikohdan malli \citep{Korhonen2004}. Kiinteässä jokaisella sektiolla on tietty leveys ja paikka, jolloin hiukkasten kasvaessa tai pienetessä ne liikkuvat sektiosta toiseen. Tämä on tehokas tapa esittää dynaamisia prosesseja, mutta sillä voi esiintyä niin sanottua numeerista diffuusiota. Hiukkasten kasvaessa suurempaan kokoon niiden kasvu yliarvoidaan, joka leventää ja madaltaa hiukkaskokojakaumaa. Tällöin sillä saattaa olla suuri vaikutus mallinnettaessa kondensaatiota.
+%
+%Liikkuvassa sektionaalisessa mallissa sektioita ei kiinnitetä tiettyihin hiukkaskokoihin vaan niiden annetaan liikkua ajan kuluessa \citep{Korhonen2004}. Hiukkasten kasvaessa kondensaatiolla sektioiden hiukkaskoko muuttuu, jolloin niiden voidaan ajatella liikkuvan. Tällöin hiukkasten kasvua ei yliarvioida ja numeerista diffuusiota ei synny, jolloin kondensaation mallintaminen onnistuu. Liikkuvassa mallissa tulee kuitenkin ongelmia hiukkasmuodostuksen kanssa, jos sektioita ei ole lähellä hiukkas\-kokoa, jossa hiukkasia muodostuu. Tällöin hiukkaset lisätään lähimpään sektioon, joka saattaa olla kaukana oikeasta. 
+%
+%Liikkuvan keskikohdan malli yhdistää kiinteän ja liikkuvan sektionaalisen mallin edut. Siinä sektion reunat kiinnitetään, mutta hiukkaskoot voivat vaihdella sektioiden sisällä \citep{Jacobson1997}. Malli toimii hyvin mallinnettaessa kondensaatiota, haih\-tumista ja nukleaatiota, muttei sovellu tarkkoihin nukleaation tarkasteluihin \citep{Korhonen2004}.
+%
+\section{Used sectional model}
+
+In sectional model particle size distribution is divided in desired amount of size sections which are characterized with two parametres: particle size and consentration. Particle population is considered monodispersive in each section. In this study moving center model was used where section borders are fixed but particle sizes can vary inside sections \citep{Korhonen2004}. Model takes into account particle coagulation and dilution, vapor condensation in to the particles, vapor dilution and loss to  walls (or other places). 
+
+Coagulation is modelled with parts of discrete general dymanic equation \citep{Seinfeld1998}
+\begin{align}
+ \label{eq:Coag}
+  \cfrac{dN_{k}}{dt}
+  = \cfrac{1}{2}\sum_{j=g^*}^{k-g^*} K_{j,k-j}N_{j}N_{k-j} -N_{k}\sum_{j=g^*}^{\infty} K_{k,j}N_{j},
+\end{align}
+where first term represents increase of particles in section $k$ and second term reduction of particles through coagulation.
+
+Condensation growth of particles is modelled by growing section size using growth rate \citep{Seinfeld1998}
+\begin{equation}
+  \label{eq:GR}
+   \cfrac{dd_{p}}{dt} = \cfrac{2M_{vap}I}{\pi \rho d_{p}^2N_A}, 
+\end{equation}
+where $M_{vap}$ is condensing vapor molecular mass, $\rho$ particle density, $N_A$ Avogadro's number and $I$ flux of molecules to the particle phase. It is obtained from
+\begin{equation}
+  \label{eq:I}
+   I = 2\pi d_p D C_{vap} \beta_m, 
+\end{equation}
+where $D$ is diffusion coefficient, $C_{vap}$ consentration of condensing vapor and $\beta_m$ obtained from equation \ref{eq:beta}.
+
+Dilution of particle consentration is modelled with equation
+\begin{align}
+ \label{eq:dilN}
+  \cfrac{dN_{k}}{dt} = -\gamma_{dil} N_k,
+\end{align}
+where $\gamma_{dil}$ is dilution coefficient in units 1/s. It is inverse value of aerosol lifetime $\tau$.
+
+Used condensing vapor consentration gradient
+\begin{align}
+ \label{eq:Cvap}
+  \cfrac{dC_{vap}}{dt} = Q - CS\cdot C_{vap} -\gamma C_{vap} -\gamma_{dil} C_{vap},
+\end{align}
+takes into account vapor source rate $Q$, vapor loss rate to particles $CS$ and to walls $\gamma$ and vapor dilution rate $\gamma_{dil}$.
+
+See connection with CS and I
+\begin{equation}
+  \label{eq:CSandI}
+   CS = \sum_{i}I_iN_i.
+	\end{equation}
+This is connection between particle growth and vapor loss to particles.
+These differential equations \ref{eq:Coag}, \ref{eq:GR},\ref{eq:dilN} and \ref{eq:Cvap} are solved numerically using Runge-Kutta-method \citep{Dormand1980} and time evolution of number distibution function $dN/dd_p$ gained among other results.
+
+
+
+\section{How model was used}
+
+In this study batch type aerosol chamber was modelled with 60 size sections between sizes 1 nm and 1 $\upmu$m. Different aerosol mass seeds $M_0$ and monoterpene consentrations $P_0$ was used for two particle sizes and two SLLV wall loss coefficient resulting 4x4x2x2~$=$~64 model runs. Used constants and variables are presented in table \ref{tab: initial values}.
+
+\begin{table}[ht]
+\centering
+\caption{Used values in modelling. Those values kept same in each model run are presented first and then values that changed between are under.}
+\label{tab: initial values}
+\begin{tabular}[t]{c c c c}
+ %& & & \multicolumn{2}{c}{$\Delta N_{80}(\tau)$} \\
+%\cline{4-5}
+    \textbf{Constant}  & \textbf{Symbol} & \textbf{Unit} & \textbf{Value}\\
+    \hline
+    Stoichiometric yield of SLLV &  $\alpha$ &  -  &  0.3\\
+    Sticking coefficient &  $\alpha_m$ & - & 1 \\
+    Dilution coefficient &  $\gamma_{dil}$ & 1/s & 5$\cdot$ 10$^{-5}$\\
+    SLLV vapor mean free path & $\lambda$ & nm &  102.65\\
+    Particle density &  $\rho$ & g/cm$^3$ & 1.4\\
+		Geometric mean deviation GMD &  $\sigma$ & - & 1.3\\
+    Diffusion coefficient of SLLV & $D_{AB}$ &  cm$^2$/s &  0.0489\\
+		Reaction rate of ozone & $k'$ &  1/s &  2$\cdot$ 10$^{-16}$\\
+		Molar mass of SLLV & $M_{vap}$ &  g/mol &  300\\
+		Molar mass of monoterpene & $M_{MT}$ & g/mol & 137\\
+		Ozone consentration & [0$_3$] & ppb &  60\\
+		Pressure & $p$ & atm & 1 \\
+		Temperature & $T$ &  K &  290\\
+		Time vector & $t$ & s &  0 - 36000\\
+		&  &  &\\
+		\textbf{Variable} & \textbf{Symbol} &  \textbf{Unit} &  \textbf{Value}\\
+		\hline
+		SLLV wall loss coefficient& $\gamma$ &  1/s &  0.02, 0.002\\
+		Count median diameter CMD & $\mu$ &  nm &  10, 80 \\
+		Aerosol mass seed (10 nm particles) & $M_{10nm}$ &  ng/m$^3$ &  3, 15, 30, 100\\
+		Related number (10 nm particles) & $N_{10nm}$ &  10$^3$ 1/cm$^3$ &  $\sim$ 4, 20, 41, 137\\
+		Aerosol mass seed (80 nm particles) & $M_{80nm}$ &  $\upmu$g/m$^3$ &  1, 5, 10, 30\\
+		Related number (80 nm particles) & $N_{80nm}$ &  10$^3$ 1/cm$^3$ &  $\sim$ 2.7, 13, 27, 80\\
+		Initial monoterpene consentration & $P_0$ &  ppb &  10, 50, 100, 200\\
+\end{tabular}
+\end{table}
+
+Aerosol total numbers for model presented in table \ref{tab: initial values} are calculated from aerosol mass seed using count median diameter as size of particles
+\begin{equation}
+  \label{eq:mass2number}
+   N = \cfrac{m}{\rho (\pi/6) \mu^3}.
+	\end{equation}
+Then lognormal distribution is produced with CMD, GMD and N.
+
+Conversion of ppb to 1/cm$^3$ is done multipling with $p/kT =$ 2.5331$\cdot$ 10$^{19}$ air molecules/cm$^3$.
+
+
+\section{Analysing tools for results, how to get $\alpha$ and $\gamma$?}
+
+Aerosol mass yield
+\begin{equation}
+  \label{eq:yield end}
+   Y = \cfrac{\Delta M}{\Delta P},
+	\end{equation}
+where $\Delta M$ is formed aerosol mass and $\Delta P$ is used precursor mass. Formed aerosol mass can be calculated
+\begin{equation}
+  \label{eq:aerosol mass}
+   \Delta M = M_{tot} - M_0 + M_{dil},
+	\end{equation}
+where $M_{tot}$ is aerosol total mass, $M_0$ initial aerosol mass and $M_{dil}$ diluted aerosol mass.
+From particle number distribution $dN/dd_p$, total aerosol number $N_{tot}$, volume $V_{tot}$ and mass $M_{tot}$ is integrated considering spherical particles with density $\rho =$~1.4 g/cm$^3$. Diluted aerosol number $N_{dil}$ is calculated by model from differential equation \ref{eq:dilN}. From $N_{dil}$ diluted mass $M_{dil}$ can be calculated and formed aerosol mass got.
+
+Used precursor $\Delta P$ is calculated from
+\begin{align}
+ \label{eq:precursor}
+  \Delta P = \int_0^{t_{end}} kP\,\mathrm{d}t,
+\end{align}
+where $t_{end}$ is elapsed time, $k$ is formation rate and $P$ is precursor consentration presented in equation \ref{eq:Q}.
+
+Condensation sink was calculated from equation \ref{eq:CS} using particle number distribution $dN/dd_p$ and values of table \ref{tab: initial values}.
+
+Proposed relation for yield and condensation sink
+\begin{align}
+ \label{eq:yield_CS}
+  Y_{end} = \cfrac{\alpha}{1+\cfrac{\gamma}{CS_{end}}}.
+\end{align}
+Using equation \ref{eq:CS_M}, this relation can be presented as function of aerosol mass
+\begin{align}
+ \label{eq:yield_Mm}
+  Y_{end} = \cfrac{\alpha}{1+\cfrac{\gamma}{2\cdot 10^{-4} \cdot N^{0.37} M^{0.63}}}.
+\end{align}
+Fitting these functions to yield data results knowledge of stoichiometric coefficient of SLLV product $\alpha$ and chamber wall losses $\gamma$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Results} % saadut tulokset ja niiden tarkastelu
+
+%\begin{figure}[ht]
+%\begin{center}
+%\includegraphics[width=0.8\textwidth]{malli1.eps}
+%\end{center}
+%\caption{Esimerkki mallin laskemasta aikasarjasta, kun taustahiukkaspitoisuus oli 1500~cm$^{-3}$, nukleaatiohiukkasten pitoisuus 1000 cm$^{-3}$ ja kasvunopeus 3 nm$/$h.}
+%\label{fig:malli1}
+%\end{figure}
+
+
+%\begin{figure}[h]
+%\tikzstyle{every node}=[font=\scriptsize]
+ %\input{Yend_CSend.tikz}
+%\caption{Yeild as function of condensation sink}
+%\label{fig:N1_constant}
+%\end{figure}
+\section{Results using H$_2$SO$_4$ values}
+To get an idea how condensation sink and secondary organic aerosol mass varies throughout modelling time,  in figures \ref{fig:CSt} and \ref{fig:Mt} are presented four examples of condensation sink
+and aerosol mass with different initial conditions in batch chamber. All other condensation sinks and aerosol masses of 60 cases are between or near of those lines in figures \ref{fig:CSt} and
+\ref{fig:Mt}. 
+
+\begin{figure}[ht]
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\small]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{CS_time.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+\draw[<-,thick,white] (.4,.4) --(.4,.4) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[<-,thick,white] (.115,.5) --(.115,.5) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};		
+		
+\draw[<-,thick,white] (.3,.8) --(.3,.8) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[<-,thick,white] (.2,.9) --(.2,.9) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};	
+		
+\draw[<-,thick,white] (.6,.7) --(.6,.7) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {small aerosol seed};
+\draw[<-,thick,white] (.6,.9) --(.6,.9) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {big aerosol seed};	
+\end{scope}
+\end{tikzpicture}
+\caption{Condensation sink as function of modelling time in four different cases. Two lines for small ($D_p =$ 10 nm, $M_{OA} =$ 3 ngm$^{-3}$) and two lines for big ($D_p =$ 80 nm, $M_{OA} =$ 10 $\mu$gm$^{-3}$) secondary organic aerosol mass seeds are presented with two different SLLV product lifetimes $\tau$.}
+\label{fig:CSt}
+\end{figure}
+
+
+Both condensation sink and aerosol mass grow until dilution loss is bigger than gain from aerosol growth. That happens near 10$^4$ seconds which is about 3 hours and near the times when aerosol mass yield values are stabilized, see figure \ref{fig:Y_example}. 
+
+Exactly:
+Yield $Y$ and condensation sink $CS$ values was chosen at times 6960 s for 80 nm particles and 11280 s for 10 nm particles and final values for yield $Y_{end}$ and condensation sink $CS_{end}$ got.
+
+\begin{figure}[ht]
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\small]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{Moa_time.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+\draw[white] (.4,.4) --(.4,.4) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[white] (.115,.51) --(.115,.51) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};		
+		
+\draw[white] (.2,.75) --(.2,.75) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[white] (.2,.88) --(.2,.88) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};	
+		
+\draw[white] (.6,.77) --(.6,.77) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {small aerosol seed};
+\draw[white] (.6,.91)--(.6,.91) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {big aerosol seed};			
+\end{scope}
+\end{tikzpicture}
+\caption{Secondary organic aerosol mass as function of modelling time in four different cases. Two lines for small ($D_p =$ 10 nm, $M_{OA} =$ 3 ngm$^{-3}$) and two lines for big ($D_p =$ 80 nm, $M_{OA} =$ 10 $\mu$gm$^{-3}$) secondary organic aerosol mass seeds are presented with two different SLLV product lifetimes $\tau$.}
+\label{fig:Mt}
+\end{figure}
+
+\begin{figure}[ht]
+\tikzstyle{every node}=[font=\small]
+ \input{Y_time.tikz}
+\caption{Aerosol mass yield as function of modelling time for two SLLV lifetimes $\tau$. Model initial values were $D_p =$ 80 nm, $M_{OA} =$ 5 $\mu$gm$^{-3}$ and $P_0 =$ 50ppb.}
+\label{fig:Y_example}
+\end{figure}
+
+In figure \ref{fig:Yend} are aerosol mass yield values at time when they have reached constant value, see figure \ref{fig:Y_example}, as function of aerosol condensation sink. Times needed to stabilise yields are in this modelling from two to three hours. That time is considered as end time $t_{end}$. 
+
+\begin{figure}[ht]
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\footnotesize]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{Yend_CSend.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+\draw[<-,thick,white] (.2,.4) --(.2,.4) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[<-,thick,white] (.25,.9) --(.25,.9) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};		
+\end{scope}
+\end{tikzpicture}
+\caption{Presented data points are yield values as function of condensation sink for two different SLLV product lifetimes $\tau$ used in modelling. Lifetime is inverse of chamber loss rate
+$\gamma$. Data points are fitted to $\alpha/(1+\gamma/CS)$ with three different ways. Red lines are fitted with constant values for $\alpha$ and $\gamma$ which are the same used in model. Black and blue lines are fitted to data
+using least square method with two parametres $\alpha$ and $\gamma$ (black) or one parameter $\gamma$ and constant $\alpha$ (blue). Used fitting parametres are shown in legend.}
+\label{fig:Yend}
+\end{figure}
+
+One can see, comparing data points with different SLLV lifetimes in figure \ref{fig:Yend}, that aerosol mass yields are lower when lifetime is shorter. With short vapor lifetime, there is not enough time for aerosol to grow bigger sizes (bigger CS). When condensation sink remains low then also achieved yield is low.
+
+What comes to goodness of formula \ref{eq:yield_CS}, red lines in figure \ref{fig:Yend} show that yield values are over estimated. That is because of vapor dilution (neglible?? 5e-5) and... other? And fits better to those values with greater seed aerosol mass and condensation sink. Thus chamber wall loss is bigger when aerosol mass (condensation sink) is small. vapor goes to wall in the beginning (of experiment) because it has no other place to go resulting bigger wall loss coefficient $\gamma$. 
+
+Both black and blue lines fit to data really good and better than red ones. One can see, comparing vapor loss coefficients $\gamma$ of red and blue fits, that blue one, which agrees better to data, has greater loss coefficient. (Thus this result agrees with earlier conclusion...) 
+
+Other reason, why red line fits better to data points with bigger mass, is that it is assumed that condensation sink stays roughly constant during aerosol mass growth (see supplementary). Really CS isn't constant but increases during aerosol growth resulting to bigger values for wall loss coefficient $\gamma$.
+
+Increase of CS is relatively bigger for small seeds than for bigger seeds as one can see from figure \ref{fig:CSt}. Thus this assumption (red line) is better for bigger aerosol seeds when CS doesn't change so much.
+
+One can get rough values for $\alpha$ and $\gamma$ fitting formula \ref{eq:yield_CS} to CS data... 
+
+If also Vtot figure then $\alpha$ and $\gamma$ values from distribution data (if density known and spherical particles).
+If Mtot known then you get
+
+Problem still N$^{0.37}$
+
+But how mentel or odum or shilling got Yield pictures as function of aerosol mass without problem but we have? 
+
+Questions in calculation
+
+CS calc with H2S04 values (CS general function)
+ diff coeff and molemass
+
+Mass calc with H2SO4
+ molemass, density
+
+Model run with H2SO4
+
+Diff coeff in model and CS calculation is for H2SO4...
+
+Should we change those closer to condensating vapor values?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Results using C$_{10}$H$_{16}$O$_{10}$ values}
+
+Changed D, $\lambda$, molar mass of monoterpene precursor $M_{MT}$ and condensing vapor $M_{vap}$, density of particles $\rho$
+
+To get an idea how condensation sink and secondary organic aerosol mass varies throughout modelling time,  in figures \ref{fig:CSt2} and \ref{fig:Mt2} are presented four examples of condensation sink
+and aerosol mass with different initial conditions in batch chamber model. All other condensation sinks and aerosol masses of 60 cases are between or near of those lines in figures \ref{fig:CSt2} and
+\ref{fig:Mt2}. 
+
+\begin{figure}[ht]
+\centering     
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\small]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{CS_time(2).tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+\draw[white] (.4,.4)--(.4,.4) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[white] (.11,.51)--(.11,.51) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};		
+		
+\draw[white] (.3,.8) --(.3,.8) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[white] (.2,.91)--(.2,.91) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};	
+		
+\draw[white] (.6,.73)--(.6,.73) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {small aerosol seed};
+\draw[white] (.6,.9)--(.6,.9) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {big aerosol seed};	
+\end{scope}
+\end{tikzpicture}
+\caption{Condensation sink as function of modelling time in four different cases. Two lines for small ($D_p =$ 10 nm, $M_{OA} =$ 3 ngm$^{-3}$) and two lines for big ($D_p =$ 80 nm, $M_{OA} =$ 10 $\mu$gm$^{-3}$) secondary organic aerosol mass seeds are presented with two different SLLV product lifetimes $\tau$.}
+\label{fig:CSt2}
+\end{figure}
+
+\begin{figure}[ht]
+\centering 
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\small]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{Moa_time(2).tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+\draw[white] (.4,.45)--(.4,.45) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[white] (.11,.52)--(.11,.52) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};		
+		
+\draw[white] (.2,.7) --(.2,.7) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[white] (.2,.85) --(.2,.85) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};	
+		
+\draw[white] (.6,.77) --(.6,.77) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {small aerosol seed};
+\draw[white] (.6,.945) --(.6,.945) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {big aerosol seed};			
+\end{scope}
+\end{tikzpicture}
+\caption{Secondary organic aerosol mass as function of modelling time in four different cases. Two lines for small ($D_p =$ 10 nm, $M_{OA} =$ 3 ngm$^{-3}$) and two lines for big ($D_p =$ 80 nm, $M_{OA} =$ 10 $\mu$gm$^{-3}$) secondary organic aerosol mass seeds are presented with two different SLLV product lifetimes $\tau$.}
+\label{fig:Mt2}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\small]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{Y_time2.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+\draw[white] (.4,.5)--(.4,.5) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[white] (.15,.8) --(.15,.8) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};				
+\end{scope}
+\end{tikzpicture}
+\caption{Aerosol mass yield as function of modelling time for two SLLV lifetimes $\tau$. Model initial values were $D_p =$ 80 nm, $M_{OA} =$ 5 $\upmu$gm$^{-3}$ and $P_0 =$ 50 ppb.}
+\label{fig:Y_example2}
+\end{figure}
+
+Both condensation sink and aerosol mass grow until dilution loss is bigger than gain from aerosol growth. That happens near 10$^4$ seconds which is about 3 hours and near the times when also aerosol mass yield values are stabilized, see figure \ref{fig:Y_example2}. 
+
+%Exactly:
+%Yield $Y$ and condensation sink $CS$ values was chosen at times 6960 s for 80 nm particles and 11280 s for 10 nm particles and final values for yield $Y_{end}$ and condensation sink $CS_{end}$ got.
+
+In figure \ref{fig:YendVend} are aerosol mass yield values, at time when they have reached constant values, as function of aerosol volume. Times needed to stabilise yields are in this modelling from two to three hours, see figure \ref{fig:Y_example2}. That time is considered as end time $t_{end}$. 
+
+\begin{figure}[ht]
+\centering
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\footnotesize]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{Yend_Vend.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+%\draw[<-,thick,white] (.3,.3)--(.25,.4) 
+     %node[right,draw=white,rounded corners,
+     %text width=2cm,align=center,text=black] 
+     %{$\tau =$ 1/$\gamma =$ 50 s};
+\draw[<-,thick,red] (.98,.88)--(.94,.48) 
+     node[right,
+     text width=2.5cm,align=center,text=black] 
+     {};		
+\end{scope}
+\end{tikzpicture}
+\caption{Presented data points are yield values as function of aerosol particles total volume $V_{tot}$ for 80 nm particles with four different mass seeds $M_0$ ($\upmu$g/cm$^3$) and two different SLLV product lifetimes $\tau$ used in 
+modelling. Lifetime is inverse of chamber loss rate $\gamma$ ($s^{-1}$). Data points are fitted to $\alpha/(1+\gamma/(2\cdot 10^{-4} \cdot N_{end}^{0.37} M_{end}^{0.63}))$, where $M_{end} = \rho V_{end}$. Lines are fitted to data using least
+square method with two parametres $\alpha$ and $\gamma$. Parameter values are shown in legend and used $N_{end}$ values in table \ref{tab: N_end values}. Red arrow represents growth of mass seed $M_0$.}
+\label{fig:YendVend}
+\end{figure}
+
+
+From figure \ref{fig:YendVend} can be seen that it not possible to fit all data points to same curve/graph. Yield values increase as aerosol mass seed increases and data points fit to different graphs (see red arrow). One can see same effect for both chamber loss rate $\gamma$ values (blue and black lines). Those points with particle size 10 nm behave similarly because they have pretty much same particle number $N$ as 80 nm data points.
+
+\begin{table}[ht]
+\centering
+\caption{Used final particle number values $N_{end}$ in fitting figure \ref{fig:YendVend}. Values are averages of four data points with nearly equal number consentrations presented in different graphs in figure \ref{fig:YendVend}.}
+\label{tab: N_end values}
+\begin{tabular}[t]{c c c c}
+ %& & & \multicolumn{2}{c}{$\Delta N_{80}(\tau)$} \\
+%\cline{4-5}
+    $M_0$ ($\upmu$g/cm$^3$)  & $N_{end}$ (1/cm$^3$)\\
+    \hline
+    1 &  $\sim$1900\\
+    5 &  $\sim$9000\\
+    10 &  $\sim$17000\\
+    30 & $\sim$44000\\
+\end{tabular}
+\end{table}
+
+That's the reason why we propose that yield values should be presented as a function of condensation sink instead of aerosol mass or volume. All data points fit better to one graph as seen in figure \ref{fig:Yend2}.
+
+\begin{figure}[ht]
+\centering
+    \setlength\fheight{10cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\small]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{Yend_CSend(2).tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+\draw[<-,thick,white] (.2,.4) --(.2,.4) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[<-,thick,white] (.25,.9)--(.25,.9) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};		
+\draw[<-,thick,black] (.5,.8)--(.5,.6) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {};		
+\draw[<-,thick,black] (.6,.85)--(.6,.7) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {};
+\draw[<-,thick,black] (.7,.91)--(.7,.81) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {};
+\end{scope}
+\end{tikzpicture}
+\caption{Presented data points are yield values as function of condensation sink for two different SLLV product lifetimes $\tau$ used in modelling. Lifetime is inverse of chamber loss rate
+$\gamma$. Data points are fitted to $\alpha/(1+\gamma/CS)$ with three different ways. Red lines are fitted with constant values for $\alpha$ and $\gamma$ which are the same used in model. Black and blue lines are fitted to data
+using least square method with two parametres $\alpha$ and $\gamma$ (black) or one parameter $\gamma$ and constant $\alpha$ (blue). Used fitting parametres are shown in legend. Black arrows represents what happens when vapor lifetime grows.}
+\label{fig:Yend2}
+\end{figure}
+
+
+One can see, comparing data points with different SLLV lifetimes in figure \ref{fig:Yend2}, that aerosol mass yields are lower when lifetime is shorter. With short vapor lifetime, there is not enough time for aerosol to grow bigger sizes (bigger CS). This happens mainly in chamber studies but shifting to athmosphere, where vapor lifetime is assumed to be much longer, it results bigger yield values. This transfer is presented with black arrows in figure \ref{fig:Yend2}. 
+%(When condensation sink remains low then also achieved yield is low.)
+
+What comes to goodness of formula \ref{eq:yield_CS}, red lines in figure \ref{fig:Yend2} show that yield values are overestimated. %That is because of vapor dilution (neglible?? 5e-5) and... other? 
+And fits better to those values with greater seed aerosol mass and condensation sink. Thus chamber wall loss is bigger when aerosol mass (condensation sink) is small. Vapor goes to wall in the beginning of experiment because it has no other place to go, resulting bigger wall loss coefficient $\gamma$. 
+
+Both black and blue lines fit to data really good and better than red ones. One can see, comparing vapor loss coefficients $\gamma$ of red and blue fits, that blue one, which agrees better to data, has greater loss coefficient. This result agrees with earlier conclusion.
+
+Other reason, why red line fits better to data points with bigger mass, is that it is assumed that condensation sink stays roughly constant during aerosol mass growth (see supplementary). Really CS isn't constant but increases during aerosol growth resulting to bigger values for wall loss coefficient $\gamma$ when CS is small.
+
+Third reason is that increase of CS is relatively bigger for small seeds than for bigger seeds as one can see from figure \ref{fig:CSt2}. Thus this assumption (red line) is better for bigger aerosol seeds when CS doesn't change so much.
+
+One can get rough values for $\alpha$ and $\gamma$ fitting formula \ref{eq:yield_CS} to CS data.
+
+%If also Vtot figure then $\alpha$ and $\gamma$ values from distribution data (if density known and spherical particles).
+%If Mtot known then you get
+%
+%Problem still N$^{0.37}$
+%
+%But how mentel or odum or shilling got Yield pictures as function of aerosol mass without problem but we have? 
+
+\newpage
+\subsection{Mass-$\alpha$ figures}
+
+In this section yields are calculated using precursor molar mass $M_{MT}$ = 137 g/mol to calculate lost precursor mass. In previous section it was 300 g/mol.
+
+From figures \ref{fig:YendVend3} and \ref{fig:Yend3} can be seen that mass yields are higher than molecular/stoichiometric yields (figures \ref{fig:YendVend} and \ref{fig:Yend2}). If stoichiometric coefficient $\alpha$ of equation \ref{eq:MT2Cvap} is wanted, one should use molecular yield. Althought mass yields are those which are measured. From stoichiometric $\alpha_{st}$ to mass $\alpha_{mass}$
+\begin{equation}
+  \label{eq:alpha_conversion}
+   \alpha_{mass} = \alpha_{st} \cdot \cfrac{M_{vap}}{M_{MT}} = 0.3 \cdot \cfrac{300}{137} = 0.657.
+	\end{equation}
+In conclusion stoichiometric coefficients are not straight seen from mass yields but from stoichiometric yields.
+
+\begin{figure}[ht]
+\centering
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\footnotesize]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{Yend_Vend3.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+%\draw[<-,thick,white] (.3,.3)--(.25,.4) 
+     %node[right,draw=white,rounded corners,
+     %text width=2cm,align=center,text=black] 
+     %{$\tau =$ 1/$\gamma =$ 50 s};
+\draw[<-,thick,red] (.98,.85)--(.94,.48) 
+     node[right,
+     text width=2.5cm,align=center,text=black] 
+     {};		
+\end{scope}
+\end{tikzpicture}
+\caption{Presented data points are yield values as function of aerosol particles total volume $V_{tot}$ for 80 nm particles with four different mass seeds $M_0$ ($\upmu$g/cm$^3$) and two different SLLV product lifetimes $\tau$ used in 
+modelling. Lifetime is inverse of chamber loss rate $\gamma$ ($s^{-1}$). Data points are fitted to $\alpha/(1+\gamma/(2\cdot 10^{-4} \cdot N_{end}^{0.37} M_{end}^{0.63}))$, where $M_{end} = \rho V_{end}$. Lines are fitted to data using least square method with two parametres $\alpha$ and $\gamma$. Parameter values are shown in legend and used $N_{end}$ values in table \ref{tab: N_end values}. Red arrow represents growth of mass seed $M_0$.}
+\label{fig:YendVend3}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+    \setlength\fheight{10cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\small]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{Yend_CSend3.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+\draw[white] (.2,.4) --(.2,.4) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 50 s};
+\draw[<-,thick,white] (.25,.9) --(.25,.9) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {$\tau =$ 1/$\gamma =$ 500 s};		
+\draw[<-,thick,black] (.5,.75)--(.5,.55) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {};		
+\draw[<-,thick,black] (.6,.8)--(.6,.65) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {};
+\draw[<-,thick,black] (.7,.86)--(.7,.76) 
+     node[right,
+     text width=3cm,align=center,text=black] 
+     {};
+\end{scope}
+\end{tikzpicture}
+\caption{Presented data points are yield values as function of condensation sink for two different SLLV product lifetimes $\tau$ used in modelling. Lifetime is inverse of chamber loss rate
+$\gamma$. Data points are fitted to $\alpha/(1+\gamma/CS)$ with three different ways. Red lines are fitted with constant values for mass-$\alpha$ and $\gamma$ which are the same used in model. Black and blue lines are fitted to data
+using least square method with two parametres mass-$\alpha$ and $\gamma$ (black) or one parameter $\gamma$ and constant mass-$\alpha$ (blue). Used fitting parametres are shown in legend. Black arrows represents what happens when vapor lifetime grows.}
+\label{fig:Yend3}
+\end{figure}
+
+%\begin{table}[ht]
+%\centering
+%\caption{Muutamia esimerkkejä alkuparametrien muuttamisen vaikutuksesta yli 80 nm:n hiukkaspitoisuuteen, kun tausta on suuri ja pieni. Ylöspäin oleva nuoli (vihreä) kuvaa suureen kasvamista ja alaspäin oleva (punainen) pienentymistä.}
+%\label{tab: muutostaulukko}
+%\begin{tabular}[t]{c c c c c}
+ %& & & \multicolumn{2}{c}{$\Delta N_{80}(\tau)$} \\
+%\cline{4-5}
+   %$N_{tausta}$  & $GR$ & $N_{nucl}$ & suuri $N_{tausta}$ & pieni $N_{tausta}$ \\
+    %\hline
+    %\textcolor{green1}{$\uparrow$} &  \textcolor{green1}{$\uparrow$} &  \textcolor{green1}{$\uparrow$} &  \textcolor{red}{$\downarrow$} &  \textcolor{green1}{$\uparrow$}\\
+     %\textcolor{green1}{$\uparrow$} &  \textcolor{green1}{$\uparrow$} & \textcolor{red}{$\downarrow$} & \textcolor{red}{$\downarrow$} & \textcolor{red}{$\downarrow$}\\
+    %\textcolor{red}{$\downarrow$} &  \textcolor{green1}{$\uparrow$} & \textcolor{red}{$\downarrow$} &  \textcolor{green1}{$\uparrow$} & \textcolor{red}{$\downarrow$}\\
+    %\textcolor{red}{$\downarrow$} & \textcolor{red}{$\downarrow$} & \textcolor{red}{$\downarrow$} &  \textcolor{green1}{$\uparrow$} & \textcolor{red}{$\downarrow$}\\
+    %vakio &  \textcolor{green1}{$\uparrow$} & \textcolor{red}{$\downarrow$} & \textcolor{red}{$\downarrow$} & \textcolor{red}{$\downarrow$}\\
+    %vakio & \textcolor{red}{$\downarrow$} &  \textcolor{green1}{$\uparrow$} &  \textcolor{green1}{$\uparrow$} &  \textcolor{green1}{$\uparrow$}\\
+%\end{tabular}
+%\end{table}
+
+\chapter{Matlab scripts and data files}
+
+Datafiles are located in GitHub path: 
+
+For 10 nm particles
+
+$\backslash$GitHub$\backslash$AECHAMO$\backslash$Results and scripts$\_$mp$\backslash$SOA formation$\backslash$Batch
+
+$\backslash$Fixed$\_$diff$\_$molemass$\backslash$10nm$\backslash$fixed correct lambda$\backslash$fixed correct density
+
+$\backslash$run$\_$20130726T203251
+
+And for 80 nm particles
+
+$\backslash$GitHub$\backslash$AECHAMO$\backslash$Results and scripts$\_$mp$\backslash$SOA formation$\backslash$Batch 
+
+$\backslash$Fixed$\_$diff$\_$molemass$\backslash$80nm$\backslash$fixed correct lambda$\backslash$fixed correct density
+
+$\backslash$run$\_$20130726T200039
+
+Calculations was done with script:
+
+$\backslash$GitHub$\backslash$AECHAMO$\backslash$calculate and plot$\backslash$SOA$\_$calculation$\_$Yend$\_$CSend.m
+
+Also all used functions are found in this folder or AEROTOOLS$\backslash$development repository.
+
+This documentation pdf latex origin:
+
+$\backslash$GitHub$\backslash$AECHAMO$\backslash$documentation$\_$mp$\backslash$chamber
+
+
+Diffusion coefficient variation figure \ref{fig:DAB} made with:
+$\backslash$GitHub$\backslash$AECHAMO$\backslash$calculate and plot
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Conclusion}
+
+\section{What next?}
+
+DONE-Writing down methods (and theory):
+
+DONE-How model works? Aerosol processes, equations, used coefficients
+
+DONE-How calculations are done? What are calculated from $dN/dD_p$? 
+
+How one gets $\alpha$ and $\gamma$ from $dN/dD_p$?
+
+DONE-Ask Jyrki for diffusion coefficient, find out D
+
+DONE-Draw pictures $Yend(Vtot)$ and fits
+
+DONE-C$_{10}$H$_{16}$O$_{10}$ pictures with right values
+
+DONE-yield pictures with precursor P molarmass M = 137 g/mol -> $\alpha$ to 0.657
+
+DONE-explain differense between mass yield and molecular yield
+
+DONE-used Nend values
+
+DONE-uniform terminology
+
+DONE- Diff. figure
+
+DONE- references
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% lähdeluettelo
+\newpage
+\addcontentsline{toc}{chapter}{References} % Lisää tämäkin sisällysluetteloon
+\renewcommand{\bibname}{References} 
+
+\bibliographystyle{apalike}
+\bibliography{lähteet}
+
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\chapter{Liitteitä}
+%\citet{Goldstein2007}
+%\citet{Makela2000}
+\end{document}
