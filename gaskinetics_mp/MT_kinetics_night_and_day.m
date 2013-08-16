@@ -147,7 +147,7 @@ elseif plotting == 1
     plot(time,out.meas.E_MT,'kx-','LineWidth',lw,'MarkerSize',ms)
     set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
     set(gca,'YTick',[2.5e5,3e5,3.5e5,4e5,4.5e5,5e5,5.5e5], 'YTickLabel',{'2.5' ' ' '3.5' ' ' '4.5' ' ' '5.5'})
-    ylabel('E (cm^{-3}s^{-1})')
+    ylabel('E (10^5 cm^{-3}s^{-1})')
     %xlabel('time')
     axis([0 96 2.5e5 5.5e5])
 
@@ -155,7 +155,7 @@ elseif plotting == 1
     plot(out.model.time/3600, out.model.Q_Cvap, 'k-','LineWidth',lw,'MarkerSize',ms)
     set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
     set(gca,'YTick',[2.5e5,3e5,3.5e5,4e5,4.5e5,5e5,5.5e5], 'YTickLabel',{'2.5' ' ' '3.5' ' ' '4.5' ' ' '5.5'})
-    ylabel('Q_{vap} (cm^{-3}s^{-1})')
+    ylabel('Q_{vap} (10^5 cm^{-3}s^{-1})')
     %xlabel('time')
     axis([0 96 2.5e5 5.5e5])
 
