@@ -18,7 +18,7 @@ figure(1)
 % Plot the total particle volume in aerosol:
 subplot(5,3,7)
 plot(chamb.output_data.tim/(60*60),chamb.output_data.Vtot,'k-','LineWidth',lw,'MarkerSize',ms)
-xhandle = xlabel('time');
+%xhandle = xlabel('time');
 yhandle = ylabel('V_{tot}(m^3/cm^{3})','rotation',90);
 set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
 %set(gca,'YTick',[0.165,0.17,0.175,0.18,0.185,0.19,0.195,0.2,0.205,0.21], 'YTickLabel',{' ' '0.17' ' ' '0.18' ' ' '0.19' ' ' '0.2' ' ' '0.21'})
@@ -27,7 +27,7 @@ axis([0 96 0 2.5e-18])
 % Plot the particle concentration:
 subplot(5,3,8)
 plot(chamb.output_data.tim/(60*60),chamb.output_data.Ntot,'k-','LineWidth',lw,'MarkerSize',ms)
-xhandle = xlabel('time');
+%xhandle = xlabel('time');
 yhandle = ylabel('N_{tot}(cm^{-3})','rotation',90);
 set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
 axis([0 96 0 10000])
@@ -35,7 +35,7 @@ axis([0 96 0 10000])
 % Plot the vapor concentration:
 subplot(5,3,10)
 plot(chamb.output_data.tim/(60*60),chamb.output_data.vap,'k-','LineWidth',lw,'MarkerSize',ms)
-xhandle = xlabel('time');
+%xhandle = xlabel('time');
 yhandle = ylabel('C_{vap}(cm^{-3})','rotation',90);
 set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
 axis([0 96 0 6e7])
@@ -49,7 +49,7 @@ plot(tvect/3600,part_source(:,2),'k-','LineWidth',1.5,'MarkerSize',8)
 set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
 set(gca,'YTick',[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0], 'YTickLabel',{'0' ' ' ' ' ' ' ' ' '0.5' ' ' ' ' ' ' ' ' '1'})
 ylabel('J (cm^{-3}s^{-1})')
-xlabel('time')
+%xlabel('time')
 axis([0 96 -0.1 1.1])
 
 % copy CS, yield(M) and Y(t)
@@ -82,14 +82,14 @@ subplot(5,3,15)
 set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
 %set(gca,'YTick',[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0], 'YTickLabel',{'0' ' ' ' ' ' ' ' ' '0.5' ' ' ' ' ' ' ' ' '1'})
 ylabel('M_{OA} (\mug/m^3)')
-xlabel('time')
+%xlabel('time')
 axis([0 96 0 3])
 
 subplot(5,3,12)
 set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
 %set(gca,'YTick',[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0], 'YTickLabel',{'0' ' ' ' ' ' ' ' ' '0.5' ' ' ' ' ' ' ' ' '1'})
 ylabel('CS (s^{-1})')
-xlabel('time')
+%xlabel('time')
 axis([0 96 0 4e-3])
 
 subplot(5,3,13)
@@ -103,7 +103,7 @@ subplot(5,3,14)
 set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
 set(gca,'YTick',[0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1], 'YTickLabel',{'0' ' ' ' ' ' ' ' ' '0.05' ' ' ' ' ' ' ' ' '0.1'})
 ylabel('Yield')
-xlabel('time')
+%xlabel('time')
 axis([0 96 0 0.1])
 
 

@@ -117,7 +117,7 @@ elseif plotting == 1
     set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
     set(gca,'YTick',[0.165,0.17,0.175,0.18,0.185,0.19,0.195,0.2,0.205,0.21], 'YTickLabel',{' ' '0.17' ' ' '0.18' ' ' '0.19' ' ' '0.2' ' ' '0.21'})
     ylabel('MT (ppb)')
-    xlabel('time')
+    %xlabel('time')
     axis([0 96 0.1649999 0.21])
 
     subplot(5,3,1)
@@ -125,7 +125,7 @@ elseif plotting == 1
     set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
     set(gca,'YTick',[9,10,11,12,13,14,15,16,17,18], 'YTickLabel',{'9' ' ' ' ' '12' ' ' ' ' '15' ' ' ' ' '18'})
     ylabel('T (^{\circ}C)')
-    xlabel('time')
+    %xlabel('time')
     axis([0 96 9 18])
 
     subplot(5,3,3)
@@ -133,14 +133,14 @@ elseif plotting == 1
     set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
     set(gca,'YTick',[25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40], 'YTickLabel',{'25' ' ' ' ' ' ' ' ' '30' ' ' ' ' ' ' ' ' '35' ' ' ' ' ' ' ' ' '40'})
     ylabel('O_3 (ppb)')
-    xlabel('time')
+    %xlabel('time')
     axis([0 96 25 40])
 
     subplot(5,3,4)
     semilogy(time, out.meas.OH, 'kx-','LineWidth',lw,'MarkerSize',ms)
     set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
     ylabel('OH (ppt)')
-    xlabel('time')
+    %xlabel('time')
     axis([0 96 7e-4 3.1e-2])
 
     subplot(5,3,2)
@@ -148,7 +148,7 @@ elseif plotting == 1
     set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
     set(gca,'YTick',[2.5e5,3e5,3.5e5,4e5,4.5e5,5e5,5.5e5], 'YTickLabel',{'2.5' ' ' '3.5' ' ' '4.5' ' ' '5.5'})
     ylabel('E (cm^{-3}s^{-1})')
-    xlabel('time')
+    %xlabel('time')
     axis([0 96 2.5e5 5.5e5])
 
     subplot(5,3,6)
@@ -156,7 +156,7 @@ elseif plotting == 1
     set(gca,'XTick',[12,24,36,48,60,72,84], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
     set(gca,'YTick',[2.5e5,3e5,3.5e5,4e5,4.5e5,5e5,5.5e5], 'YTickLabel',{'2.5' ' ' '3.5' ' ' '4.5' ' ' '5.5'})
     ylabel('Q_{vap} (cm^{-3}s^{-1})')
-    xlabel('time')
+    %xlabel('time')
     axis([0 96 2.5e5 5.5e5])
 
 end
