@@ -1,0 +1,712 @@
+\documentclass[12pt,a4paper,english]{tutthesis}
+
+\usepackage[english]{babel} % tavutus suomeksi, vaihda jos eri kieli
+\usepackage[small]{caption}% kuvatekstien kirjasinkoko ja asettelu
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}			%omia k‰skyj‰ voi lis‰t‰ t‰h‰n v‰liin, esim. \newcommand{\angs}{\textsl{\AA}}
+
+\usepackage{epstopdf}
+\captionsetup[figure]{labelfont={bf}}
+\captionsetup[table]{labelfont={bf}}
+
+
+%%v‰rit
+%\usepackage[pdf]{pstricks}
+%\definecolor{green1}{RGB}{0,80,0}
+
+%%% Pgf plots, tikz ja kaikki muu mit‰ piirt‰minen vaatii
+\usepackage{tikz,pgfplots}
+%\usetikzlibrary{shapes,snakes}
+\usepackage[version=3]{mhchem}
+\pgfplotsset{compat=newest} 
+\pgfplotsset{plot coordinates/math parser=false}
+\usepackage{pgfplotstable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{colortbl}
+
+%%matikka
+\usepackage{amsmath,amssymb}
+%multiple roots
+ \usepackage{letltxmacro}
+%\usepackage{mathtools}
+% l‰hteet
+\usepackage{natbib}
+
+% non-italic µ = \upmu
+\usepackage{upgreek}
+
+% chemical reactions
+\usepackage{chemfig}
+
+%\usepackage[...]{microtype}
+
+%\usepackage{pgfplots}
+%\usepackage{pgfplotstable}
+%
+%\usepgfplotslibrary{external} 
+%\tikzexternalize
+%\pgfplotsset{compat=newest}
+
+\usetikzlibrary{plotmarks}
+
+%%%
+\pagenumbering{Roman}
+% alkuvalmistelut loppuu
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\LetLtxMacro{\oldsqrt}{\sqrt} % makes all sqrts closed
+\renewcommand{\sqrt}[1][]{%
+  \def\DHLindex{#1}\mathpalette\DHLhksqrt}
+\def\DHLhksqrt#1#2{%
+  \setbox0=\hbox{$#1\oldsqrt[\DHLindex]{#2\,}$}\dimen0=\ht0
+  \advance\dimen0-0.2\ht0
+  \setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
+  {\box0\lower0.71pt\box2}}
+
+\thispagestyle{empty}
+
+\vspace*{-.5cm}\noindent
+
+\includegraphics[width=8cm]{tut-logo}
+
+\vspace{6.8cm}
+
+\noindent{\bf\large \textsf{Mikko Poikkim‰ki}}\\
+{\bf\large \textsf{SOA formation yields in atmosphere}}\\
+%\textsf{Research}
+
+\vspace{8.7cm} % jos kaksi otsikkorivi‰ vaihda -> 6.7cm, jos yksi 8.7cm
+
+\begin{flushright}
+  
+\begin{minipage}[c]{6.8cm}
+\begin{spacing}{1.0}
+%\textsf{Tarkastaja: }\\ 
+%\textsf{J‰tetty tarkastettavaksi: }\\ 
+\textsf{Updated: 16.8.2013}\\ 
+\end{spacing}
+\end{minipage}
+\end{flushright}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\setcounter{page}{1} % t‰m‰ tarvitaan, jottei ensimm‰inen sivu kansilehden j‰lkeen olisi numero 2.
+%\chapter*{ALKUSANAT}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\chapter*{TIIVISTELMƒ}
+%\begin{spacing}{1.0}
+%\textsf{TAMPEREEN TEKNILLINEN YLIOPISTO}\\
+%\textsf{Teknis-luonnontieteellinen koulutusohjelma}\\
+%{\bf \textsf{POIKKIMƒKI, MIKKO: Monoterpeenien vaikutus pilviytimien lukum‰‰r‰‰n k‰ytt‰en sektionaalista aerosolimallia}}\\
+%\textsf{Kandidaatintyˆ, 29 sivua}\\
+%\textsf{Toukokuu 2013}\\
+%\textsf{P‰‰aine: Teknillinen fysiikka}\\
+%\textsf{Tarkastajat: Apulaisprofessori Miikka Dal Maso}\\ 
+%\textsf{Avainsanat: aerosoli, BVOC, havumets‰, ilmasto, kondensaatiokasvu, pilviydin, sektio\-naalinen malli}\\
+%\end{spacing}
+%
+%\noindent
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+%\chapter*{ABSTRACT}
+%\begin{spacing}{1.0}
+%\textsf{TAMPERE UNIVERSITY OF TECHNOLOGY}\\
+%\textsf{Bachelor's Degree Programme in Science and Engineering}\\
+%{\bf \textsf{POIKKIMƒKI, MIKKO: Monoterpene effect on cloudnuclei consentration using sectional aerosolmodel}}\\ % t‰t‰ t‰ytyy viel‰ mietti‰
+%\textsf{Bachelor of Science Thesis, xx pages, x Appendix pages}\\
+%\textsf{May 2013}\\
+%\textsf{Major: Advanced Engineering Physics}\\
+%\textsf{Examiner: Associate Professor Miikka Dal Maso}\\
+%\textsf{Keywords: }\\
+%\end{spacing}
+%
+%\noindent 
+%First paragraph
+%
+%\noindent
+%Second paragraph
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\renewcommand\contentsname{Table of contents} % poista jos kieli muu kuin suomi
+\tableofcontents
+%\newpage
+%\listoffigures
+%\listoftables
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+%\chapter*{TERMIT JA NIIDEN MƒƒRITELMƒT}
+%%\item [$$] 
+%
+%\section *{Latinalaiset symbolit}
+%\begin{termiluettelo}
+%\item [$$] 
+%
+%\end{termiluettelo} 
+%
+%\section*{Kreikkalaiset symbolit} % tarkasta aakkosj‰rjestys
+%\begin{termiluettelo}
+%
+%\end{termiluettelo} 
+%
+%\section*{Lyhenteet}
+%\begin{termiluettelo}
+%
+%\end{termiluettelo} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter. \ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{}{}}
+\lhead{\fancyplain{}{\leftmark}}
+
+% T‰st‰ alkaa varsinainen teksti
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Introduction} % tutkimuksen nykytilan esittely
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Theory}
+
+\section{Diffusion in binary mixtures} 
+
+Diffusion illustrates mass convection in medium from greater consentration to lower consentration. Fick's law states diffusion flux 
+\begin{equation}
+  \label{eq:Fick}
+   J = -D_{AB} \cfrac{dn}{dx},
+	\end{equation}
+where $D_{AB}$ is binary diffusion coefficient and $n$ molecule number consentration.
+
+Diffusion coefficient for binary gasmixtures can be calculated from \citet{Reid1987}
+\begin{equation}
+  \label{eq:Dif}
+   D_{AB} = 0.001 \cdot T^{1.75} \cfrac{\sqrt[]{\cfrac{1}{M_{A}}+\cfrac{1}{M_{B}}}}{p(V_A^{1/3}+V_B^{1/3})^2},
+	\end{equation}
+where unit of diffusion coefficient is cm$^2$/s, temperature $T$ is Kelvin, molar masses $M$ are g/mol and pressure $p$ is bar. Diffusion volumes $V$ can be calculated from values for atomic diffusion volumes which are for carbon C 15.9, for hydrogen 2.31, for oxygen 6.11, for nitrogen 4.54, for heterocyclic ring -18.3 and for air 19.7.
+
+Diffusion related vapor mean free path according to \citet{Pirjola1998}
+\begin{equation}
+  \label{eq:lambda}
+   \lambda = \cfrac{3D_{AB}}{\overline{c}_A},
+\end{equation}
+where $\overline{c}_A$ is velocity of gas molecules
+\begin{equation}
+  \label{eq:cA}
+   \overline{c}_A = \sqrt[]{\cfrac{8RT}{\pi M_A}},
+\end{equation}
+where $R$ is ideal gas constant 8.31446 J/Kmol.
+
+For example C$_{10}$H$_{16}$O$_{10}$ molecule ($M_A \approx$ 300) with one heterocyclic ring, diffusion volume $V_A \approx$ 250. Diffusion coefficient of this molecule in air in temperature 290 K and pressure 1 atm is 0.0489 cm$^2$/s. Related mean free path $\lambda$ is 102.65 nm. 
+
+\section{Condensation sink} 
+
+Condensation sink represents rate how rapidly condensable vapor molecules condenses on existing aerosol in units 1/s. It can be calculated from
+
+\begin{equation}
+  \label{eq:CS}
+   CS = 2\pi D\int_0^\infty d_p\beta (d_p)n(d_p)\,\mathrm{d}d_p = 2\pi D\sum_{i}\beta d_{pi}N_i,
+	\end{equation}
+	
+where $d_{pi}$ is the diameter of a particle in size class $i$, $N_i$ is corresbonding particle number consentration \citep{DalMaso2002} and $D$ is diffusion coefficient of condensing vapor. Transition regime correction factor $\beta_m$ according to Fuchs and Sutugin (1971) is
+	
+	\begin{equation}
+  \label{eq:beta}
+   \beta _m = \cfrac{1+Kn}{1+\left(\cfrac{4}{3\alpha_m}+0.337\right)Kn+\cfrac{4}{3\alpha_m}Kn^2}
+	\end{equation}
+	
+	where $\alpha_m$ is the sticking coefficient which represents probability of molecule to stick in to the particle. Dimensioless Knudsen number is
+	
+	\begin{equation}
+  \label{eq:kn}
+   Kn = \cfrac{2\lambda}{d_p},
+	\end{equation}
+	
+	where $\lambda$ is the effective mean free path of the condensing vapor molecules in the gas. Knudsen number is the ratio of two lenght scales. Mean free path $\lambda$ characterizes the gas with respect to the transport of mass and particle diameter $d_p$ characterizes the droplet.
+	
+One can semiempirically represent condensation sink as a function of aerosol mass as follows
+
+\begin{equation}
+  \label{eq:CS_M}
+   CS = 2\cdot 10^{-4} \cdot N^{0.37} M^{0.63},
+	\end{equation}
+where $N$ is particle number and $M$ particle mass.
+	
+\section{Proposed chemical reaction of monoterpene, SLLV source}
+
+Monoterpene reaction with ozone and hydroxyl produces SLLV product with molecular yield of $\alpha$ and other products with mass yields of $\beta_i$
+\begin{equation}
+ \label{eq:MT2Cvap}
+\chemname{\chemfig{MT + O_3 + OH}
+\chemrel[k][]{->}\chemfig{\upalpha C_{vap}+\sum_{i}^{}\upbeta_i C_i}}{}
+\end{equation}
+Source of SLLV vapor is then
+\begin{equation}
+  \label{eq:Q}
+   Q_{vap} = \alpha kP,
+\end{equation} 
+where $P$ is precursor (monoterpene) consentration and overall reaction rate $k = k_{O_3}$[O$_3$] + $k_{OH}$[OH] is reaction rate of ozone times ozone consentration plus reaaction rate of hydroxyl times hydroxyl consentration.
+
+Proposed SLLV product sinks
+\begin{figure}[ht] % selitys viel‰ saturaatiosta ja hiukkasmuodostuksen vaikutuksesta taustaan
+\centering
+\begin{tikzpicture}[thick,scale=2, every node/.style={scale=1.2}]
+	\node[scale=1] (MT) {MT};
+	\node (Cvap) [node distance=1.3cm, below of=MT]{$C_{vap}$};
+	\node (Moa) [node distance=1.3cm, left of=Cvap, below of=Cvap]{$M_{OA}$};
+	\node (Wall) [node distance=1.3cm, right of=Cvap, below of=Cvap]{};
+	
+	\draw[->] (MT) to node [right, scale=0.6]{k} (Cvap);
+	\draw[->] (Cvap) to node [left, scale=0.6]{CS} (Moa);
+	\draw[->] (Cvap) to node [right, scale=0.6]{$\gamma$} (Wall);	
+
+\end{tikzpicture}
+\label{fig:systeemikaavio}
+\caption{Proposed routes for monoterpene precursor MT reaction (rate $k$) SLLV product $C_{vap}$. To aerosol $M_{OA}$ with rate CS or to walls or other losses with rate $\gamma$}
+\end{figure}
+
+\section{Hydroxyl radical concentration diurnal variation in atmosphere}
+
+\begin{figure}[ht]
+\centering 
+		\newlength\fheight 
+    \newlength\fwidth
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\normalsize]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{concentration_OH.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+%\draw[white] (.19,.9)--(.19,.9) 
+     %node[right,
+     %text width=2cm,align=center,text=black] 
+     %{C$_{10}$H$_{14}$0$_9$};
+\end{scope}
+\end{tikzpicture}
+\caption{Diurnal variation of hydroxyl radical median concentration measured in spring and summer 2007 in Hyyti‰l‰ on new particle formation event days. Hourly datapoints (crosses) are from \citealt{Petaja2009} and solid line is used in modelling. Time is from midnight to midnight and noons are marked.}
+\label{fig:OH}
+\end{figure}
+
+\section{Ozone concentration diurnal variation in atmosphere}
+
+\begin{figure}[ht]
+\centering 
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\normalsize]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{concentration_O3.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+%\draw[white] (.19,.9)--(.19,.9) 
+     %node[right,
+     %text width=2cm,align=center,text=black] 
+     %{C$_{10}$H$_{14}$0$_9$};
+\end{scope}
+\end{tikzpicture}
+\caption{Diurnal variation of mean ozone concentration measured summertime in 1997-2003 in Hyyti‰l‰ on new particle formation event days. Hourly datapoints (crosses) are from \citealt{Lyubovtseva2005} and solid line is used in modelling.}
+\label{fig:O3}
+\end{figure}
+
+\newpage
+\section{Diurnal variation of atmospheric temperature}
+
+\begin{figure}[ht]
+\centering 
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\normalsize]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{temperature.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+%\draw[white] (.19,.9)--(.19,.9) 
+     %node[right,
+     %text width=2cm,align=center,text=black] 
+     %{C$_{10}$H$_{14}$0$_9$};
+\end{scope}
+\end{tikzpicture}
+\caption{Diurnal variation of mean temperature measured summertime in 1997-2003 in Hyyti‰l‰ on new particle formation event days. Hourly datapoints (crosses) are from \citealt{Lyubovtseva2005} and solid line is used in modelling.}
+\label{fig:temp}
+\end{figure}
+This temperature variation is used in monoterpene emission modelling.
+
+\newpage
+\section{Diurnal variation of monoterpene emissions}
+
+The temperature dependence of the monoterpene emission is described by \citet{Guenther1993}
+\begin{equation}
+  \label{eq:MTemission}
+   E = E_{30} exp[\beta (T - 30^{\circ}C)],
+	\end{equation}
+where $E$ is the emission, $E_{30}$ is the normalized emission potential and $\beta$ is the temperature dependence coefficient. Commonly used value for $\beta$ is 0.09$^{\circ}$C$^{-1}$ and emission potential value 1.37 mg/m$^2$h \citep{Rinne2007} was used to obtain diurnal variation of monoterpene emissions presented in figure \ref{fig:emissionMT}. Emission unit milligrams per squaremetre of land per hour was trasformed to concentration per second (cm$^{-3}$s$^{-1}$) considering atmospheric box 1000mx1mx1m = 1000m$^3$ with height 1km.
+
+\begin{figure}[ht]
+\centering 
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\normalsize]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{emission_MT.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+%\draw[white] (.19,.9)--(.19,.9) 
+     %node[right,
+     %text width=2cm,align=center,text=black] 
+     %{C$_{10}$H$_{14}$0$_9$};
+\end{scope}
+\end{tikzpicture}
+\caption{Diurnal variation of monoterpene emissions using G93 model. Hourly datapoints (crosses) are calculated from G93 and solid line is used in modelling.}
+\label{fig:emissionMT}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Methods} 
+
+Particle size distribution varies in time through different processes as nucleation, condensation, coagulation, sedimentation and dilution. These changes can be modelled with general dynamic equation (GDE) \citep{Seinfeld1998}
+\begin{align}
+ \label{eq:CGDE}
+  \cfrac{\partial n(v,t)}{\partial t}
+  = \cfrac{1}{2}\int_0^v \mathrm K(v-q,q)n(v-q,t)\,\mathrm{d}q - n(v,t)\int_0^\infty \mathrm K(q,v)n(q,t)\,\mathrm{d}q
+  \notag\\
+     - \cfrac{\partial}{\partial v}[I(v)n(v,t)] + J_{0}\delta (v-v_{0}) + S(v) -R(v),
+\end{align}
+where $I$ is particle volume changing rate, $J_{0}$ is nucleation rate, $K$ is coagulation coefficient, $n$ is size distribution function, $R$ particle loss rate, $S$ particle sources emission rate, $t$ is time, $v$ and $q = v + dv$ are particle volumes and $\delta (v-v_{0})$ is Dirac's delta function which is one whenever $v = v_{0}$ and otherwise zero. Two first term of equation represents coagulation, third term condensation, fourth nucleation, fifth other particle sources and the last other particle sinks like deposition.
+%
+%\section{Sektionaalinen malli} % esimerkkikuva interpoloidusta ja todellisesta alkujakaumasta?
+%
+%Sektionaalisessa mallissa arvioidaan jatkuvaa hiukkaskokojakaumaa diskreetill‰ ja\-kaumalla, jossa on ‰‰rellinen m‰‰r‰ kokosektioita. Sektion sis‰ltˆ karakterisoidaan sektion keskikoolla ja hiukkaslukum‰‰r‰ll‰. Toisin sanoen hiukkaspopulaation ajatellaan olevan monodispersiivist‰ jokaisessa sektiossa. Mallin tarkkuus riippuu k‰ytettyjen sektioiden m‰‰r‰st‰ \citep{Korhonen2004}.
+%
+%Erilaisia sektionaalisia malleja on kiinte‰, liikkuva ja n‰iden yhdistelm‰, liikkuvan keskikohdan malli \citep{Korhonen2004}. Kiinte‰ss‰ jokaisella sektiolla on tietty leveys ja paikka, jolloin hiukkasten kasvaessa tai pienetess‰ ne liikkuvat sektiosta toiseen. T‰m‰ on tehokas tapa esitt‰‰ dynaamisia prosesseja, mutta sill‰ voi esiinty‰ niin sanottua numeerista diffuusiota. Hiukkasten kasvaessa suurempaan kokoon niiden kasvu yliarvoidaan, joka levent‰‰ ja madaltaa hiukkaskokojakaumaa. T‰llˆin sill‰ saattaa olla suuri vaikutus mallinnettaessa kondensaatiota.
+%
+%Liikkuvassa sektionaalisessa mallissa sektioita ei kiinnitet‰ tiettyihin hiukkaskokoihin vaan niiden annetaan liikkua ajan kuluessa \citep{Korhonen2004}. Hiukkasten kasvaessa kondensaatiolla sektioiden hiukkaskoko muuttuu, jolloin niiden voidaan ajatella liikkuvan. T‰llˆin hiukkasten kasvua ei yliarvioida ja numeerista diffuusiota ei synny, jolloin kondensaation mallintaminen onnistuu. Liikkuvassa mallissa tulee kuitenkin ongelmia hiukkasmuodostuksen kanssa, jos sektioita ei ole l‰hell‰ hiukkas\-kokoa, jossa hiukkasia muodostuu. T‰llˆin hiukkaset lis‰t‰‰n l‰himp‰‰n sektioon, joka saattaa olla kaukana oikeasta. 
+%
+%Liikkuvan keskikohdan malli yhdist‰‰ kiinte‰n ja liikkuvan sektionaalisen mallin edut. Siin‰ sektion reunat kiinnitet‰‰n, mutta hiukkaskoot voivat vaihdella sektioiden sis‰ll‰ \citep{Jacobson1997}. Malli toimii hyvin mallinnettaessa kondensaatiota, haih\-tumista ja nukleaatiota, muttei sovellu tarkkoihin nukleaation tarkasteluihin \citep{Korhonen2004}.
+%
+\section{Used sectional aerosol model}
+
+In sectional model particle size distribution is divided in desired amount of size sections which are characterized with two parametres: particle size and consentration. Particle population is considered monodispersive in each section. In this study moving center model was used where section borders are fixed but particle sizes can vary inside sections \citep{Korhonen2004}. Model takes into account particle coagulation, dilution and nucleation, vapor condensation in to the particles, vapor dilution and loss to  walls (or other places). 
+
+Coagulation is modelled with parts of discrete general dymanic equation \citep{Seinfeld1998}
+\begin{align}
+ \label{eq:Coag}
+  \cfrac{dN_{k}}{dt}
+  = \cfrac{1}{2}\sum_{j=g^*}^{k-g^*} K_{j,k-j}N_{j}N_{k-j} -N_{k}\sum_{j=g^*}^{\infty} K_{k,j}N_{j},
+\end{align}
+where first term represents increase of particles in section $k$ and second term reduction of particles through coagulation.
+
+Condensation growth of particles is modelled by growing section size using growth rate \citep{Seinfeld1998}
+\begin{equation}
+  \label{eq:GR}
+   \cfrac{dd_{p}}{dt} = \cfrac{2M_{vap}I}{\pi \rho d_{p}^2N_A}, 
+\end{equation}
+where $M_{vap}$ is condensing vapor molecular mass, $\rho$ particle density, $N_A$ Avogadro's number and $I$ flux of molecules to the particle phase. It is obtained from
+\begin{equation}
+  \label{eq:I}
+   I = 2\pi d_p D C_{vap} \beta_m, 
+\end{equation}
+where $D$ is diffusion coefficient, $C_{vap}$ consentration of condensing vapor and $\beta_m$ obtained from equation \ref{eq:beta}.
+
+Dilution of particle consentration is modelled with equation
+\begin{align}
+ \label{eq:dilN}
+  \cfrac{dN_{k}}{dt} = -\gamma_{dil} N_k,
+\end{align}
+where $\gamma_{dil}$ is dilution coefficient in units 1/s. It is inverse value of aerosol lifetime $\tau$.
+
+Used condensing vapor consentration gradient
+\begin{align}
+ \label{eq:Cvap}
+  \cfrac{dC_{vap}}{dt} = Q - CS\cdot C_{vap} -\gamma C_{vap} -\gamma_{dil} C_{vap},
+\end{align}
+takes into account vapor source rate $Q$, vapor loss rate to particles $CS$ and to walls $\gamma$ and vapor dilution rate $\gamma_{dil}$.
+
+See connection with CS and I
+\begin{equation}
+  \label{eq:CSandI}
+   CS = \sum_{i}I_iN_i.
+	\end{equation}
+This is connection between particle growth and vapor loss to particles.
+These differential equations \ref{eq:Coag}, \ref{eq:GR},\ref{eq:dilN} and \ref{eq:Cvap} are solved numerically using Runge-Kutta-method \citep{Dormand1980} and time evolution of number distribution function $dN/dd_p$ is gained among other results.
+
+\section{Used monoterpene reaction model}
+
+Monoterpene precursor consentration $P$ was modelled using differential equation 
+\begin{align}
+ \label{eq:precursorMT}
+  \cfrac{dP}{dt} = E - k_{OH}[OH]\cdot P - k_{O_3}[O_3]\cdot P.
+\end{align}
+This monoterpene consentration varies through chemical reaction \ref{eq:MT2Cvap} and biogenic emissions $E$.
+
+\section{How models was used}
+
+In this study diurnal atmospheric SOA formation was modelled with 60 size sections between sizes 1 nm and 1 $\upmu$m. Used constants and variables are presented in table \ref{tab: initial values}.
+
+\begin{table}[ht]
+\centering
+\caption{Used values in modelling.}
+\label{tab: initial values}
+\begin{tabular}[t]{c c c c}
+ %& & & \multicolumn{2}{c}{$\Delta N_{80}(\tau)$} \\
+%\cline{4-5}
+    \textbf{Constant}  & \textbf{Symbol} & \textbf{Unit} & \textbf{Value}\\
+    \hline
+    Stoichiometric yield of SLLV &  $\alpha$ &  -  &  0.08\\
+    Sticking coefficient &  $\alpha_m$ & - & 1 \\
+    Dilution coefficient &  $\gamma_{dil}$ & 1/s & 5$\cdot$ 10$^{-6}$\\
+		SLLV wall loss coefficient& $\gamma$ &  1/s &  5$\cdot$ 10$^{-5}$\\
+    SLLV vapor mean free path & $\lambda$ & nm &  102.65\\
+    Particle density &  $\rho$ & g/cm$^3$ & 1.4\\
+		Geometric mean deviation GMD &  $\sigma$ & - & 1.6\\
+    Diffusion coefficient of SLLV & $D_{AB}$ &  cm$^2$/s &  0.0489\\
+		Reaction rate of ozone & $k_{O_3}$ &  cm$^3$s$^{-1}$ &  9$\cdot$ 10$^{-17}$\\
+		Reaction rate of hydroxyl & $k_{OH}$ &  cm$^3$s$^{-1}$ &  5$\cdot$ 10$^{-11}$\\
+		Molar mass of SLLV & $M_{vap}$ &  g/mol &  300\\
+		Molar mass of monoterpene & $M_{MT}$ & g/mol & 137\\
+		Pressure & $p$ & atm & 1 \\
+		Temperature & $T$ &  K &  290\\
+		Time vector & $t$ & hours &  0 - 95\\
+		Count median diameter CMD & $\mu$ &  nm &  80 \\		
+		Background number consentration & $N$ &  1/cm$^3$ &  500\\
+\end{tabular}
+\end{table}
+
+Nucleation was modelled with nucleation rate $J$ of 3 nm particles presented in figure \ref{fig:nucleation}. Nucleation starting at 11:00 and ending at 14:00.
+\begin{figure}[ht]
+\centering 
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\normalsize]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{nucleation.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+%\draw[white] (.19,.9)--(.19,.9) 
+     %node[right,
+     %text width=2cm,align=center,text=black] 
+     %{C$_{10}$H$_{14}$0$_9$};
+\end{scope}
+\end{tikzpicture}
+\caption{3 nm sized particle nucleation rate used in modelling}
+\label{fig:nucleation}
+\end{figure}
+
+
+
+Conversion of ppb to 1/cm$^3$ is done multipling with $p/kT =$ 2.5331$\cdot$ 10$^{19}$ air molecules/cm$^3$.
+
+\newpage
+\section{Analysing tools for results, how to get $\alpha$ and $\gamma$?}
+
+Aerosol mass yield
+\begin{equation}
+  \label{eq:yield end}
+   Y = \cfrac{\Delta M}{\Delta P},
+	\end{equation}
+where $\Delta M$ is formed aerosol mass and $\Delta P$ is used precursor mass. Formed aerosol mass can be calculated
+\begin{equation}
+  \label{eq:aerosol mass}
+   \Delta M = M_{tot} - M_0 + M_{dil},
+	\end{equation}
+where $M_{tot}$ is aerosol total mass, $M_0$ initial aerosol mass and $M_{dil}$ diluted aerosol mass.
+From particle number distribution $dN/dd_p$, total aerosol number $N_{tot}$, volume $V_{tot}$ and mass $M_{tot}$ is integrated considering spherical particles with density $\rho =$~1.4 g/cm$^3$. Diluted aerosol number $N_{dil}$ is calculated by model from differential equation \ref{eq:dilN}. From $N_{dil}$ diluted mass $M_{dil}$ can be calculated and formed aerosol mass got.
+
+Used precursor $\Delta P$ is calculated from
+\begin{align}
+ \label{eq:precursor}
+  \Delta P = \int_0^{t_{end}} kP\,\mathrm{d}t,
+\end{align}
+where $t_{end}$ is elapsed time, $k$ is formation rate and $P$ is precursor consentration presented in equation \ref{eq:Q}.
+
+Condensation sink was calculated from equation \ref{eq:CS} using particle number distribution $dN/dd_p$ and values of table \ref{tab: initial values}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Results} % saadut tulokset ja niiden tarkastelu
+
+\section{Monoterpene consentration modelling}
+
+Solution of differential equation \ref{eq:precursorMT} (figure \ref{fig:consentrationMT}) using diurnal atmospheric values presented in chapter 2  
+\begin{figure}[ht]
+\centering 
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\normalsize]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{concentration_MT.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+%\draw[white] (.19,.9)--(.19,.9) 
+     %node[right,
+     %text width=2cm,align=center,text=black] 
+     %{C$_{10}$H$_{14}$0$_9$};
+\end{scope}
+\end{tikzpicture}
+\caption{Diurnal variation of monoterpene consentration.}
+\label{fig:consentrationMT}
+\end{figure}
+is used to produce source $Q_{vap}$ for condensing vapour using equation \ref{eq:Q}.
+\begin{figure}[ht]
+\centering 
+    \setlength\fheight{9cm} 
+    \setlength\fwidth{13cm}
+\begin{tikzpicture}
+\tikzstyle{every node}=[font=\normalsize]
+%The matlab2tikz plot is drawn as a node
+\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+\input{source_Cvap.tikz}
+};
+% Some grid lines are drawn to help you placing your additions
+\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+% You can add what you want over the plot
+%\draw[white] (.19,.9)--(.19,.9) 
+     %node[right,
+     %text width=2cm,align=center,text=black] 
+     %{C$_{10}$H$_{14}$0$_9$};
+\end{scope}
+\end{tikzpicture}
+\caption{Diurnal variation of monoterpene consentration.}
+\label{fig:QCvap}
+\end{figure}
+
+This source of condensing vapor was used in sectional model.
+
+\newpage
+\section{Atmospheric SOA formation modelling}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=\textwidth]{conclusion.pdf}
+\end{center}
+\caption{Diurnal parametres during four days modelling: \textbf{a)} atmospheric temperature summertime in Hyyti‰l‰, \textbf{b)} monoterpene emissions using G93 model, \textbf{c)} ozone concentration summertime in Hyyti‰l‰, \textbf{d)} hydroxyl radical concentration spring and summer 2007 in Hyyti‰l‰, \textbf{e)} modelled monoterpene concentration, \textbf{f)} modelled condensing vapor source, \textbf{g)} modelled total particle volume, \textbf{h)} modelled total particle number, \textbf{i)} modelled particle size distribution, \textbf{j)} modelled condensing vapor consentration, \textbf{k)} nucleation rate used in modelling, \textbf{l)} modelled condensation sink, \textbf{m)} molecular yield as function of aerosol mass, \textbf{n)} molecular yield as function of time (solid) and yield of vapor lost to wall (dashed) and \textbf{o)} modelled organic aerosol mass. X-axis is time starting at midnight.}
+\label{fig:conclusion}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Matlab scripts and data files}
+
+Matlab scripts and data files to get figure \ref{fig:conclusion}: 
+
+$\backslash$GitHub$\backslash$AECHAMO$\backslash$calculate and plot$\backslash$Many$\_$subplots$\_$atm.m
+
+and $\backslash$GitHub$\backslash$AECHAMO$\backslash$gaskinetics$\_$mp$\backslash$MT$\_$kinetics$\_$night$\_$and$\_$day.m
+
+and $\backslash$GitHub$\backslash$AECHAMO$\backslash$Results and scripts$\_$mp$\backslash$SOA 
+
+formation$\backslash$ATM modelling$\backslash$v4$\backslash$run$\_$20130814T114856.mat
+
+and $\backslash$GitHub$\backslash$AECHAMO$\backslash$gaskinetics$\_$mp$\backslash$o3$\_$OH$\_$MT$\_$T$\_$Variable$\_$values.m
+
+This documentation latex origin:
+$\backslash$Github$\backslash$AECHAMO$\backslash$documentation$\_$mp$\backslash$Atmosphere
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Conclusion}
+
+
+%\begin{figure}[ht]
+%\centering 
+    %\setlength\fheight{2cm} 
+    %\setlength\fwidth{2cm}
+%\begin{tikzpicture}
+%\tikzstyle{every node}=[font=\footnotesize]
+%%The matlab2tikz plot is drawn as a node
+%\node[anchor=south west,inner sep=2] (myplot) at (0,0) {
+%\input{conclusion.tikz}
+%};
+ %%Some grid lines are drawn to help you placing your additions
+%\begin{scope}[x={(myplot.south east)}, y={(myplot.north west)}]
+%% Next three lines must be commented to obtain final result
+%%\draw[xstep=.1,ystep=.1,help lines,gray!50] (0,0) grid (1,1);
+%%\foreach \x in {0,1,...,9} { \node [anchor=north,font=\tiny] at (\x/10,0) {0.\x}; }
+%%\foreach \y in {0,1,...,9} { \node [anchor=east,font=\tiny] at (0,\y/10) {0.\y}; }
+ %%You can add what you want over the plot
+%%\draw[white] (.19,.9)--(.19,.9) 
+     %%node[right,
+     %%text width=2cm,align=center,text=black] 
+     %%{C$_{10}$H$_{14}$0$_9$};
+%\end{scope}
+%\end{tikzpicture}
+%\caption{Diurnal variation of monoterpene consentration.}
+%\label{fig:conclusion}
+%\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% l‰hdeluettelo
+\newpage
+\addcontentsline{toc}{chapter}{References} % Lis‰‰ t‰m‰kin sis‰llysluetteloon
+\renewcommand{\bibname}{References} 
+
+\bibliographystyle{apalike}
+\bibliography{l‰hteet}
+
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\chapter{Liitteit‰}
+%\citet{Goldstein2007}
+%\citet{Makela2000}
+\end{document}

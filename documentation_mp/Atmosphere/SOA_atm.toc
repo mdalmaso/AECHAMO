@@ -1,0 +1,21 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1.}Introduction}{1}
+\contentsline {chapter}{\numberline {2.}Theory}{2}
+\contentsline {section}{\numberline {2.1}Diffusion in binary mixtures}{2}
+\contentsline {section}{\numberline {2.2}Condensation sink}{3}
+\contentsline {section}{\numberline {2.3}Proposed chemical reaction of monoterpene, SLLV source}{3}
+\contentsline {section}{\numberline {2.4}Hydroxyl radical concentration diurnal variation in atmosphere}{4}
+\contentsline {section}{\numberline {2.5}Ozone concentration diurnal variation in atmosphere}{5}
+\contentsline {section}{\numberline {2.6}Diurnal variation of atmospheric temperature}{6}
+\contentsline {section}{\numberline {2.7}Diurnal variation of monoterpene emissions}{7}
+\contentsline {chapter}{\numberline {3.}Methods}{8}
+\contentsline {section}{\numberline {3.1}Used sectional aerosol model}{8}
+\contentsline {section}{\numberline {3.2}Used monoterpene reaction model}{9}
+\contentsline {section}{\numberline {3.3}How models was used}{10}
+\contentsline {section}{\numberline {3.4}Analysing tools for results, how to get $\alpha $ and $\gamma $?}{11}
+\contentsline {chapter}{\numberline {4.}Results}{13}
+\contentsline {section}{\numberline {4.1}Monoterpene consentration modelling}{13}
+\contentsline {section}{\numberline {4.2}Atmospheric SOA formation modelling}{14}
+\contentsline {chapter}{\numberline {5.}Matlab scripts and data files}{16}
+\contentsline {chapter}{\numberline {6.}Conclusion}{17}
+\contentsline {chapter}{References}{18}

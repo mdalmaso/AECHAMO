@@ -5,6 +5,8 @@ function [ CS_tot, CS_prime ] = CS_tot_Y( Y,nSec, t, plot_on )
 alpha = 1.0;
 T = 293;
 yesmatrix = 0;
+lw = 1.5;
+ms = 8;
 
 CS_tot = zeros(length(t),1);
 CS_prime = zeros(length(t),1);
@@ -26,7 +28,7 @@ num_figs = length(figs);
 % Open a new figure:
 h = figure(num_figs+1);
 
-plot(t/(24*60*60),CS_tot,'b*-', 'MarkerSize', 5, 'LineWidth',1)
+plot(t/(60*60),CS_tot,'k-','LineWidth',lw,'MarkerSize',ms)
 handle1 = xlabel('time (d)');
 set(handle1,'Fontsize',9,'Fontname','Computermodern')
 handle2 = ylabel('CS (s^{-1})','rotation',90);

@@ -25,9 +25,10 @@ plot_original = 0;
 if(nargin > 2)
     for i=1:nargin-2
         switch(varargin{i})
-%             case('smoothed')
-%                 v = obj.output_data.distr_smoothed;
-%                 Zdata=log10(abs(v(2:end,3:end))+1e-21);
+            case('smoothed')
+                v = obj.output_data.distr_smoothed;
+                Zdata=log10(abs(v(2:end,3:end))+1e-21);
+                time = 0;
             case('original')
                 v = obj.output_data.distr_original;
                 Zdata=log10(abs(v(2:end,3:(end-2)/2+2))+(1e-21));
@@ -42,6 +43,7 @@ if(nargin > 2)
 else
     v = obj.output_data.distr;  
     Zdata=log10(abs(v(2:end,3:end))+1e-21);
+    time = 0;
 end
 
 
@@ -67,9 +69,11 @@ figure(gcf)
 subplot(sub)
 
 % set time from seconds to hours
+time=time/3600;
 v(2:end,1) = v(2:end,1)/3600;
 
 %set time from hours to days
+time=time/24;
 v(2:end,1) = v(2:end,1)/24;
 
 semilogy(v(2:end,1),v(2:end,2),'or');
@@ -130,7 +134,7 @@ grid
 gcc=colorbar('horiz');
 set(gcc,'xlim',[1 5],'xtick',[1 2 3 4 5],'fontsize',10)
 set(gcc,'xticklabel',[10,100,1000,10000 100000]')
-x = xlabel(gcc, 'dN/dlogDp (cm^{-3})');
+x = xlabel(gcc, 'dN/dlogD_p (cm^{-3})');
 set(x, 'fontsize',12)
 %set(x,'Fontangle','italic')
 
@@ -145,13 +149,14 @@ set(x, 'fontsize',12)
 % % set(gcc,'position',[V(1) V(2)-0.01 V(3) V(4)])
 
 %% x-axis fix
-xhandle = xlabel('time (d)');
+xhandle = xlabel('time');
 set(xhandle,'Fontsize',12)
+set(gca,'XTick',[0.5,1,1.5,2,2.5,3,3.5], 'XTickLabel',{'12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00' ' ' '12:00'})
 %set(xhandle,'Fontangle','italic')
 %set(xhandle,'Fontname','Computermodern')
 
 %% y-axis fix
-yhandle = ylabel('D_{p} (nm)','rotation',90);
+yhandle = ylabel('D_{p} (m)','rotation',90);
 set(yhandle,'Fontsize',12)
 %set(yhandle,'Fontangle','italic')
 % set dp from m to nm
