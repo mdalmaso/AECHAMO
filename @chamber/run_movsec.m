@@ -1,4 +1,4 @@
-function run_movsec(obj)
+function [t,Y] = run_movsec(obj)
 % RUN_MOVSEC runs the simulation with moving sections.
 % 
 % Saves the results to chamber.output_data.
@@ -84,19 +84,13 @@ opts = odeset('absTol',absTol); % Assign tolerances
 
 
 % Create a visual waitbar (slows the program down a little)
-% h = waitbar(0,'0 %');
+h = waitbar(0,'0 %','Name','Running simulation...');
 
-% Solve Y:
-[t Y]= ode45(@chamberODE,initials.tvect,y0,opts,obj);
+% Solve and return Y:
+[t, Y]= ode45(@chamberODE,initials.tvect,y0,opts,obj);
 
-display('Ode45 finished, processing data...');
-
-% Close waitbar
-% close(h);
-
-% This makes a handy structure of the results:
-obj.output_data = obj.model_convert(t,Y);
-
+% Close waitbar:
+close(h);
 
 % Now
 % output_data.Y           % the Y array
@@ -111,8 +105,6 @@ obj.output_data = obj.model_convert(t,Y);
 % output_data.Mwall=      % mass lost to wall
 % output_data.Mdilu=      % mass diluted as aerosol
 % output_data.Mvdilu=     % mass diluted as vapor
-
-% toc
 
 function dy = chamberODE(t,y,chamb)
     
@@ -173,11 +165,11 @@ else    % Else coagmode == 0 => particles agglomerate.
 end
  
 % Show the time evolution in Matlab command window:
-time = t
+% time = t
 
 % Or update the visual waitbar:
-% perc=round(t/chamb.tvect(end)*100);
-% waitbar(perc/100,h,sprintf('%d %%',perc))
+perc=round(t/initial.tvect(end)*100);
+waitbar(perc/100,h,sprintf('%d %%',perc))
 
 
 
