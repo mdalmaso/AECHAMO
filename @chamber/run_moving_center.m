@@ -1,4 +1,4 @@
-function run_moving_center(obj)
+function [out_t, out_Y] = run_moving_center(obj)
 % RUN_MOVING_CENTER Runs the simulation with fixed sections using ode45.
 % Saves the results to chamber.output_data.
 %  
@@ -32,30 +32,34 @@ function run_moving_center(obj)
 % -Make obj.sections stand only for number of sections. Create a new
 %  variable for user-defined section spacing.
 % -Constant particle sources.
-% -Remove nested functions.
 
-initials=obj.initials;
+params=obj.initials;
 
 % Make a logarithmically spaced vector between 10^(Dp_min) and 10^(Dpmax).
-% Number of cells is initials.sections.
-% If initials.sections is not a scalar, the user has already defined the
-% sections. Otherwise initials.sections tells the number of sections.
-if(isscalar(initials.sections))
-    Dp=logspace(initials.Dp_min,initials.Dp_max,initials.sections);
+% Number of cells is params.sections.
+% If params.sections is not a scalar, the user has already defined the
+% sections. Otherwise params.sections tells the number of sections.
+if(isscalar(params.sections))
+    Dp=logspace(params.Dp_min,params.Dp_max,params.sections);
 else
-    Dp = unique(initials.sections);
-    initials.sections = length(Dp);
+    Dp = unique(params.sections);
+    params.sections = length(Dp);
 end
 
+nSec = params.sections;
 
 % Dp_variable keeps track of the diameter inside a section. In the
 % beginning it is the same as Dp.
-Dp_variable = Dp;
+if(isscalar(params.center_diameters))
+    Dp_variable = Dp;
+else
+    Dp_variable = params.center_diameters;
+end
 
 % All but the last section have a limit.
-Dplims=zeros(1,length(Dp)-1); 
+params.Dplims=zeros(1,length(Dp)-1); 
 
-for i = 1:length(Dplims)
+for i = 1:length(params.Dplims)
     exp1 = log10(Dp(i))/log10(10);  % Find the exponents of current and
     exp2 = log10(Dp(i+1))/log10(10);% next Dp.
     % Then create a logarithmically spaced 3-element vector between these Dp:s.
@@ -63,30 +67,31 @@ for i = 1:length(Dplims)
     
     % Now the second value of the vector is the logarithmic center between
     % Dp:s and will be the upper limit of section i.
-    Dplims(i)=temp(2);
+    params.Dplims(i)=temp(2);
 end
+clear temp exp1 exp2;
 
 % Form a lognormal distribution dN/dlogDp where the minimum diameter is
 % vector Dp's first value and maximum is Dp's last value. Number of cells
-% is the same as Dp's length (i.e. initials.sections).
+% is the same as Dp's length (i.e. params.sections).
 dNdlogDp = zeros(size(Dp));
-for i=1:length(initials.mu)
-    dNdlogDp=dNdlogDp + obj.log_normal(Dp,initials.mu(i),initials.sigma(i),initials.N(i));
+for i=1:length(params.mu)
+    dNdlogDp=dNdlogDp + obj.log_normal(Dp,params.mu(i),params.sigma(i),params.N(i));
 end
 
 % If the particle source is defined, search the index that corresponds the
 % diameter defined in part_source. Replace the diameter in part_source with
 % the index.
-if(initials.part_source_is_vect)
+if(params.part_source_is_vect)
     % If part_source is a 3d-matrix, length(part_source(1,1,:)) > 1, and
     % the loop will go through all particle sources.
-    for i=1:length(initials.part_source(1,1,:))
+    for i=1:length(params.part_source(1,1,:))
         ind = 1;
-        while(Dplims(ind) < initials.part_source(1,3,i))
+        while(params.Dplims(ind) < params.part_source(1,3,i))
             ind = ind+1;
         end
-        initials.part_source(:,4,i) = initials.part_source(1,3,i);
-        initials.part_source(:,3,i) = ind;        
+        params.part_source(:,4,i) = params.part_source(1,3,i);
+        params.part_source(:,3,i) = ind;
     end
     clear ind;
 end
@@ -96,9 +101,16 @@ end
 % distribution (Dp,dNdlogDp). N(i) is the concentration of particles in
 % section i.
 [~, N]  = obj.Dlog_to_N_vect(Dp,dNdlogDp);
+clear dNdlogDp;
+
 N = abs(N); % Make sure that concentrations are positive 
             % (Dlog_to_N_vect may make near-zero concentrations negative).
 
+% Replace the values of N with user-defined values if params.distr is
+% set:
+if(~isscalar(params.distr))
+    N = params.distr;
+end
 
 AE_Wall  = 0; % aerosol lost to wall (molecules)
 AE_dilu  = 0; % aerosol lost to dilution (molecules)
@@ -106,48 +118,59 @@ Vap_dilu = 0; % vapor lost to dilution (molecules)
 Vap_Wall = 0; % vapor lost to walls (molecules)
 
 % Initial conditions:
-y0 = [initials.Cvap0 N Dp AE_Wall AE_dilu Vap_dilu Vap_Wall Dp_variable eps];
+y0 = [params.Cvap0 N Dp AE_Wall AE_dilu Vap_dilu Vap_Wall Dp_variable eps];
 
-% [y0, C3] = add_vapor(y0, C1, C2, 1e5, 'constant');
-% C3.constant = 0;
-% C3.source = [...];
 
 % Error tolerance options for ode45:
 absTol = ones(size(y0)).*1e-6; % Preallocate the tolerance vector.
-absTol(1) = initials.Cvap_tol; % Vapor concentration tolerance
-absTol(2:initials.sections+1) = initials.N_tol; % Particle concentration tolerance
-absTol(initials.sections+2:(2*initials.sections+1)) = initials.Dp_tol; % Particle diameter tolerance
-absTol(2*initials.sections+6:(3*initials.sections+5)) = initials.Dp_tol; % Particle diameter tolerance
-% absTol(3*initials.sections+6) = 20*eps;
+absTol(1) = params.Cvap_tol; % Vapor concentration tolerance
+absTol(2:params.sections+1) = params.N_tol; % Particle concentration tolerance
+absTol(params.sections+2:(2*params.sections+1)) = params.Dp_tol; % Particle diameter tolerance
+absTol(2*params.sections+6:(3*params.sections+5)) = params.Dp_tol; % Particle diameter tolerance
+% absTol(3*params.sections+6) = 20*eps;
 
-% Apply ode45 options: the tolerance settings and the function 'events' as
-% Event-function.
-options = odeset('absTol',absTol,'Events',@events, 'NonNegative', 1:initials.sections+1,'NonNegative', 2*initials.sections+6:3*initials.sections+5); 
+% Apply the tolerance settings to ode45 options:
+options = odeset('absTol',absTol, 'NonNegative', 1:params.sections+1,'NonNegative', 2*params.sections+6:3*params.sections+5); 
+
+% Set the function 'events' as Event-function:
+options = odeset(options,'Events',@events);
 
 % Summary:
 % concentrations: Y(2:nSec+1)
 % diameters:      Y((nSec+2):(2*nSec+1))
 % lost:           Y(2*nSec+2 2*nSec+3 2*nSec+4 2*nSec+5)
 % variable diams: Y((2*nSec+6 : 3*nSec+5))
-yout = [];
-tout = [];
+% yout = [];
+% tout = [];
+
+
+
 ye = 0;
 
-tvect = initials.tvect;
+tvect = params.tvect;
 
-tout=tvect(1);
-yout=y0;
+% Preallocate yout and tout:
+yout = zeros(length(tvect),length(y0));
+tout = zeros(length(tvect),1);
 
-
+tout(1)=tvect(1);
+yout(1,:)=y0;
 
 t_start=tvect(1);
 delta_t = tvect(2)-tvect(1);
 t_end = tvect(end);
 
+% Set the MaxStep to delta_t so ode will not miss for example short
+% nucleation events:
 options = odeset(options, 'MaxStep', delta_t);
 
 % Define the time span for ode so that it equals the user defined tvect.
 t_span = t_start:delta_t:t_end;
+
+run_ind = 2;
+
+% Create a visual waitbar (slows the program down a little)
+h = waitbar(0,'0 %','Name','Running simulation...');
 
 % Run the simulation as long as the beginning of the ode's time span vector
 % is smaller than the end of the user defined tvect.
@@ -187,14 +210,15 @@ while(t_span(1) < tvect(end))
         end
         ie=ie(1:i);
         clear i;
-        
-        % Discard events that occur in sections that are next to each
-        % other:
+
+        % If there are two events that occur in sections that are next to
+        % each other, discard the other one of them, so that only the first
+        % one of consecutive sections is handled.
         difference = diff(ie);
         difference = [2;difference];
         ie=ie(difference ~= 1)
         
-        y0=ye(1,:); % And the first row of ye as well.
+        y0=ye(1,:);
         te=te(1);
         
         % Redefine t so that it ends to the time point where the first
@@ -219,17 +243,17 @@ while(t_span(1) < tvect(end))
     % the particles to next section and calculate the new diameter inside
     % the next section.
     for i=1:length(ie)
-        if(ie(i) == initials.sections)
+        if(ie(i) == nSec)
             % If the ie is nSec, it means that particles are to
             % nucleate into an empty section. If this happens, the diameter
             % of the section must be moved to correspond the diameter of
             % nucleating particles.
-            for j=1:length(initials.part_source(1,1,:))                
+            for j=1:length(params.part_source(1,1,:))                
                 % Index of the section where particles nucleate is stored in
-                % initials.part_source, as well as the diameter of nucleating
+                % params.part_source, as well as the diameter of nucleating
                 % particles.
-                index = initials.part_source(1,3,j);
-                diam = initials.part_source(1,4,j);
+                index = params.part_source(1,3,j);
+                diam = params.part_source(1,4,j);
                 if(y0(1+index) < eps)
                     y0(2*nSec+5+index) = diam;
                 end
@@ -238,8 +262,7 @@ while(t_span(1) < tvect(end))
             % Set the value of y(3*nSec+6) back to eps to indicate that the
             % diameter of the section is now all right.
             y0(3*nSec+6) = eps;
-            clear index;
-            clear diam;
+            clear index diam;
         
         % Otherwise particles just need to be moved to another section.
         elseif(y0(1+ie(i)) > 0)    % Is there particles in section?
@@ -250,7 +273,7 @@ while(t_span(1) < tvect(end))
             % ie+direction (=ie+1). Otherwise the particles are moved to the
             % section below, and direction is -1, and still the target
             % section is ie+direction (=ie-1).
-            direction = -sign(Dplims(ie(i))-y0(2*nSec+5+ie(i)));
+            direction = -sign(params.Dplims(ie(i))-y0(2*nSec+5+ie(i)));
             
             Ni1=y0(1+ie(i));   % Number of particles in section ie
             Ni2=y0(1+ie(i)+direction); % Number of particles in section ie+direction
@@ -258,7 +281,7 @@ while(t_span(1) < tvect(end))
             v1 = pi/6*y0(2*nSec+5+ie(i))^3*Ni1;    % Total vol of particles in section ie
             v2 = pi/6*y0(2*nSec+direction+5+ie(i))^3*Ni2;  % Total vol of particles in section ie+direction
             
-            vtot = (v1+v2)/Ntot;           % Average vol of particles in section ie+1 when the particles from ie are moved there.
+            vtot = (v1+v2)/Ntot;           % Average vol of particles in section ie+direction when the particles from ie are moved there.
             if(vtot > 0)
                 y0(2*nSec+5+direction+ie(i)) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
             end
@@ -310,12 +333,17 @@ while(t_span(1) < tvect(end))
         % because the first one is already saved in previous round and the
         % elements between the first and last do equal time vector's
         % elements.
-        tout = [tout; t(2:nt-1)];
-        yout = [yout; y(2:nt-1,:)];
+        length_addition = length(t(2:nt-1));
+%         tout(run_ind:run_ind+length_addition = [tout; t(2:nt-1)];
+        tout(run_ind:run_ind+length_addition-1) = t(2:nt-1);
+%         yout = [yout; y(2:nt-1,:)];
+        yout(run_ind:run_ind+length_addition-1,:) = y(2:nt-1,:);
+        run_ind = run_ind + length_addition;
         
-        %TODO: It's possible that event happens between y(nt-2) and y(nt-1),
-        %so the diameters in y(nt-1) may be too big, the correct values are
-        %in y0, but represent the y at time t_span(1).
+        
+        % TODO: It's possible that event happens between y(nt-2) and y(nt-1),
+        % so the diameters in y(nt-1) may be too big, the correct values are
+        % in y0, but represent the y at time t_span(1).
         
         
         % Redefine the t_span for ode so that the first step is
@@ -331,8 +359,14 @@ while(t_span(1) < tvect(end))
         % end of time vector, so this means we have reached the end. That
         % is why only the last element of t will be saved; other elements
         % do not equal any of the elements in the time vector.
-        tout = [tout; t(nt)];
-        yout = [yout; y(nt,:)];
+        
+        
+%         tout = [tout; t(nt)];
+%         yout = [yout; y(nt,:)];
+        length_addition = 1;
+        tout(run_ind:run_ind+length_addition-1) = t(nt);
+        yout(run_ind:run_ind+length_addition-1,:) = y(nt,:);
+        run_ind = run_ind + length_addition;
         
         % Let t_span equal t_end, so the while loop will be terminated.
         t_span = t_end;
@@ -342,9 +376,13 @@ while(t_span(1) < tvect(end))
         % element of the time vector OR ode has reached the end of the time
         % vector. In that case, save all the values of t and y except the
         % first row.
-        yout = [yout; y(2:nt,:)];
-        tout = [tout; t(2:nt)];
-        
+%         yout = [yout; y(2:nt,:)];
+%         tout = [tout; t(2:nt)];
+        length_addition = length(t(2:nt));
+        tout(run_ind:run_ind+length_addition-1) = t(2:nt);
+        yout(run_ind:run_ind+length_addition-1,:) = y(2:nt,:);
+        run_ind = run_ind + length_addition;
+
         % And redefine the t_span for ode beginning from current time point
         % to the end of the time vector with spacing of delta_t.
         t_span = [t(nt):delta_t:t_end];
@@ -370,51 +408,51 @@ else
     Y2 = [yout(:,1:nSec+1),yout(:,2*nSec+6:3*nSec+5),yout(:,2*nSec+2:2*nSec+5)];
 end
 
-display('Ode45 finished, processing data...');
+out_Y = Y2;
+out_t = tout;
 
-% This makes a handy structure of the results:
-obj.output_data = obj.model_convert(tout,Y2);
+% Close waitbar:
+close(h);
 
 
 function dy = chamberODE(t,y)
     dy = zeros(size(y));
     
-    part_source = initials.part_source;
-    Source = initials.gas_source ; % the condensing vapor source rate (1/cm^3/s) (scalar or 2-column array)
-    Dilu   = initials.dilu_coeff ; % the dilution coefficient (scalar or 2-column array)
-    Vap_wallsink = initials.vap_wallsink;
-    Csat   = initials.satu_conc ; % The condensing vapor saturation concentration
-    lambda = initials.lambda ; % the condensing vapor mean free path
-    diffu  = initials.diff_coeff ; % the condensing vapor diffusion coefficient
-    mv     = initials.vap_molmass ; % the condensing vapor molecular weight
-    rool   = initials.particle_dens ; % the particle density
-    alfa   = initials.stick_coeff ; % the sticking coefficient
-    nSec   = initials.sections; % the number of size sections
-    T      = initials.T;               % Temperature
+    part_source = params.part_source;
+    Source = params.gas_source ; % the condensing vapor source rate (1/cm^3/s) (scalar or 2-column array)
+    Dilu   = params.dilu_coeff ; % the dilution coefficient (scalar or 2-column array)
+    Vap_wallsink = params.vap_wallsink;
+    Csat   = params.satu_conc ; % The condensing vapor saturation concentration
+    lambda = params.lambda ; % the condensing vapor mean free path
+    diffu  = params.diff_coeff ; % the condensing vapor diffusion coefficient
+    mv     = params.vap_molmass ; % the condensing vapor molecular weight
+    rool   = params.particle_dens ; % the particle density
+    alfa   = params.stick_coeff ; % the sticking coefficient
+    T      = params.T;               % Temperature
     
-    Df     = initials.Df;  % Fractal dimension of agglomerates. Used only if agglomeration is on.
-    r0     = initials.r0;  % Radius of agglomerate primary particles. Used only if agglomeration is on.
+    Df     = params.Df;  % Fractal dimension of agglomerates. Used only if agglomeration is on.
+    r0     = params.r0;  % Radius of agglomerate primary particles. Used only if agglomeration is on.
 
 
-    CX     = initials.coag_on; % Coagulation switch.
+    CX     = params.coag_on; % Coagulation switch.
     coag_possible = CX;
     
     % Get the coagulation mode (coagulation or agglomeration).
     % 1 = coagulation
     % 0 = agglomeration
-    coagmode = initials.coag_num;
+    coagmode = params.coag_num;
     
     NA = 6.022e23; % Avogadro constant
     
     % If dilu_coeff is defined as vector, interpolate it to find the value of
     % dilu_coeff for the current t.
-    if initials.dilu_vect_on, 
+    if params.dilu_vect_on, 
         Dilu = interp1(Dilu(:,1),Dilu(:,2),t,'linear',0);
     end
     
     % If gas_source is defined as vector, interpolate it to find the value of
     % gas_source for the current t.
-    if initials.gas_source_is_vect,
+    if params.gas_source_is_vect,
         Source = interp1(Source(:,1),Source(:,2),t,'linear',0);
     end
     
@@ -446,13 +484,16 @@ function dy = chamberODE(t,y)
     end
         
     % Show the time evolution in Matlab command window:
-    time = t
+%     time = t
+    % Or update the visual waitbar:
+    perc=round(t/params.tvect(end)*100);
+    waitbar(perc/100,h,sprintf('%d %%',perc))
     
     % Increase condensing vapor concentration by vapor coming from Source
     dy(1) = dy(1) + Source;
 
     % Dilution of vapor
-    if initials.dilu_on,
+    if params.dilu_on,
         % Dilute the vapor:
         dy(1) = dy(1)-Dilu.*y(1);
         % And save the information about lost vapor molecules:
@@ -460,7 +501,7 @@ function dy = chamberODE(t,y)
     end
     
     % Deposition of vapor on walls
-    if initials.vap_wallsink_on,
+    if params.vap_wallsink_on,
         % Dilute the vapor by wall sink coefficient:
         dy(1) = dy(1)-Vap_wallsink.*y(1);
         % And save the information about lost vapor molecules:
@@ -473,7 +514,7 @@ function dy = chamberODE(t,y)
     % concentrations.
     for i = 1:nSec
         % Dilution of particles
-        if initials.dilu_on
+        if params.dilu_on
             dy(i+1) = dy(i+1)-Dilu.*y(i+1);   % Decrease particle concentration
 
             % Calculate the molecules lost to dilution in aerosol phase and
@@ -501,12 +542,12 @@ function dy = chamberODE(t,y)
         
         % condensation %%%%
         if(y(i+1) ~= 0)
-            dy = obj.add_condensation(dy, y, initials, i);
+            dy = obj.add_condensation(dy, y, params, i);
         end
         
         % wall losses and sedimentation according to T. Anttila model...fitted
         % by M. Dal Maso; only usable for SAPPHIR chamber!!
-        if (initials.sedi_on && coag_possible)
+        if (params.sedi_on && coag_possible)
             beta = obj.sapphir_beta2(y(2*nSec+5+i),T);
             %beta = 3.5e-5; % 0th order approx
             dy(i+1) = dy(i+1)-beta.*y(i+1);
@@ -518,19 +559,17 @@ function dy = chamberODE(t,y)
     
     % If vapor concentration is kept constant, reset the value of dy(1) to
     % initial.Cvap0.
-    if(initials.Cvap_const == 1)
+    if(params.Cvap_const == 1)
         dy(1) = 0;
     end
 end  % End function chamberODE
 
 
-function[value,isterminal,direction] = events(t,y)
-    nSec = initials.sections;
-    
+function[value,isterminal,direction] = events(t,y)   
     Dps = y(2*nSec+6:3*nSec+5);
     
     % limits(i) is the upper limit of Dp(i) and the lower limit of Dp(i+1)
-    limits = Dplims'; 
+    limits = params.Dplims'; 
     
     val_1 = limits-Dps(1:end-1); % Goes below zero if Dp(i) > limits(i)
     val_2 = Dps(2:end)-limits;   % Goes below zero if Dp(i+1) < limits(i)
@@ -553,8 +592,5 @@ function[value,isterminal,direction] = events(t,y)
     isterminal = ones(length(value),1);
     direction = zeros(length(value),1);
 end
-
-
-
 
 end
