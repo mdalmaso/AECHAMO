@@ -66,7 +66,7 @@ if(plot_distr == 1)
         obj.subplot_dmps(111,'original');
         return;
     else
-        % Otherwise plot only the original distribution:
+        % Otherwise plot the interpolated distribution:
         obj.subplot_dmps(111);
         
         % And terminate the function:
@@ -111,7 +111,7 @@ figure(num_figs + 3)
 if(plot_original == 1)
     obj.subplot_dmps(111,'original');
 else
-    % Otherwise plot the original distribution:
+    % Otherwise plot the interpolated distribution:
     obj.subplot_dmps(111);
 end
 
