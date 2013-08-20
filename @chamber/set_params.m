@@ -185,6 +185,8 @@ if(isempty(obj.initials) || nargin == 1)
     obj.initials.tvect = 0:60:10800;  % The time vector (seconds)
 
     % Distribution parameters
+    obj.initials.distr         = 0;
+    obj.initials.center_diameters = 0;
     obj.initials.N             = 1e5;                  % Initial particle concentration
     obj.initials.Dp_min        = -9;     % Exponent of the minimum diameter of size distribution. Diameter will be 10^(Dp_min).
     obj.initials.Dp_max        = -6;     % Exponent of the maximum diameter of size distribution. Diameter will be 10^(Dp_max).
