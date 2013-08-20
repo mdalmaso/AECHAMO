@@ -11,9 +11,14 @@ function run(obj)
 % 2013-05-31    0.1.0
 
 if(obj.initials.fixed_sections == 0)
-    obj.run_movsec;
+    [t, Y] = obj.run_movsec;
 else
-    obj.run_moving_center;
+    [t, Y] = obj.run_moving_center;
 end
+
+display('Ode45 finished, processing data...');
+
+% This makes a handy structure of the results:
+obj.output_data = obj.model_convert(t,Y);
 
 end
