@@ -25,10 +25,10 @@ plot_original = 0;
 if(nargin > 2)
     for i=1:nargin-2
         switch(varargin{i})
-            case('smoothed')
-                v = obj.output_data.distr_smoothed;
-                Zdata=log10(abs(v(2:end,3:end))+1e-21);
-                time = 0;
+%             case('smoothed')
+%                 v = obj.output_data.distr_smoothed;
+%                 Zdata=log10(abs(v(2:end,3:end))+1e-21);
+%                 time = 0;
             case('original')
                 v = obj.output_data.distr_original;
                 Zdata=log10(abs(v(2:end,3:(end-2)/2+2))+(1e-21));
