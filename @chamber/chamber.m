@@ -59,13 +59,13 @@ classdef chamber < handle
 
     properties (Access = public)
         error_messages  % Contains warnings and errors during simulation.
+                %CALCULATED DATA:
+        output_data  % Calculated data in a handy structure.
     end
     % Properties that user can see, but not modify:
     properties (GetAccess = public, SetAccess = private)
         initials; % Contains all initial parameters. Defined in initialize.m.
-                
-        %CALCULATED DATA:
-        output_data  % Calculated data in a handy structure.
+
     end
     
     % Public methods:
@@ -74,6 +74,11 @@ classdef chamber < handle
         function obj = chamber(varargin)
             obj.initialize;
         end
+        
+        % Runs the simulation with fixed sections, but the diameter inside
+        % these sections moves.
+        [out_t, out_Y] = run_moving_center(obj)
+        
         
         % Initializes object with user input values:
         initialize(obj,varargin) % Defined in initialize.m
@@ -84,7 +89,10 @@ classdef chamber < handle
         
         % Runs the chamber simulation with initialized values:
         run(obj) % Defined in run.m
-                
+        
+        % Converts the calculated data to nice form
+        out_struct = model_convert(obj, t, Y) % Defined in model_convert.m
+        
         % Plots some data:
         plot(obj,varargin) % Defined in plot.m 
         
@@ -109,24 +117,24 @@ classdef chamber < handle
     
     % Private methods:
     methods (Access = private)       
-        % Converts the calculated data to nice form
-        out_struct = model_convert(obj, t, Y) % Defined in model_convert.m
+
                
         % Plots the distribution, used in public method chamber.plot.
         subplot_dmps(obj,sub,varargin);
         
         % Runs the simulation with moving sections.
-        run_movsec(obj)
+        [t, Y] = run_movsec(obj)
        
-        % Runs the simulation with fixed sections, but the diameter inside
-        % these sections moves.
-        run_moving_center(obj)
-        
+
         [dN] = N_to_dlog(obj, Dp,N);
         
         [out] = distribution_info_Vtot(obj,Dp,dN);
         
         [dy] = add_nucleation(obj,dy,y,t,part_source);
+        
+        
+        % Makes the agglomeration kernel
+        [K] = aggl_kernel(obj, Dp1,Dp2,dens,T,Df,r0)
         
     end
     
@@ -141,9 +149,6 @@ classdef chamber < handle
         
         % Makes the coagulation kernel
         [K] = koag_kernel(Dp1,Dp2,dens,T)
-        
-        % Makes the agglomeration kernel (Free-molecule range)
-        [K] = aggl_kernel(Dp1,Dp2,dens,T,Df,r0)
         
         % Makes the coagulation matrix
         [out] = coagulationMatrix(Dp,ind);
