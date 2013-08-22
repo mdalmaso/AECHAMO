@@ -1,6 +1,7 @@
 function [ out ] = diffusion_test(N0,num_of_circles, R, sections, time, interval)
 %DIFFUSION_TEST Summary of this function goes here
 %   Detailed explanation goes here
+% Testaa esim. out = diffusion_test(2e7,10,25,12,0:100,2);
 kam(num_of_circles) = chamber;
 kam(1).initialize('N',[N0],...
                   'mu', [5e-9],...
@@ -37,9 +38,13 @@ Ns = zeros(length(kam), sections);
 Dps = zeros(length(kam),sections);
 Ntot = zeros(1,length(kam));
 Ns_deleted = zeros(length(kam),sections);
+h2 = waitbar(0,'0 %','Name','Total progress','Units', 'normalized', 'Position', [0.5 0.4 0.25 0.2]);
 
 for k=time(1):interval:time(end)
     
+    perc=round(k/time(end)*100);
+    waitbar(perc/100,h2,sprintf('%d %%',perc))
+
     for i=1:length(kam)
         kam(i).initialize('tvect',k:k+interval);
         [~,Ytemp] = kam(i).run_moving_center;
@@ -63,9 +68,11 @@ for k=time(1):interval:time(end)
         if((i > 1) && (difference(i-1) > 0))
             [Dps(i,:), Ns(i,:)] = add_particles(Dps(i-1,:), Ns_deleted(i-1,:), Dps(i,:), Ns(i,:));
         end
-        kam(i).initialize('distr',Ns(i,:),'center_diameters',Dps(i,:));
+        kam(i).initialize('number_distr',Ns(i,:),'center_diameters',Dps(i,:));
     end
 end
+
+close(h2);
 
 for i=1:length(kam)
     kam(i).output_data = kam(i).model_convert(time,Y(:,:,i));
@@ -82,7 +89,7 @@ function [dy] = diffusion(t, y)
 num_of_sects = length(y)-1;
 dy=zeros(length(y),1);
 
-diff_coeff = 8e-2;
+diff_coeff = 8e-1;
 
 R = y(num_of_sects+1);
 

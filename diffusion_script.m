@@ -1,4 +1,6 @@
 %%
+% Plottaa hiukkasten kokonaism‰‰r‰n ajan funktiona (katkoviiva) sek‰
+% jokaisen pallon sis‰lt‰m‰n hiukkasm‰‰‰r‰n (yhtein‰iset viivat).
 kam=out.kam;
 Ntot=zeros(length(kam(1).output_data.tim),1);
 figure;
@@ -7,25 +9,12 @@ for i=1:length(kam)
     hold on;
     Ntot = Ntot + kam(i).output_data.Ntot;
 end
-
 plot(kam(1).output_data.tim, Ntot,'--','LineWidth', 2);
 
-%%
-plot(kam(1).output_data.tim,kam(1).output_data.Ntot,'LineWidth',2);
-hold on;
-plot(kam(2).output_data.tim,kam(2).output_data.Ntot,'r','LineWidth',2);
-hold on;
-plot(kam(3).output_data.tim,kam(3).output_data.Ntot,'m','LineWidth',2);
-Nsum = kam(1).output_data.Ntot + kam(2).output_data.Ntot + kam(3).output_data.Ntot;
-plot(kam(1).output_data.tim, Nsum,'--','LineWidth',2);
-leg=legend('Section 1', 'Section 2', 'Section 3', 'Total');
-kam(1).plot('dist','original');
-kam(2).plot('dist','original');
-kam(3).plot('dist','original');
-
 
 %%
-
+% Plottaa jokaisen pallon hiukkasjakauman ajan funktiona eri kuviin
+kam = out.kam;
 for i=1:length(kam)
     kam(i).plot('dist','original');
     caxis([1 7]);
@@ -36,11 +25,17 @@ end
 
 
 %%
+% Plottaa pallot ylh‰‰lt‰p‰in katsottuna siten, ett‰ pallon (tai 
+% pallokuoren) sis‰lt‰m‰ hiukkasm‰‰r‰ ilmaistaan harmaan s‰vyn‰. Musta =
+% paljon hiukkasia, valkoinen = ei yht‰‰n hiukkasia. Tilanne plotataan
+% time_interval v‰lein eri kuviin. Vaatii filledCircle-funktion 
+% (Draw a filled circle, file exchange).
+time_interval = 50;
 kam=out.kam;
 r = out.r;
 Ntot0 = out.Ntot0;
 time = kam(1).output_data.tim;
-for t=1:50:length(time)
+for t=1:time_interval:length(time)
     figure;
     for i=length(r):-1:1
         intensity = kam(i).output_data.Ntot(t)/Ntot0;
