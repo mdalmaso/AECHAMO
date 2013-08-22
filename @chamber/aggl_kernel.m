@@ -10,8 +10,8 @@ function [K] = aggl_kernel(obj, Dp1, Dp2, dens, T, Df, r0)
 % Df is the fractal dimension of agglomerates
 % r0 is the primary particle diameter
 
-% Based on Yu & Lin: "Taylor-expansion moment method for agglomerate coagulation due
-% to Brownian motion in the entire size regime." 2009
+% Based on Yu & Lin: "Taylor-expansion moment method for agglomerate 
+% coagulation due to Brownian motion in the entire size regime." 2009
 
 % (c) Pauli Simonen 2013
 %

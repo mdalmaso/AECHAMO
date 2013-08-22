@@ -29,55 +29,24 @@ function [out_t, out_Y] = run_moving_center(obj)
 %                     stopped and the diameter of the section is changed.
 
 % TODO:
-% -Make obj.sections stand only for number of sections. Create a new
-%  variable for user-defined section spacing.
 % -Constant particle sources.
 
+% Get the initial parameters:
 params=obj.initials;
 
-% Make a logarithmically spaced vector between 10^(Dp_min) and 10^(Dpmax).
-% Number of cells is params.sections.
-% If params.sections is not a scalar, the user has already defined the
-% sections. Otherwise params.sections tells the number of sections.
-if(isscalar(params.sections))
-    Dp=logspace(params.Dp_min,params.Dp_max,params.sections);
-else
-    Dp = unique(params.sections);
-    params.sections = length(Dp);
-end
+% And diameter vector:
+Dp = obj.Dps;
+
+% And the particle number distribution. N(i) represents the particle
+% concentration in section i, and the initial diameter of section i is
+% Dp(i).
+N = obj.number_distribution;
 
 nSec = params.sections;
 
 % Dp_variable keeps track of the diameter inside a section. In the
-% beginning it is the same as Dp.
-if(isscalar(params.center_diameters))
-    Dp_variable = Dp;
-else
-    Dp_variable = params.center_diameters;
-end
-
-% All but the last section have a limit.
-params.Dplims=zeros(1,length(Dp)-1); 
-
-for i = 1:length(params.Dplims)
-    exp1 = log10(Dp(i))/log10(10);  % Find the exponents of current and
-    exp2 = log10(Dp(i+1))/log10(10);% next Dp.
-    % Then create a logarithmically spaced 3-element vector between these Dp:s.
-    temp = logspace(exp1,exp2,3);
-    
-    % Now the second value of the vector is the logarithmic center between
-    % Dp:s and will be the upper limit of section i.
-    params.Dplims(i)=temp(2);
-end
-clear temp exp1 exp2;
-
-% Form a lognormal distribution dN/dlogDp where the minimum diameter is
-% vector Dp's first value and maximum is Dp's last value. Number of cells
-% is the same as Dp's length (i.e. params.sections).
-dNdlogDp = zeros(size(Dp));
-for i=1:length(params.mu)
-    dNdlogDp=dNdlogDp + obj.log_normal(Dp,params.mu(i),params.sigma(i),params.N(i));
-end
+% beginning it is the same as Dp unless user has set the center diameters.
+Dp_variable = obj.center_diameters;
 
 % If the particle source is defined, search the index that corresponds the
 % diameter defined in part_source. Replace the diameter in part_source with
@@ -87,29 +56,13 @@ if(params.part_source_is_vect)
     % the loop will go through all particle sources.
     for i=1:length(params.part_source(1,1,:))
         ind = 1;
-        while(params.Dplims(ind) < params.part_source(1,3,i))
+        while(obj.Dplims(ind) < params.part_source(1,3,i))
             ind = ind+1;
         end
         params.part_source(:,4,i) = params.part_source(1,3,i);
         params.part_source(:,3,i) = ind;
     end
     clear ind;
-end
-
-
-% Get the concentration of particles (N) in each cell (=section) of the
-% distribution (Dp,dNdlogDp). N(i) is the concentration of particles in
-% section i.
-[~, N]  = obj.Dlog_to_N_vect(Dp,dNdlogDp);
-clear dNdlogDp;
-
-N = abs(N); % Make sure that concentrations are positive 
-            % (Dlog_to_N_vect may make near-zero concentrations negative).
-
-% Replace the values of N with user-defined values if params.distr is
-% set:
-if(~isscalar(params.distr))
-    N = params.distr;
 end
 
 AE_Wall  = 0; % aerosol lost to wall (molecules)
@@ -161,15 +114,20 @@ delta_t = tvect(2)-tvect(1);
 t_end = tvect(end);
 
 % Set the MaxStep to delta_t so ode will not miss for example short
-% nucleation events:
-options = odeset(options, 'MaxStep', delta_t);
+% nucleation events. This slows down the simulation remarkably and is
+% unnecessary in most cases. Consider commenting this out or handling the
+% problem in some other way.
+
+if(params.max_timestep)
+    options = odeset(options, 'MaxStep', params.max_timestep);
+end
 
 % Define the time span for ode so that it equals the user defined tvect.
 t_span = t_start:delta_t:t_end;
 
 run_ind = 2;
 
-% Create a visual waitbar (slows the program down a little)
+% Create a visual waitbar (slows the program down a little, a few seconds)
 h = waitbar(0,'0 %','Name','Running simulation...');
 
 % Run the simulation as long as the beginning of the ode's time span vector
@@ -273,7 +231,7 @@ while(t_span(1) < tvect(end))
             % ie+direction (=ie+1). Otherwise the particles are moved to the
             % section below, and direction is -1, and still the target
             % section is ie+direction (=ie-1).
-            direction = -sign(params.Dplims(ie(i))-y0(2*nSec+5+ie(i)));
+            direction = -sign(obj.Dplims(ie(i))-y0(2*nSec+5+ie(i)));
             
             Ni1=y0(1+ie(i));   % Number of particles in section ie
             Ni2=y0(1+ie(i)+direction); % Number of particles in section ie+direction
@@ -293,7 +251,7 @@ while(t_span(1) < tvect(end))
             % particles. If the diameter is not reset, it will grow
             % immediatly over its limit if particles coagulate into it and
             % grow by condensation.
-            y0(2*nSec+5+ie(i)) = y0(nSec+1+ie(i));
+            y0(2*nSec+5+ie(i)) = obj.center_diameters(ie(i));
         end
     end
     % The t and y vectors from ode will be saved to cumulative output
@@ -569,7 +527,7 @@ function[value,isterminal,direction] = events(t,y)
     Dps = y(2*nSec+6:3*nSec+5);
     
     % limits(i) is the upper limit of Dp(i) and the lower limit of Dp(i+1)
-    limits = params.Dplims'; 
+    limits = obj.Dplims'; 
     
     val_1 = limits-Dps(1:end-1); % Goes below zero if Dp(i) > limits(i)
     val_2 = Dps(2:end)-limits;   % Goes below zero if Dp(i+1) < limits(i)

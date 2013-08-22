@@ -123,5 +123,44 @@ if(length(initials.N) ~= num_of_distr || length(initials.sigma) ~= num_of_distr)
     error('chamber.initialize: Parameters ''mu'', ''N'' and ''sigma'' must have equal lengths.');
 end
 
+% If user has defined particle number distribution, its length must equal
+% the number of sections.
+% if(~isscalar(initials.distr))
+    if(initials.sections ~= length(obj.number_distribution))
+        error('Number distribution is defined, but its length is not the same as number of sections.');
+    end
+% end
+
+if(initials.fixed_sections ~= 0)
+    % The length of center diameter vector must equal the
+    % number of sections. In addition, every center value must be larger than
+    % the lower limit of section.
+    
+    % First check that the length equals number of sections:
+    if(initials.sections ~= length(obj.center_diameters))
+        error('The number of center diameters does not equal the number of sections.');
+    end
+    % Then check that the number of section limits == 
+    % (number of sections - 1)
+    if(length(obj.Dplims) ~= (length(obj.Dps)-1))
+        error('The length of Dplims must equal (number of sections -1).');
+    else
+        % If the length is correct, check that every
+        % center diameter > lower limit of section:
+        for i=2:initials.sections
+            if(obj.center_diameters(i) < obj.Dplims(i-1))
+                error('The lower limit of section %i is larger than the center diameter of corresponding section.',i);
+            end
+        end
+        % And that every center diameter < upper limit of section:
+        for i=1:initials.sections-1
+            if(obj.center_diameters(i) > obj.Dplims(i))
+                error('The upper limit of section %i is smaller than the center diameter of corresponding section.',i);
+            end
+        end
+    end
+end
+
+
 end
 

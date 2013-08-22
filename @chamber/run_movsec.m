@@ -11,31 +11,17 @@ function [t,Y] = run_movsec(obj)
 % 2013-05-24    0.1.0
 % 
 % TODO:
-% -User defined initial sections in the same way as in run_moving_center.
-%  Maybe initials.sections should not be used in this meaning for clarity.
 
-
+% Get the initial values:
 initials=obj.initials;
-% Make a logarithmically spaced vector between 10^(Dp_min) and 10^(Dpmax).
-% Number of cells is initials.sections.
-Dp=logspace(initials.Dp_min,initials.Dp_max,initials.sections);
 
-% Form a lognormal distribution dN/dlogDp where the minimum diameter is
-% vector Dp's first value and maximum is Dp's last value. Number of cells
-% is the same as Dp's length (i.e. initials.sections).
-dNdlogDp = zeros(size(Dp));
-for i=1:length(initials.mu)
-    dNdlogDp=dNdlogDp + obj.log_normal(Dp,initials.mu(i),initials.sigma(i),initials.N(i));
-end
+% And diameter vector:
+Dp = obj.Dps;
 
-
-% Get the concentration of particles (N) in each cell (=section) of the
-% distribution (Dp,dNdlogDp). N(i) is the concentration of particles in
-% section i.
-[~, N]  = obj.Dlog_to_N_vect(Dp,dNdlogDp);
-N = abs(N); % Make sure that concentrations are positive 
-            % (Dlog_to_N_vect may make near-zero concentrations negative).
-
+% And the particle number distribution. N(i) represents the particle
+% concentration in section i, and the initial diameter of section i is
+% Dp(i).
+N = obj.number_distribution;
 
 AE_Wall  = 0; % aerosol lost to wall (molecules)
 AE_dilu  = 0; % aerosol lost to dilution (molecules)
@@ -80,14 +66,17 @@ absTol(2:initials.sections+1) = initials.N_tol; % Particle concentration toleran
 absTol(initials.sections+1:(2*initials.sections+1)) = initials.Dp_tol; % Particle diameter tolerance
 opts = odeset('absTol',absTol); % Assign tolerances
 
+if(initials.max_timestep)
+    opts = odeset(opts, 'MaxStep', initials.max_timestep);
+end
 
 
-
-% Create a visual waitbar (slows the program down a little)
+% Create a visual waitbar (slows the program down a little, a few seconds)
 h = waitbar(0,'0 %','Name','Running simulation...');
 
 % Solve and return Y:
-[t, Y]= ode45(@chamberODE,initials.tvect,y0,opts,obj);
+% [t, Y]= ode45(@chamberODE,initials.tvect,y0,opts,obj);
+[t, Y]= ode45(@chamberODE,initials.tvect,y0,opts);
 
 % Close waitbar:
 close(h);
@@ -106,47 +95,48 @@ close(h);
 % output_data.Mdilu=      % mass diluted as aerosol
 % output_data.Mvdilu=     % mass diluted as vapor
 
-function dy = chamberODE(t,y,chamb)
-    
+% function dy = chamberODE(t,y,chamb)
+function dy = chamberODE(t,y)
+        
 dy = zeros(size(y));
 
-initial = chamb.initials;
+% initial = chamb.initials;
 
 % load the parameters:
-Source = initial.gas_source ; % the condensing vapor source rate (1/cm^3/s) (scalar or 2-column array)
-Dilu   = initial.dilu_coeff ; % the dilution coefficient (scalar or 2-column array)
-Csat   = initial.satu_conc ; % The condensing vapor saturation concentration
-lambda = initial.lambda ; % the condensing vapor mean free path
-diffu  = initial.diff_coeff ; % the condensing vapor diffusion coefficient
-mv     = initial.vap_molmass ; % the condensing vapor molecular weight
-rool   = initial.particle_dens ; % the particle density
-alfa   = initial.stick_coeff ; % the sticking coefficient
-nSec   = initial.sections; % the number of size sections
-T      = initial.T;               % Temperature
+Source = initials.gas_source ; % the condensing vapor source rate (1/cm^3/s) (scalar or 2-column array)
+Dilu   = initials.dilu_coeff ; % the dilution coefficient (scalar or 2-column array)
+Csat   = initials.satu_conc ; % The condensing vapor saturation concentration
+lambda = initials.lambda ; % the condensing vapor mean free path
+diffu  = initials.diff_coeff ; % the condensing vapor diffusion coefficient
+mv     = initials.vap_molmass ; % the condensing vapor molecular weight
+rool   = initials.particle_dens ; % the particle density
+alfa   = initials.stick_coeff ; % the sticking coefficient
+nSec   = initials.sections; % the number of size sections
+T      = initials.T;               % Temperature
 
-Df     = initial.Df;  % Fractal dimension of agglomerates. Used only if agglomeration is on.
-r0     = initial.r0;  % Radius of agglomerate primary particles. Used only if agglomeration is on.
+Df     = initials.Df;  % Fractal dimension of agglomerates. Used only if agglomeration is on.
+r0     = initials.r0;  % Radius of agglomerate primary particles. Used only if agglomeration is on.
 
 
-CX     = initial.coag_on; % Coagulation switch.
+CX     = initials.coag_on; % Coagulation switch.
 
 % Get the coagulation mode (coagulation or agglomeration).
 % 1 = coagulation
 % 0 = agglomeration
-coagmode = initial.coag_num;
+coagmode = initials.coag_num;
 
 
 NA = 6.022e23; % Avogadro constant
 
 % If dilution coefficient is defined as vector, interpolate it to find the
 % value of coefficient for the current t.
-if initial.dilu_vect_on, 
+if initials.dilu_vect_on, 
     Dilu = interp1(Dilu(:,1),Dilu(:,2),t);
 end
 
 % If gas_source is defined as vector, interpolate it to find the value of
 % gas_source for the current t.
-if initial.gas_source_is_vect,
+if initials.gas_source_is_vect,
     Source = interp1(Source(:,1),Source(:,2),t);
 end
 
@@ -156,11 +146,11 @@ end
 kk=zeros(nSec,length(y((nSec+2):(2*nSec+1)))); % Preallocate
 if(coagmode == 1) % coagmode == 1 => particles coagulate.
     for i = 1:nSec,
-        kk(i,:) = chamb.koag_kernel(y(nSec+1+i),y((nSec+2):(2*nSec+1)),rool,T).*1e6;
+        kk(i,:) = obj.koag_kernel(y(nSec+1+i),y((nSec+2):(2*nSec+1)),rool,T).*1e6;
     end
 else    % Else coagmode == 0 => particles agglomerate.
     for i = 1:nSec,
-        kk(i,:) = chamb.aggl_kernel(y(nSec+1+i),y((nSec+2):(2*nSec+1)),rool,T,Df,r0).*1e6;
+        kk(i,:) = obj.aggl_kernel(y(nSec+1+i),y((nSec+2):(2*nSec+1)),rool,T,Df,r0).*1e6;
     end
 end
  
@@ -168,7 +158,7 @@ end
 % time = t
 
 % Or update the visual waitbar:
-perc=round(t/initial.tvect(end)*100);
+perc=round(t/initials.tvect(end)*100);
 waitbar(perc/100,h,sprintf('%d %%',perc))
 
 
@@ -185,7 +175,7 @@ waitbar(perc/100,h,sprintf('%d %%',perc))
 dy(1) = dy(1) + Source;
 
 % Dilution of vapor
-if initial.dilu_on,
+if initials.dilu_on,
     % Dilute the vapor:
     dy(1) = dy(1)-Dilu.*y(1);
     % And save the information about lost vapor molecules:
@@ -205,7 +195,7 @@ for i = 1:nSec,
     I = 2.*pi.*max([y(nSec+1+i) 0]).*1e2.*diffu.*(y(1)-Csat).*betam; %1/s
 
     % Dilution of particles
-    if initial.dilu_on
+    if initials.dilu_on
         dy(i+1) = dy(i+1)-Dilu.*y(i+1);   % Decrease particle concentration
         
         % Calculate the molecules lost to dilution in aerosol phase and
@@ -219,7 +209,7 @@ for i = 1:nSec,
     if CX,    
     % calculate a coagulation matrix
     % this tells how to partition the particles 
-    cM = chamb.coagulationMatrix(y((nSec+2):(2*nSec+1)),i);
+    cM = obj.coagulationMatrix(y((nSec+2):(2*nSec+1)),i);
     for j = 1:i,
         if i == j
             dy(j+1) = dy(j+1)-y(i+1).*y(j+1).*kk(i,j); % loss             
@@ -240,8 +230,8 @@ for i = 1:nSec,
         
     % wall losses and sedimentation according to T. Anttila model...fitted
     % by M. Dal Maso; only usable for SAPPHIR chamber!!
-    if initial.sedi_on,
-        beta = chamb.sapphir_beta2(y(nSec+1+i),T);
+    if initials.sedi_on,
+        beta = obj.sapphir_beta2(y(nSec+1+i),T);
         %beta = 3.5e-5; % 0th order approx
         dy(i+1) = dy(i+1)-beta.*y(i+1);
         
@@ -250,8 +240,8 @@ for i = 1:nSec,
     end
     
     % If vapor concentration is kept constant, reset the value of dy(1) to
-    % initial.Cvap0.
-    if(initial.Cvap_const == 1)
+    % initials.Cvap0.
+    if(initials.Cvap_const == 1)
         dy(1) = 0;
     end
     

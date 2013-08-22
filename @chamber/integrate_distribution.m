@@ -11,3 +11,4 @@ DpX = dmin:1e-10:dmax;
 dNX = interp1(Dp,dN,DpX);          % data
 lDpX = length(DpX);
 out = trapz(log10(DpX),dNX);
+end

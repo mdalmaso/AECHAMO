@@ -59,15 +59,20 @@ classdef chamber < handle
 
     properties (Access = public)
         error_messages  % Contains warnings and errors during simulation.
-                %CALCULATED DATA:
+        %CALCULATED DATA:
         output_data  % Calculated data in a handy structure.
     end
     % Properties that user can see, but not modify:
     properties (GetAccess = public, SetAccess = private)
         initials; % Contains all initial parameters. Defined in initialize.m.
-
     end
     
+    properties (Access = private)
+        Dps;
+        Dplims;
+        center_diameters;
+        number_distribution;
+    end
     % Public methods:
     methods
         % Creates the object.
@@ -77,25 +82,29 @@ classdef chamber < handle
         
         % Runs the simulation with fixed sections, but the diameter inside
         % these sections moves.
-        [out_t, out_Y] = run_moving_center(obj)
-        
+        [out_t, out_Y] = run_moving_center(obj)       
         
         % Initializes object with user input values:
-        initialize(obj,varargin) % Defined in initialize.m
+        initialize(obj,varargin)
         
+        % Sets the initial parameters. Function initialize uses this
+        % function.
         set_params(obj,varargin)
         
+        % Checks that the initial values are correct. Function initialize
+        % uses this function.
         check_initials(obj)
         
         % Runs the chamber simulation with initialized values:
-        run(obj) % Defined in run.m
+        run(obj)
         
         % Converts the calculated data to nice form
-        out_struct = model_convert(obj, t, Y) % Defined in model_convert.m
+        out_struct = model_convert(obj, t, Y)
         
         % Plots some data:
-        plot(obj,varargin) % Defined in plot.m 
+        plot(obj,varargin)
         
+        % Makes a mass conservation check:
         mass_conserv_check(chamber);
         
         % Makes a copy of a chamber object:
@@ -117,21 +126,20 @@ classdef chamber < handle
     
     % Private methods:
     methods (Access = private)       
-
-               
         % Plots the distribution, used in public method chamber.plot.
         subplot_dmps(obj,sub,varargin);
         
         % Runs the simulation with moving sections.
         [t, Y] = run_movsec(obj)
        
-
+        % Converts a N-Dp distribution to dN/dlogDp distribution.
         [dN] = N_to_dlog(obj, Dp,N);
         
-        [out] = distribution_info_Vtot(obj,Dp,dN);
         
+%         [out] = distribution_info_Vtot(obj,Dp,dN);
+        
+        % Adds nucleated particles to dy:
         [dy] = add_nucleation(obj,dy,y,t,part_source);
-        
         
         % Makes the agglomeration kernel
         [K] = aggl_kernel(obj, Dp1,Dp2,dens,T,Df,r0)
@@ -144,7 +152,7 @@ classdef chamber < handle
         [out] = log_normal(Dp_in,mu,sigma,N)
         
         % Gets the concentration of particles in each section of
-        % distribution [Dp, dN]
+        % dN/dlogDp distribution
         [Dp, N] = Dlog_to_N_vect(Dp, dN)
         
         % Makes the coagulation kernel
@@ -153,12 +161,16 @@ classdef chamber < handle
         % Makes the coagulation matrix
         [out] = coagulationMatrix(Dp,ind);
         
+        % Calculates particle deposition into chamber walls:
         [out] = sapphir_beta2(Dp,T);
         
+        % Calculates the coagulation sink for particles
         [Diffcoeff] = diff_particle(Dp,T);
+        
         
         [out] = integrate_distribution(Dp,dN,dmin,dmax);
         
+        % Adds the effect of condensation to dy:
         [dy] = add_condensation(dy, y, initials, index);
     end
     
