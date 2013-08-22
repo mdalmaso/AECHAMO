@@ -71,19 +71,17 @@ Vap_dilu = 0; % vapor lost to dilution (molecules)
 Vap_Wall = 0; % vapor lost to walls (molecules)
 
 % Initial conditions:
-y0 = [params.Cvap0 N Dp AE_Wall AE_dilu Vap_dilu Vap_Wall Dp_variable eps];
-
+y0 = [params.Cvap0, N, Dp_variable, AE_Wall, AE_dilu, Vap_dilu, Vap_Wall, eps];
 
 % Error tolerance options for ode45:
 absTol = ones(size(y0)).*1e-6; % Preallocate the tolerance vector.
 absTol(1) = params.Cvap_tol; % Vapor concentration tolerance
 absTol(2:params.sections+1) = params.N_tol; % Particle concentration tolerance
 absTol(params.sections+2:(2*params.sections+1)) = params.Dp_tol; % Particle diameter tolerance
-absTol(2*params.sections+6:(3*params.sections+5)) = params.Dp_tol; % Particle diameter tolerance
 % absTol(3*params.sections+6) = 20*eps;
 
 % Apply the tolerance settings to ode45 options:
-options = odeset('absTol',absTol, 'NonNegative', 1:params.sections+1,'NonNegative', 2*params.sections+6:3*params.sections+5); 
+options = odeset('absTol',absTol, 'NonNegative', 1:params.sections+1); 
 
 % Set the function 'events' as Event-function:
 options = odeset(options,'Events',@events);
@@ -95,8 +93,6 @@ options = odeset(options,'Events',@events);
 % variable diams: Y((2*nSec+6 : 3*nSec+5))
 % yout = [];
 % tout = [];
-
-
 
 ye = 0;
 
@@ -117,7 +113,6 @@ t_end = tvect(end);
 % nucleation events. This slows down the simulation remarkably and is
 % unnecessary in most cases. Consider commenting this out or handling the
 % problem in some other way.
-
 if(params.max_timestep)
     options = odeset(options, 'MaxStep', params.max_timestep);
 end
@@ -149,7 +144,6 @@ while(t_span(1) < tvect(end))
     % ye is the y-vector at time te
     % ie is the index of diameter(s) that grew over limit
 
-    
     % Get the time vector's size
     nt = length(t);
     
@@ -213,7 +207,7 @@ while(t_span(1) < tvect(end))
                 index = params.part_source(1,3,j);
                 diam = params.part_source(1,4,j);
                 if(y0(1+index) < eps)
-                    y0(2*nSec+5+index) = diam;
+                    y0(nSec+1+index) = diam;
                 end
             end
             
@@ -231,17 +225,17 @@ while(t_span(1) < tvect(end))
             % ie+direction (=ie+1). Otherwise the particles are moved to the
             % section below, and direction is -1, and still the target
             % section is ie+direction (=ie-1).
-            direction = -sign(obj.Dplims(ie(i))-y0(2*nSec+5+ie(i)));
+            direction = -sign(obj.Dplims(ie(i))-y0(nSec+1+ie(i)));
             
             Ni1=y0(1+ie(i));   % Number of particles in section ie
             Ni2=y0(1+ie(i)+direction); % Number of particles in section ie+direction
             Ntot = Ni1+Ni2;
-            v1 = pi/6*y0(2*nSec+5+ie(i))^3*Ni1;    % Total vol of particles in section ie
-            v2 = pi/6*y0(2*nSec+direction+5+ie(i))^3*Ni2;  % Total vol of particles in section ie+direction
-            
+            v1 = pi/6*y0(nSec+1+ie(i))^3*Ni1;    % Total vol of particles in section ie
+            v2 = pi/6*y0(nSec+direction+1+ie(i))^3*Ni2; % Total vol of particles in section ie+direction
+
             vtot = (v1+v2)/Ntot;           % Average vol of particles in section ie+direction when the particles from ie are moved there.
             if(vtot > 0)
-                y0(2*nSec+5+direction+ie(i)) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
+                y0(nSec+1+direction+ie(i)) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
             end
             
             y0(1+ie(i)+direction)=Ntot; % Add particles from section ie to ie+direction
@@ -251,7 +245,7 @@ while(t_span(1) < tvect(end))
             % particles. If the diameter is not reset, it will grow
             % immediatly over its limit if particles coagulate into it and
             % grow by condensation.
-            y0(2*nSec+5+ie(i)) = obj.center_diameters(ie(i));
+            y0(nSec+1+ie(i)) = obj.center_diameters(ie(i));
         end
     end
     % The t and y vectors from ode will be saved to cumulative output
@@ -292,12 +286,9 @@ while(t_span(1) < tvect(end))
         % elements between the first and last do equal time vector's
         % elements.
         length_addition = length(t(2:nt-1));
-%         tout(run_ind:run_ind+length_addition = [tout; t(2:nt-1)];
         tout(run_ind:run_ind+length_addition-1) = t(2:nt-1);
-%         yout = [yout; y(2:nt-1,:)];
         yout(run_ind:run_ind+length_addition-1,:) = y(2:nt-1,:);
-        run_ind = run_ind + length_addition;
-        
+        run_ind = run_ind + length_addition;     
         
         % TODO: It's possible that event happens between y(nt-2) and y(nt-1),
         % so the diameters in y(nt-1) may be too big, the correct values are
@@ -318,9 +309,6 @@ while(t_span(1) < tvect(end))
         % is why only the last element of t will be saved; other elements
         % do not equal any of the elements in the time vector.
         
-        
-%         tout = [tout; t(nt)];
-%         yout = [yout; y(nt,:)];
         length_addition = 1;
         tout(run_ind:run_ind+length_addition-1) = t(nt);
         yout(run_ind:run_ind+length_addition-1,:) = y(nt,:);
@@ -334,8 +322,6 @@ while(t_span(1) < tvect(end))
         % element of the time vector OR ode has reached the end of the time
         % vector. In that case, save all the values of t and y except the
         % first row.
-%         yout = [yout; y(2:nt,:)];
-%         tout = [tout; t(2:nt)];
         length_addition = length(t(2:nt));
         tout(run_ind:run_ind+length_addition-1) = t(2:nt);
         yout(run_ind:run_ind+length_addition-1,:) = y(2:nt,:);
@@ -354,16 +340,11 @@ if(length(tout) > length(tvect))
     % Y2 will be similar to Y, but only the variable diameters will be
     % saved to get as much information as possible. The fixed diameters
     % will be skipped.
-    temp = [yout(:,1:nSec+1),yout(:,2*nSec+6:3*nSec+5),yout(:,2*nSec+2:2*nSec+5)];        
-    Y2=interp1(tout,temp,tvect);
+    Y2 = interp1(tout,yout,tvect);
     tout = tvect;
 else
     % Now tout equals tvect, so there is no need for interpolation.
-    
-    % Y2 will be similar to Y, but only the variable diameters will be
-    % saved to get as much information as possible. The fixed diameters
-    % will be skipped.
-    Y2 = [yout(:,1:nSec+1),yout(:,2*nSec+6:3*nSec+5),yout(:,2*nSec+2:2*nSec+5)];
+    Y2 = yout;
 end
 
 out_Y = Y2;
@@ -418,21 +399,21 @@ function dy = chamberODE(t,y)
     dy = obj.add_nucleation(dy, y,t, part_source);
     
     % Calculation of coagulation kernels:
-    if(all(diff(y(2*nSec+6:3*nSec+5))>0))
+    if(all(diff(y(nSec+2:2*nSec+1))>0))
         % Calculate the coagulation kernels only if the diameter vector is
         % increasing. In this case it is possible to calculate the
         % coagulation, so set coag_possible to 1.
         coag_possible = 1;
         % Make coagulation kernel. Different functions for coagulation and
         % agglomeration.
-        kk=zeros(nSec,length(y((2*nSec+6):(3*nSec+5)))); % Preallocate
+        kk=zeros(nSec,length(y((nSec+2):(2*nSec+1)))); % Preallocate
         if(coagmode == 1) % coagmode == 1 => particles coagulate.
             for i = 1:nSec,
-                kk(i,:) = obj.koag_kernel(y(2*nSec+5+i),y((2*nSec+6):(3*nSec+5)),rool,T).*1e6;
+                kk(i,:) = obj.koag_kernel(y(nSec+1+i),y((nSec+2):(2*nSec+1)),rool,T).*1e6;
             end
         else    % Else coagmode == 0 => particles agglomerate.
             for i = 1:nSec,
-                kk(i,:) = obj.aggl_kernel(y(2*nSec+5+i),y((2*nSec+6):(3*nSec+5)),rool,T,Df,r0).*1e6;
+                kk(i,:) = obj.aggl_kernel(y(nSec+1+i),y((nSec+2):(2*nSec+1)),rool,T,Df,r0).*1e6;
             end
         end
     else
@@ -477,14 +458,14 @@ function dy = chamberODE(t,y)
 
             % Calculate the molecules lost to dilution in aerosol phase and
             % save information to dy(2*nSec+3).
-            dy(2*nSec+3) = dy(2*nSec+3)+ Dilu.*y(i+1).*(NA.*1e6.*rool.*pi.*(y(2*nSec+5+i).^3))./(6.*mv);
+            dy(2*nSec+3) = dy(2*nSec+3)+ Dilu.*y(i+1).*(NA.*1e6.*rool.*pi.*(y(nSec+1+i).^3))./(6.*mv);
         end
         
         % coagulation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
         if (CX && coag_possible)    
             % calculate a coagulation matrix
             % this tells how to partition the particles 
-            cM = obj.coagulationMatrix(y((2*nSec+6):(3*nSec+5)),i);
+            cM = obj.coagulationMatrix(y((nSec+2):(2*nSec+1)),i);
             for j = 1:i,
                 if i == j
                     dy(j+1) = dy(j+1)-y(i+1).*y(j+1).*kk(i,j); % loss             
@@ -506,12 +487,12 @@ function dy = chamberODE(t,y)
         % wall losses and sedimentation according to T. Anttila model...fitted
         % by M. Dal Maso; only usable for SAPPHIR chamber!!
         if (params.sedi_on && coag_possible)
-            beta = obj.sapphir_beta2(y(2*nSec+5+i),T);
+            beta = obj.sapphir_beta2(y(nSec+1+i),T);
             %beta = 3.5e-5; % 0th order approx
             dy(i+1) = dy(i+1)-beta.*y(i+1);
 
             %molecules lost to the wall = volume lost to wall (in aerosol phase)
-            dy(2*nSec+2) = dy(2*nSec+2)+ beta.*y(i+1).*(NA.*1e6.*rool.*pi.*(y(2*nSec+5+i).^3))./(6.*mv);               
+            dy(2*nSec+2) = dy(2*nSec+2)+ beta.*y(i+1).*(NA.*1e6.*rool.*pi.*(y(nSec+1+i).^3))./(6.*mv);               
         end
     end %% End for loop.
     
@@ -524,8 +505,8 @@ end  % End function chamberODE
 
 
 function[value,isterminal,direction] = events(t,y)   
-    Dps = y(2*nSec+6:3*nSec+5);
-    
+    Dps = y(nSec+2:2*nSec+1);
+
     % limits(i) is the upper limit of Dp(i) and the lower limit of Dp(i+1)
     limits = obj.Dplims'; 
     
@@ -545,7 +526,7 @@ function[value,isterminal,direction] = events(t,y)
     % particles are to nucleate into an empty section. If this happens, ode
     % must be stopped and the diameter of the section must be moved to
     % correspond the diameter of nucleating particles.
-    value = [value; y(3*nSec+6)];
+    value = [value; 2*nSec+6];
     
     isterminal = ones(length(value),1);
     direction = zeros(length(value),1);

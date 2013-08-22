@@ -26,22 +26,22 @@ if(initials.part_source_is_vect)
         diam = part_source_temp(3);
         dy(1+index) = dy(1+index) + part_source_temp(1);
         
-        if(part_source_temp(1) > 0 && y(2*nSec+5+index) ~= diam)
+        if(part_source_temp(1) > 0 && y(nSec+1+index) ~= diam)
             % If there are particles that will nucleate and the diameter of
             % the corresponding section is not the same as the diameter of
             % the nucleating particles, the diameter of the section must be
             % changed.
-            if(abs(y(1+index)) < eps || y(3*nSec+6) < 0)
+            if(abs(y(1+index)) < eps || y(2*nSec+6) < 0)
                 % If the section to which particles will nucleate is empty
                 % (or nearly empty), try to set y(3*nSec+6) negative so ode
                 % will stop and the diameter of section 'index' will be
                 % changed to the diameter of nucleating particles.
-                dy(3*nSec+6) = -10*eps;
+                dy(2*nSec+6) = -10*eps;
             else
                 Ntot = y(1+index);
                 % If there are already particles in the section, just move 
                 % the center diameter of corresponding section:
-                dy(2*nSec+5+index) = part_source_temp(1)/(3*Ntot*y(2*nSec+5+index)^2)*(diam^3-y(2*nSec+5+index)^3);
+                dy(nSec+1+index) = part_source_temp(1)/(3*Ntot*y(nSec+1+index)^2)*(diam^3-y(nSec+1+index)^3);
             end
         end
     end
