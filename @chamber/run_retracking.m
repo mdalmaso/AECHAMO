@@ -1,7 +1,6 @@
-function [ output_args ] = run_retracking( input_args )
+function [out_t, out_Y] = run_retracking(obj)
 %RUN_RETRACKING Summary of this function goes here
 %   Detailed explanation goes here
-function [out_t, out_Y] = run_moving_center(obj)
 % RUN_MOVING_CENTER Runs the simulation with fixed sections using ode45.
 % Saves the results to chamber.output_data.
 %  
@@ -128,6 +127,10 @@ run_ind = 2;
 % Create a visual waitbar (slows the program down a little, a few seconds)
 h = waitbar(0,'0 %','Name','Running simulation...');
 
+
+retrack_interval = 60;
+retrack_moment = retrack_interval;
+
 % Run the simulation as long as the beginning of the ode's time span vector
 % is smaller than the end of the user defined tvect.
 while(t_span(1) < tvect(end))
@@ -189,7 +192,7 @@ while(t_span(1) < tvect(end))
         clear t_temp;
         nt = length(t);
     end
-    
+
     % Set the initial step of ode to one second, so the first step of
     % solver after the event will not be too big.
     options = odeset(options, 'InitialStep', 1);
@@ -218,37 +221,51 @@ while(t_span(1) < tvect(end))
             % diameter of the section is now all right.
             y0(3*nSec+6) = eps;
             clear index diam;
-        
-        % Otherwise particles just need to be moved to another section.
-        elseif(y0(1+ie(i)) > 0)    % Is there particles in section?
-            
-            % Check the direction where particles are to moved. If
-            % limits(ie)-Dp(ie) < 0, Dp is growing and must be moved to the
-            % next section, so the direction must be +1, and the section is
-            % ie+direction (=ie+1). Otherwise the particles are moved to the
-            % section below, and direction is -1, and still the target
-            % section is ie+direction (=ie-1).
-            direction = -sign(obj.Dplims(ie(i))-y0(nSec+1+ie(i)));
-            
-            Ni1=y0(1+ie(i));   % Number of particles in section ie
-            Ni2=y0(1+ie(i)+direction); % Number of particles in section ie+direction
-            Ntot = Ni1+Ni2;
-            v1 = pi/6*y0(nSec+1+ie(i))^3*Ni1;    % Total vol of particles in section ie
-            v2 = pi/6*y0(nSec+direction+1+ie(i))^3*Ni2; % Total vol of particles in section ie+direction
+       
+        elseif(ie(i) == 1)
+            % Retracking.
+%             % Omatekoinen "interpolaatio" alkaa:
+%             y0_temp=zeros(1,length(y0));
+%             for j=1:nSec-1
+%                 if(y0(1+j) > 0)
+%                     new_ind = j;
+%                     for k=j:nSec-1
+%                         if(y0(nSec+1+j) > obj.Dplims(k))
+%                             new_ind = k+1;
+%                         end
+%                     end
+%                     Dp0=y0(nSec+1+j);
+%                     Dp1=obj.center_diameters(new_ind);
+%                     Dp2=obj.center_diameters(new_ind+1);
+%                     N0=y0(1+j);
+%                     N1 = (N0*(Dp0^3-Dp2^3))/(Dp1^3-Dp2^3);
+%                     N2 = N0-N1;
+%                     y0_temp(1+new_ind) = y0_temp(1+new_ind)+N1;
+%                     y0_temp(1+1+new_ind) = y0_temp(1+1+new_ind)+N2;
+%                 end
+%             end
+%             % Omatekoinen "interpolaatio p‰‰ttyy
 
-            vtot = (v1+v2)/Ntot;           % Average vol of particles in section ie+direction when the particles from ie are moved there.
-            if(vtot > 0)
-                y0(nSec+1+direction+ie(i)) = (6/pi*vtot)^(1/3);  % New average diameter inside section ie+1
+            retrack_moment = retrack_interval + te
+            
+            % Jakauman interpolaatio alkaa:
+%             y0(2:nSec+1) = interp1(y0(nSec+2:2*nSec+1),y0(2:nSec+1),obj.center_diameters,'pchip');
+            % Jakauman interpolaatio p‰‰ttyy
+            
+%             y0(2:nSec+1)=y0_temp;
+%             y0(2:nSec+1) = y0_temp(2:nSec+1);
+%             clear y0_temp;
+
+            % DndlogDp interpolaatio alkaa
+            dn = obj.N_to_dlog(y0(nSec+2:2*nSec+1),y0(2:nSec+1));
+            dn_new = interp1(log10(y0(nSec+2:2*nSec+1)),dn,log10(obj.center_diameters),'pchip');
+            if(~all(dn_new>=0))
+                pause;
             end
+            [~, y0(2:nSec+1)] = obj.Dlog_to_N_vect(obj.center_diameters,dn_new);
+            % DndlogDp interpolaatio p‰‰ttyy
             
-            y0(1+ie(i)+direction)=Ntot; % Add particles from section ie to ie+direction
-            y0(1+ie(i)) = 0;       % Delete particles from section ie.
-            
-            % Reset the diameter of the section that has now zero
-            % particles. If the diameter is not reset, it will grow
-            % immediatly over its limit if particles coagulate into it and
-            % grow by condensation.
-            y0(nSec+1+ie(i)) = obj.center_diameters(ie(i));
+            y0(nSec+2:2*nSec+1) = obj.center_diameters;
         end
     end
     % The t and y vectors from ode will be saved to cumulative output
@@ -282,49 +299,62 @@ while(t_span(1) < tvect(end))
         continue;
     end
     
-    if(modulo_time ~= 0)
-        % If the last element of t does not equal any of the elements in
-        % the time vector, save all other elements but the first and last,
-        % because the first one is already saved in previous round and the
-        % elements between the first and last do equal time vector's
-        % elements.
-        length_addition = length(t(2:nt-1));
-        tout(run_ind:run_ind+length_addition-1) = t(2:nt-1);
-        yout(run_ind:run_ind+length_addition-1,:) = y(2:nt-1,:);
-        run_ind = run_ind + length_addition;     
+%     if(modulo_time ~= 0)
+%         % If the last element of t does not equal any of the elements in
+%         % the time vector, save all other elements but the first and last,
+%         % because the first one is already saved in previous round and the
+%         % elements between the first and last do equal time vector's
+%         % elements.
+%         length_addition = length(t(2:nt-1));
+%         tout(run_ind:run_ind+length_addition-1) = t(2:nt-1);
+%         yout(run_ind:run_ind+length_addition-1,:) = y(2:nt-1,:);
+%         run_ind = run_ind + length_addition;
+%         
+%         % TODO: It's possible that event happens between y(nt-2) and y(nt-1),
+%         % so the diameters in y(nt-1) may be too big, the correct values are
+%         % in y0, but represent the y at time t_span(1).
+%         
+%         
+%         % Redefine the t_span for ode so that the first step is
+%         % delta_t-modulo_time. In this way the second element of t_span
+%         % (and thus t) will equal some of the elements of time vector. The
+%         % next elements will have spacing of delta_t.
+%         t_span = [t(nt), t(nt)+(delta_t-modulo_time):delta_t:t_end];
+%         
+%     elseif(length(t) > length(t_span))
+%         % If t is longer than t_span, it means that for the previous round
+%         % t_span has had only two elements and in that case ode will return
+%         % t with denser spacing than delta_t. This can happen only at the
+%         % end of time vector, so this means we have reached the end. That
+%         % is why only the last element of t will be saved; other elements
+%         % do not equal any of the elements in the time vector.
+%         
+%         length_addition = 1;
+%         tout(run_ind:run_ind+length_addition-1) = t(nt);
+%         yout(run_ind:run_ind+length_addition-1,:) = y(nt,:);
+%         run_ind = run_ind + length_addition;
+%         
+%         % Let t_span equal t_end, so the while loop will be terminated.
+%         t_span = t_end;
         
-        % TODO: It's possible that event happens between y(nt-2) and y(nt-1),
-        % so the diameters in y(nt-1) may be too big, the correct values are
-        % in y0, but represent the y at time t_span(1).
-        
-        
-        % Redefine the t_span for ode so that the first step is
-        % delta_t-modulo_time. In this way the second element of t_span
-        % (and thus t) will equal some of the elements of time vector. The
-        % next elements will have spacing of delta_t.
-        t_span = [t(nt), t(nt)+(delta_t-modulo_time):delta_t:t_end];
-        
-    elseif(length(t) > length(t_span))
-        % If t is longer than t_span, it means that for the previous round
-        % t_span has had only two elements and in that case ode will return
-        % t with denser spacing than delta_t. This can happen only at the
-        % end of time vector, so this means we have reached the end. That
-        % is why only the last element of t will be saved; other elements
-        % do not equal any of the elements in the time vector.
-        
-        length_addition = 1;
-        tout(run_ind:run_ind+length_addition-1) = t(nt);
-        yout(run_ind:run_ind+length_addition-1,:) = y(nt,:);
-        run_ind = run_ind + length_addition;
-        
-        % Let t_span equal t_end, so the while loop will be terminated.
-        t_span = t_end;
-        
-    else
+    if(te ~= t_end)
         % Now the event has happened at such time that equals some
         % element of the time vector OR ode has reached the end of the time
         % vector. In that case, save all the values of t and y except the
         % first row.
+        length_addition = length(t(2:nt-1));
+        tout(run_ind:run_ind+length_addition-1) = t(2:nt-1);
+        yout(run_ind:run_ind+length_addition-1,:) = y(2:nt-1,:);
+        run_ind = run_ind + length_addition;
+
+        % And redefine the t_span for ode beginning from current time point
+        % to the end of the time vector with spacing of delta_t.
+        t_span = [t(nt):delta_t:t_end];
+        if(length(t_span) < 2)
+            t_span = [t(nt), t(nt)+delta_t];
+        end
+    else
+        
         length_addition = length(t(2:nt));
         tout(run_ind:run_ind+length_addition-1) = t(2:nt);
         yout(run_ind:run_ind+length_addition-1,:) = y(2:nt,:);
@@ -508,33 +538,33 @@ end  % End function chamberODE
 
 
 function[value,isterminal,direction] = events(t,y)   
-    Dps = y(nSec+2:2*nSec+1);
-
-    % limits(i) is the upper limit of Dp(i) and the lower limit of Dp(i+1)
-    limits = obj.Dplims'; 
+%     Dps = y(nSec+2:2*nSec+1);
+% 
+%     % limits(i) is the upper limit of Dp(i) and the lower limit of Dp(i+1)
+%     limits = obj.Dplims'; 
+%     
+%     val_1 = limits-Dps(1:end-1); % Goes below zero if Dp(i) > limits(i)
+%     val_2 = Dps(2:end)-limits;   % Goes below zero if Dp(i+1) < limits(i)
+% 
+%     indices_1 = find(val_1 < 0); % Find the indices of negative elements.
+%     indices_2 = find(val_2 < 0); % Find the indices of negative elements.
+%     
+%     value=ones(length(val_1),1); % Set the event's values initially as ones.
+%     
+%     % Add the negative values of val_1 and val_2 to value vector.
+%     value(indices_1) = val_1(indices_1); 
+%     value(indices_2) = val_2(indices_2);
     
-    val_1 = limits-Dps(1:end-1); % Goes below zero if Dp(i) > limits(i)
-    val_2 = Dps(2:end)-limits;   % Goes below zero if Dp(i+1) < limits(i)
-
-    indices_1 = find(val_1 < 0); % Find the indices of negative elements.
-    indices_2 = find(val_2 < 0); % Find the indices of negative elements.
-    
-    value=ones(length(val_1),1); % Set the event's values initially as ones.
-    
-    % Add the negative values of val_1 and val_2 to value vector.
-    value(indices_1) = val_1(indices_1); 
-    value(indices_2) = val_2(indices_2);
+    retracking = retrack_moment - t;
     
     % Add y(3*nSec+6) to the end of value vector. This value indicates if
     % particles are to nucleate into an empty section. If this happens, ode
     % must be stopped and the diameter of the section must be moved to
     % correspond the diameter of nucleating particles.
-    value = [value; 2*nSec+6];
-    
+%     value = [value; 2*nSec+6;retracking];
+    value = retracking;
     isterminal = ones(length(value),1);
     direction = zeros(length(value),1);
-end
-
 end
 
 end

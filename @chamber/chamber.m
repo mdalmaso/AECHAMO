@@ -84,6 +84,8 @@ classdef chamber < handle
         % these sections moves.
         [out_t, out_Y] = run_moving_center(obj)       
         
+        [out_t, out_Y] = run_retracking(obj)   
+        
         % Initializes object with user input values:
         initialize(obj,varargin)
         

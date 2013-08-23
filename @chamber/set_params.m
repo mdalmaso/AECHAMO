@@ -170,6 +170,7 @@ if(isempty(obj.initials) || nargin == 1)
                                           % as time vector's spacing.
                                           % Otherwise MaxStep will not be
                                           % restricted.
+    obj.initials.retracking = 0;
 
     % Basic values
     obj.initials.part_source   = 0;
