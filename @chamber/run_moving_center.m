@@ -211,9 +211,9 @@ while(t_span(1) < tvect(end))
                 end
             end
             
-            % Set the value of y(3*nSec+6) back to eps to indicate that the
+            % Set the value of y(2*nSec+6) back to eps to indicate that the
             % diameter of the section is now all right.
-            y0(3*nSec+6) = eps;
+            y0(2*nSec+6) = eps;
             clear index diam;
         
         % Otherwise particles just need to be moved to another section.
@@ -522,11 +522,11 @@ function[value,isterminal,direction] = events(t,y)
     value(indices_1) = val_1(indices_1); 
     value(indices_2) = val_2(indices_2);
     
-    % Add y(3*nSec+6) to the end of value vector. This value indicates if
+    % Add y(2*nSec+6) to the end of value vector. This value indicates if
     % particles are to nucleate into an empty section. If this happens, ode
     % must be stopped and the diameter of the section must be moved to
     % correspond the diameter of nucleating particles.
-    value = [value; 2*nSec+6];
+    value = [value; y(2*nSec+6)];
     
     isterminal = ones(length(value),1);
     direction = zeros(length(value),1);
