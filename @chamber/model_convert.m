@@ -38,14 +38,6 @@ initials = obj.initials;
 mv     = initials.vap_molmass;
 rool   = initials.particle_dens;
 
-% If initials.sections is scalar, it tells the number of sections.
-% Otherwise it is an array of all sections, and the number of secs is the
-% length of this array.
-% if(isscalar(initials.sections))
-%     nSec   = initials.sections;
-% else
-%     nSec = length(unique(initials.sections));
-% end
 nSec = initials.sections;
 
 % Create a new lognormal vector containing the diameters. The number of
