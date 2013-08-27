@@ -155,6 +155,7 @@ function initialize(obj,varargin)
 
 
 obj.set_params(varargin{:});
+obj.form_distribution;
 obj.check_initials;
 
 
