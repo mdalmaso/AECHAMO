@@ -42,7 +42,8 @@ Dp = obj.Dps;
 % Dp(i).
 N = obj.number_distribution;
 
-nSec = params.sections;
+params.sections = obj.sections;
+nSec = obj.sections;
 
 % Dp_variable keeps track of the diameter inside a section. In the
 % beginning it is the same as Dp unless user has set the center diameters.
@@ -76,12 +77,12 @@ y0 = [params.Cvap0, N, Dp_variable, AE_Wall, AE_dilu, Vap_dilu, Vap_Wall, eps];
 % Error tolerance options for ode45:
 absTol = ones(size(y0)).*1e-6; % Preallocate the tolerance vector.
 absTol(1) = params.Cvap_tol; % Vapor concentration tolerance
-absTol(2:params.sections+1) = params.N_tol; % Particle concentration tolerance
-absTol(params.sections+2:(2*params.sections+1)) = params.Dp_tol; % Particle diameter tolerance
-% absTol(3*params.sections+6) = 20*eps;
+absTol(2:obj.sections+1) = params.N_tol; % Particle concentration tolerance
+absTol(obj.sections+2:(2*obj.sections+1)) = params.Dp_tol; % Particle diameter tolerance
+% absTol(3*obj.sections+6) = 20*eps;
 
 % Apply the tolerance settings to ode45 options:
-options = odeset('absTol',absTol, 'NonNegative', 1:params.sections+1); 
+options = odeset('absTol',absTol, 'NonNegative', 1:obj.sections+1); 
 
 % Set the function 'events' as Event-function:
 options = odeset(options,'Events',@events);
@@ -90,7 +91,6 @@ options = odeset(options,'Events',@events);
 % concentrations: Y(2:nSec+1)
 % diameters:      Y((nSec+2):(2*nSec+1))
 % lost:           Y(2*nSec+2 2*nSec+3 2*nSec+4 2*nSec+5)
-% variable diams: Y((2*nSec+6 : 3*nSec+5))
 % yout = [];
 % tout = [];
 
@@ -109,10 +109,9 @@ t_start=tvect(1);
 delta_t = tvect(2)-tvect(1);
 t_end = tvect(end);
 
-% Set the MaxStep to delta_t so ode will not miss for example short
+% Set the MaxStep to user set value so ode will not miss for example short
 % nucleation events. This slows down the simulation remarkably and is
-% unnecessary in most cases. Consider commenting this out or handling the
-% problem in some other way.
+% unnecessary in most cases.
 if(params.max_timestep)
     options = odeset(options, 'MaxStep', params.max_timestep);
 end
@@ -168,7 +167,7 @@ while(t_span(1) < tvect(end))
         % one of consecutive sections is handled.
         difference = diff(ie);
         difference = [2;difference];
-        ie=ie(difference ~= 1)
+        ie=ie(difference ~= 1);
         
         y0=ye(1,:);
         te=te(1);
@@ -420,6 +419,10 @@ function dy = chamberODE(t,y)
         % If diameter vector is not increasing, coagulation is not possible
         % (because coagulationMatrix() will return NaN and Inf).
         coag_possible = 0;
+%         % Make sure that ode detects event by making the difference larger:
+%         Dp_ind = find(diff(y(nSec+2:2*nSec+1)) < 0);
+%         dy(nSec+1+Dp_ind) = dy(nSec+1+Dp_ind) + 1;
+%         clear Dp_ind;
     end
         
     % Show the time evolution in Matlab command window:
@@ -527,6 +530,7 @@ function[value,isterminal,direction] = events(t,y)
     % must be stopped and the diameter of the section must be moved to
     % correspond the diameter of nucleating particles.
     value = [value; y(2*nSec+6)];
+    value = value.*1e9;
     
     isterminal = ones(length(value),1);
     direction = zeros(length(value),1);

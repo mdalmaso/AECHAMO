@@ -14,6 +14,7 @@ function [t,Y] = run_movsec(obj)
 
 % Get the initial values:
 initials=obj.initials;
+initials.sections = obj.sections;
 
 % And diameter vector:
 Dp = obj.Dps;
@@ -62,9 +63,11 @@ y0 = [initials.Cvap0 N Dp AE_Wall AE_dilu Vap_dilu];
 % Error tolerance options for ode45:
 absTol = ones(size(y0)).*1e-6; % Preallocate the tolerance vector.
 absTol(1) = initials.Cvap_tol; % Vapor concentration tolerance
-absTol(2:initials.sections+1) = initials.N_tol; % Particle concentration tolerance
-absTol(initials.sections+1:(2*initials.sections+1)) = initials.Dp_tol; % Particle diameter tolerance
+absTol(2:obj.sections+1) = initials.N_tol; % Particle concentration tolerance
+absTol(obj.sections+1:(2*obj.sections+1)) = initials.Dp_tol; % Particle diameter tolerance
 opts = odeset('absTol',absTol); % Assign tolerances
+
+opts = odeset(opts, 'NonNegative', 1:obj.sections+1);
 
 if(initials.max_timestep)
     opts = odeset(opts, 'MaxStep', initials.max_timestep);
@@ -111,7 +114,7 @@ diffu  = initials.diff_coeff ; % the condensing vapor diffusion coefficient
 mv     = initials.vap_molmass ; % the condensing vapor molecular weight
 rool   = initials.particle_dens ; % the particle density
 alfa   = initials.stick_coeff ; % the sticking coefficient
-nSec   = initials.sections; % the number of size sections
+nSec   = obj.sections; % the number of size sections
 T      = initials.T;               % Temperature
 
 Df     = initials.Df;  % Fractal dimension of agglomerates. Used only if agglomeration is on.

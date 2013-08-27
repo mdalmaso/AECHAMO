@@ -38,7 +38,7 @@ initials = obj.initials;
 mv     = initials.vap_molmass;
 rool   = initials.particle_dens;
 
-nSec = initials.sections;
+nSec = obj.sections;
 
 % Create a new lognormal vector containing the diameters. The number of
 % sections in this vector should be much more than the number of sections

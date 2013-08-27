@@ -72,6 +72,7 @@ classdef chamber < handle
         Dplims;
         center_diameters;
         number_distribution;
+        sections;
     end
     % Public methods:
     methods
@@ -97,6 +98,8 @@ classdef chamber < handle
         % uses this function.
         check_initials(obj)
         
+        form_distribution(obj)
+        
         % Runs the chamber simulation with initialized values:
         run(obj)
         
@@ -113,15 +116,19 @@ classdef chamber < handle
         function [new_object] = copy(object)
             %Copies all the data of a chamber object and makes a new 
             %chamber object using the copied values.
+            save('temp.mat','object');
+            temp = load('temp.mat');
+            new_object = temp.object;
+            delete('temp.mat');
             
-            % Make a new object of the same class.
-            new_object = feval(class(object));
- 
-            % Copy all properties.
-            p = fieldnames(object);
-            for i = 1:length(p)
-                new_object.(p{i}) = object.(p{i});
-            end
+%             % Make a new object of the same class.
+%             new_object = feval(class(object));
+%  
+%             % Copy all properties.
+%             p = fieldnames(object);
+%             for i = 1:length(p)
+%                 new_object.(p{i}) = object.(p{i});
+%             end
         end
 
     end

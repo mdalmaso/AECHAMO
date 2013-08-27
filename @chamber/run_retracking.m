@@ -44,7 +44,7 @@ Dp = obj.Dps;
 % Dp(i).
 N = obj.number_distribution;
 
-nSec = params.sections;
+nSec = obj.sections;
 
 % Dp_variable keeps track of the diameter inside a section. In the
 % beginning it is the same as Dp unless user has set the center diameters.
@@ -128,7 +128,7 @@ run_ind = 2;
 h = waitbar(0,'0 %','Name','Running simulation...');
 
 
-retrack_interval = 60;
+retrack_interval = 240;
 retrack_moment = retrack_interval;
 
 % Run the simulation as long as the beginning of the ode's time span vector
@@ -139,6 +139,7 @@ while(t_span(1) < tvect(end))
 
     [t,y,te,ye,ie]=ode45(@chamberODE,t_span,y0,options);
 
+   
     % Now ode45 has stopped, so some Dp has grown over limit OR ode45 has 
     % reached the end of t_span. If the end of t_span is reached, the
     % first element of the t_span will be later in this loop redefined so
@@ -150,6 +151,9 @@ while(t_span(1) < tvect(end))
     % ye is the y-vector at time te
     % ie is the index of diameter(s) that grew over limit
 
+    if(t(end) == t(end-1))
+        t=t(1:end-1);
+    end
     % Get the time vector's size
     nt = length(t);
     
@@ -219,19 +223,27 @@ while(t_span(1) < tvect(end))
             
             % Set the value of y(3*nSec+6) back to eps to indicate that the
             % diameter of the section is now all right.
-            y0(3*nSec+6) = eps;
+            y0(2*nSec+6) = eps;
             clear index diam;
+%         else
+%             Dp1 = y0(nSec+1+ie(i));
+%             Dp2 = y0(nSec+1+1+ie(i));
+%             N1 = y0(1+ie(i));
+%             N2 = y0(1+ie(i)+1);
+%             Ntot = N1 + N2;
+%             Dp_new = ((N1*Dp1^3 + N2*Dp2^3)/Ntot)^(1/3);
+            
        
         elseif(ie(i) == 1)
-            % Retracking.
+%             % Retracking.
 %             % Omatekoinen "interpolaatio" alkaa:
 %             y0_temp=zeros(1,length(y0));
 %             for j=1:nSec-1
 %                 if(y0(1+j) > 0)
 %                     new_ind = j;
 %                     for k=j:nSec-1
-%                         if(y0(nSec+1+j) > obj.Dplims(k))
-%                             new_ind = k+1;
+%                         if(y0(nSec+1+j) > obj.center_diameters(k))
+%                             new_ind = k;
 %                         end
 %                     end
 %                     Dp0=y0(nSec+1+j);
@@ -244,13 +256,15 @@ while(t_span(1) < tvect(end))
 %                     y0_temp(1+1+new_ind) = y0_temp(1+1+new_ind)+N2;
 %                 end
 %             end
-%             % Omatekoinen "interpolaatio p‰‰ttyy
+%             y0(2:nSec+1) = y0_temp(2:nSec+1);
+%             % Omatekoinen "interpolaatio" p‰‰ttyy
 
             retrack_moment = retrack_interval + te
             
-            % Jakauman interpolaatio alkaa:
+%             % Jakauman interpolaatio alkaa:
 %             y0(2:nSec+1) = interp1(y0(nSec+2:2*nSec+1),y0(2:nSec+1),obj.center_diameters,'pchip');
-            % Jakauman interpolaatio p‰‰ttyy
+%             y0(y0<0) = 0;
+%             % Jakauman interpolaatio p‰‰ttyy
             
 %             y0(2:nSec+1)=y0_temp;
 %             y0(2:nSec+1) = y0_temp(2:nSec+1);
@@ -258,10 +272,11 @@ while(t_span(1) < tvect(end))
 
             % DndlogDp interpolaatio alkaa
             dn = obj.N_to_dlog(y0(nSec+2:2*nSec+1),y0(2:nSec+1));
-            dn_new = interp1(log10(y0(nSec+2:2*nSec+1)),dn,log10(obj.center_diameters),'pchip');
-            if(~all(dn_new>=0))
-                pause;
-            end
+            dn_new = interp1(log10(y0(nSec+2:2*nSec+1)),dn,log10(obj.center_diameters),'pchip',0);
+            dn_new(dn_new<0) = 0;
+%             if(~all(dn_new>=0))
+%                 pause;
+%             end
             [~, y0(2:nSec+1)] = obj.Dlog_to_N_vect(obj.center_diameters,dn_new);
             % DndlogDp interpolaatio p‰‰ttyy
             
@@ -290,7 +305,85 @@ while(t_span(1) < tvect(end))
     % ode will eventually return t = [125 180 ...] and in this way only the
     % values of t that equal the values of user input time vector are saved
     % to the output data.
-    modulo_time = mod(t(end),delta_t);
+    
+%     % Toimiiva alkaa:
+%     modulo_time = mod(t(end),delta_t);
+%     
+%     % If t consists of only one element, it has the same value as the last
+%     % element of t during previous round.
+%     if(length(t) < 2)
+%         t_span = [te, te+(delta_t-modulo_time):delta_t:t_end];
+%         continue;
+%     end
+%     
+% %     if(modulo_time ~= 0)
+% %         % If the last element of t does not equal any of the elements in
+% %         % the time vector, save all other elements but the first and last,
+% %         % because the first one is already saved in previous round and the
+% %         % elements between the first and last do equal time vector's
+% %         % elements.
+% %         length_addition = length(t(2:nt-1));
+% %         tout(run_ind:run_ind+length_addition-1) = t(2:nt-1);
+% %         yout(run_ind:run_ind+length_addition-1,:) = y(2:nt-1,:);
+% %         run_ind = run_ind + length_addition;
+% %         
+% %         % TODO: It's possible that event happens between y(nt-2) and y(nt-1),
+% %         % so the diameters in y(nt-1) may be too big, the correct values are
+% %         % in y0, but represent the y at time t_span(1).
+% %         
+% %         
+% %         % Redefine the t_span for ode so that the first step is
+% %         % delta_t-modulo_time. In this way the second element of t_span
+% %         % (and thus t) will equal some of the elements of time vector. The
+% %         % next elements will have spacing of delta_t.
+% %         t_span = [t(nt), t(nt)+(delta_t-modulo_time):delta_t:t_end];
+% %         
+% %     elseif(length(t) > length(t_span))
+% %         % If t is longer than t_span, it means that for the previous round
+% %         % t_span has had only two elements and in that case ode will return
+% %         % t with denser spacing than delta_t. This can happen only at the
+% %         % end of time vector, so this means we have reached the end. That
+% %         % is why only the last element of t will be saved; other elements
+% %         % do not equal any of the elements in the time vector.
+% %         
+% %         length_addition = 1;
+% %         tout(run_ind:run_ind+length_addition-1) = t(nt);
+% %         yout(run_ind:run_ind+length_addition-1,:) = y(nt,:);
+% %         run_ind = run_ind + length_addition;
+% %         
+% %         % Let t_span equal t_end, so the while loop will be terminated.
+% %         t_span = t_end;
+%         
+%     if(te ~= t_end)
+%         % Now the event has happened at such time that equals some
+%         % element of the time vector OR ode has reached the end of the time
+%         % vector. In that case, save all the values of t and y except the
+%         % first row.
+%         length_addition = length(t(2:nt-1));
+%         tout(run_ind:run_ind+length_addition-1) = t(2:nt-1);
+%         yout(run_ind:run_ind+length_addition-1,:) = y(2:nt-1,:);
+%         run_ind = run_ind + length_addition;
+% 
+%         % And redefine the t_span for ode beginning from current time point
+%         % to the end of the time vector with spacing of delta_t.
+%         t_span = [t(nt):delta_t:t_end];
+%         if(length(t_span) < 2)
+%             t_span = [t(nt), t(nt)+delta_t];
+%         end
+%     else
+%         
+%         length_addition = length(t(2:nt));
+%         tout(run_ind:run_ind+length_addition-1) = t(2:nt);
+%         yout(run_ind:run_ind+length_addition-1,:) = y(2:nt,:);
+%         run_ind = run_ind + length_addition;
+% 
+%         % And redefine the t_span for ode beginning from current time point
+%         % to the end of the time vector with spacing of delta_t.
+%         t_span = [t(nt):delta_t:t_end];
+%     end
+%     %Toimiva loppuu
+
+            modulo_time = mod(t(end),delta_t);
     
     % If t consists of only one element, it has the same value as the last
     % element of t during previous round.
@@ -298,63 +391,49 @@ while(t_span(1) < tvect(end))
         t_span = [te, te+(delta_t-modulo_time):delta_t:t_end];
         continue;
     end
-    
-%     if(modulo_time ~= 0)
-%         % If the last element of t does not equal any of the elements in
-%         % the time vector, save all other elements but the first and last,
-%         % because the first one is already saved in previous round and the
-%         % elements between the first and last do equal time vector's
-%         % elements.
-%         length_addition = length(t(2:nt-1));
-%         tout(run_ind:run_ind+length_addition-1) = t(2:nt-1);
-%         yout(run_ind:run_ind+length_addition-1,:) = y(2:nt-1,:);
-%         run_ind = run_ind + length_addition;
-%         
-%         % TODO: It's possible that event happens between y(nt-2) and y(nt-1),
-%         % so the diameters in y(nt-1) may be too big, the correct values are
-%         % in y0, but represent the y at time t_span(1).
-%         
-%         
-%         % Redefine the t_span for ode so that the first step is
-%         % delta_t-modulo_time. In this way the second element of t_span
-%         % (and thus t) will equal some of the elements of time vector. The
-%         % next elements will have spacing of delta_t.
-%         t_span = [t(nt), t(nt)+(delta_t-modulo_time):delta_t:t_end];
-%         
-%     elseif(length(t) > length(t_span))
-%         % If t is longer than t_span, it means that for the previous round
-%         % t_span has had only two elements and in that case ode will return
-%         % t with denser spacing than delta_t. This can happen only at the
-%         % end of time vector, so this means we have reached the end. That
-%         % is why only the last element of t will be saved; other elements
-%         % do not equal any of the elements in the time vector.
-%         
-%         length_addition = 1;
-%         tout(run_ind:run_ind+length_addition-1) = t(nt);
-%         yout(run_ind:run_ind+length_addition-1,:) = y(nt,:);
-%         run_ind = run_ind + length_addition;
-%         
-%         % Let t_span equal t_end, so the while loop will be terminated.
-%         t_span = t_end;
+        if(modulo_time ~= 0)
+        % If the last element of t does not equal any of the elements in
+        % the time vector, save all other elements but the first and last,
+        % because the first one is already saved in previous round and the
+        % elements between the first and last do equal time vector's
+        % elements.
+        length_addition = length(t(2:nt-1));
+        tout(run_ind:run_ind+length_addition-1) = t(2:nt-1);
+        yout(run_ind:run_ind+length_addition-1,:) = y(2:nt-1,:);
+        run_ind = run_ind + length_addition;     
         
-    if(te ~= t_end)
+        % TODO: It's possible that event happens between y(nt-2) and y(nt-1),
+        % so the diameters in y(nt-1) may be too big, the correct values are
+        % in y0, but represent the y at time t_span(1).
+        
+        
+        % Redefine the t_span for ode so that the first step is
+        % delta_t-modulo_time. In this way the second element of t_span
+        % (and thus t) will equal some of the elements of time vector. The
+        % next elements will have spacing of delta_t.
+        t_span = [t(nt), t(nt)+(delta_t-modulo_time):delta_t:t_end];
+        
+    elseif(length(t) > length(t_span))
+        % If t is longer than t_span, it means that for the previous round
+        % t_span has had only two elements and in that case ode will return
+        % t with denser spacing than delta_t. This can happen only at the
+        % end of time vector, so this means we have reached the end. That
+        % is why only the last element of t will be saved; other elements
+        % do not equal any of the elements in the time vector.
+        
+        length_addition = 1;
+        tout(run_ind:run_ind+length_addition-1) = t(nt);
+        yout(run_ind:run_ind+length_addition-1,:) = y(nt,:);
+        run_ind = run_ind + length_addition;
+        
+        % Let t_span equal t_end, so the while loop will be terminated.
+        t_span = t_end;
+        
+    else
         % Now the event has happened at such time that equals some
         % element of the time vector OR ode has reached the end of the time
         % vector. In that case, save all the values of t and y except the
         % first row.
-        length_addition = length(t(2:nt-1));
-        tout(run_ind:run_ind+length_addition-1) = t(2:nt-1);
-        yout(run_ind:run_ind+length_addition-1,:) = y(2:nt-1,:);
-        run_ind = run_ind + length_addition;
-
-        % And redefine the t_span for ode beginning from current time point
-        % to the end of the time vector with spacing of delta_t.
-        t_span = [t(nt):delta_t:t_end];
-        if(length(t_span) < 2)
-            t_span = [t(nt), t(nt)+delta_t];
-        end
-    else
-        
         length_addition = length(t(2:nt));
         tout(run_ind:run_ind+length_addition-1) = t(2:nt);
         yout(run_ind:run_ind+length_addition-1,:) = y(2:nt,:);
@@ -538,7 +617,7 @@ end  % End function chamberODE
 
 
 function[value,isterminal,direction] = events(t,y)   
-%     Dps = y(nSec+2:2*nSec+1);
+    Dps = y(nSec+2:2*nSec+1);
 % 
 %     % limits(i) is the upper limit of Dp(i) and the lower limit of Dp(i+1)
 %     limits = obj.Dplims'; 
@@ -561,8 +640,9 @@ function[value,isterminal,direction] = events(t,y)
     % particles are to nucleate into an empty section. If this happens, ode
     % must be stopped and the diameter of the section must be moved to
     % correspond the diameter of nucleating particles.
-%     value = [value; 2*nSec+6;retracking];
-    value = retracking;
+%     value = [value; 2*nSec+6;retracking]; 
+    value = [retracking; y(2*nSec+6)];
+%     value = diff(log10(Dps))-0.08;
     isterminal = ones(length(value),1);
     direction = zeros(length(value),1);
 end
