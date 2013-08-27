@@ -151,7 +151,8 @@ chamb_temp(total_num) = chamber;
 % OK.
 s = warning('error', 'MATLAB:ode45:IntegrationTolNotMet');
 for i=1:total_num
-    tic
+    tic    
+    fprintf('Running simulation %i/%i\n',i,total_num);
     try 
         chamb_temp(i).run;
     catch
@@ -202,6 +203,7 @@ else
             chamb(obj_index).set_params(variables(i).param_name,variables(i).param_value(indices(i),:));
         end
     end
+    chamb(obj_index).form_distribution;
     chamb(obj_index).check_initials;
     obj_index = obj_index + 1;
 end

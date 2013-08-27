@@ -57,6 +57,7 @@ end
 s = warning('error', 'MATLAB:ode45:IntegrationTolNotMet');
 for i=1:rows
     tic
+    fprintf('Running simulation %i/%i\n',i,rows);
     try 
         chamb_temp(i).run;
     catch
