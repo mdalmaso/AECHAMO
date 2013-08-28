@@ -1,6 +1,7 @@
 function form_distribution(obj)
 %FORM_DISTRIBUTION Defines vectors Dp, Dplims, center_diameters and N
-%   Detailed explanation goes here
+%   Use the user set values for diameter vector, limits, center diameters
+%   and number distribution, or calculate them if they are not defined.
 
 
 % Make a logarithmically spaced diameter vector between 10^(Dp_min) and 
@@ -9,13 +10,11 @@ function form_distribution(obj)
 % Dp vector, so Dp = params.Dp_vector.
 if(isscalar(obj.initials.Dp))    
     % Make logarithmically spaced diameter vector:
-%     obj.initials.Dp = logspace(obj.initials.Dp_min, obj.initials.Dp_max, obj.initials.sections);
     obj.Dps = logspace(obj.initials.Dp_min, obj.initials.Dp_max, obj.initials.sections);
     obj.sections = obj.initials.sections;
 else
-    % Make sure that all diameter values are unique:
-%     obj.initials.Dp = unique(obj.initials.Dp);
-%     obj.initials.sections = length(obj.initials.Dp);
+    % User has defined the diameter vector, so use it, but make sure that
+    % all diameter values are unique:
     obj.Dps = unique(obj.initials.Dp);
     obj.sections = length(obj.Dps);
 end
@@ -36,43 +35,42 @@ if(isscalar(obj.initials.number_distr))
     % section i.
     [~, obj.number_distribution]  = obj.Dlog_to_N_vect(obj.Dps,dNdlogDp);
     clear dNdlogDp;
-
-    obj.number_distribution = abs(obj.number_distribution); % Make sure that concentrations are positive 
-                % (Dlog_to_N_vect may make near-zero concentrations negative).
-                
+    % Make sure that concentrations are positive
+    % (Dlog_to_N_vect may make near-zero concentrations negative).
+    obj.number_distribution = abs(obj.number_distribution);               
 else
+    % User has defined the distribution, so use it.
     obj.number_distribution = obj.initials.number_distr;
 end
 
 
-% If fixed sectional model is used, find the limits for each section and
-% save them to initials. If initials.Dplims is a vector, don't set the
+% Find the limits for each section for fixed sectional model and
+% save them. If initials.Dplims is a vector, don't set the
 % limits because they are set by user.
 if(isscalar(obj.initials.Dplims))
     Dp = obj.Dps;
-    
     % The length of Dplims is (length(Dp)-1) because the first section
     % does not have lower limit and the last section does not have upper
     % limit.
     obj.Dplims=zeros(1,length(Dp)-1);
     for i = 1:length(obj.Dplims)
-        exp1 = log10(Dp(i))/log10(10);  % Find the exponents of current and
-        exp2 = log10(Dp(i+1))/log10(10);% next Dp.
-        % Then create a logarithmically spaced 3-element vector between these Dp:s.
-        temp = logspace(exp1,exp2,3);
-
-        % Now the second value of the vector is the logarithmic center between
-        % Dp:s and will be the upper limit of section i.
-        obj.Dplims(i)=temp(2);
+        % Now the second value of the vector is the geometric mean, that
+        % is, logarithmic center between Dp:s and will be the upper limit
+        % of section i and lower limit of section (i+1).
+        obj.Dplims(i)=geomean([Dp(i),Dp(i+1)]);
     end
     clear temp exp1 exp2 Dp;
 else
+    % User has set the limits, so use them:
     obj.Dplims = obj.initials.Dplims;
 end
 
 if(isscalar(obj.initials.center_diameters))
+    % If user has not set the center diameters, use the Dp values as
+    % initial center diameters:
     obj.center_diameters = obj.Dps;
 else
+    % Otherwise, use the user set center diameters:
     obj.center_diameters = obj.initials.center_diameters;
 end
 

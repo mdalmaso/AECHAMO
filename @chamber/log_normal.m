@@ -1,7 +1,7 @@
-function[out] = log_normal(Dp_in,mu,sigma,N)
+function [out] = log_normal(Dp_in,mu,sigma,N)
 % LOG_NORMAL creates a log-normal distribution.
 % 
-% function[out] = log_normal(Dp_in,mu,sigma,N)
+% [out] = log_normal(Dp_in,mu,sigma,N)
 % Creates a log-normal distribution based on mu, sigma and N. The
 % distribution will have the same spacing as the diameter vector Dp_in.
 

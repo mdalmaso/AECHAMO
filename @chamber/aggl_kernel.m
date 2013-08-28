@@ -1,6 +1,6 @@
 function [K] = aggl_kernel(obj, Dp1, Dp2, dens, T, Df, r0)
 % AGGL_KERNEL calculates the coagulation coefficients for agglomerates.
-% aggl_kernel(Dp1, Dp2, dens, T, Df, r0)
+% [K] = chamber.aggl_kernel(Dp1, Dp2, dens, T, Df, r0)
 % 
 % Dp1 is a scalar volume-diameter of agglomerate
 % Dp2 is a vector containing volume-diameters of all interacting

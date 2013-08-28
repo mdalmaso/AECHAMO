@@ -11,7 +11,7 @@ function initialize(obj,varargin)
 %
 % THE PARAMETERS OF THE CHAMBER MODEL
 % 
-% For up-to-date list of parameters, see the documentation.
+% For more information, see the documentation.
 % 
 % SWITCHES:
 % dilu_on           Defines whether the dilution is on or not. If
@@ -28,28 +28,31 @@ function initialize(obj,varargin)
 %                   sedi_on = 1, sedimentation will occur. Only usable for
 %                   sedimentation in SAPPHIR chamber!
 % 
-% gas_source_vect_on  Defines whether the parameter gas_source is an array
-%                     or scalar. This cannot be set by user. Instead, the
-%                     program checks if gas_source is an array or not and
-%                     sets the value to 1 or 0 respectively.
-% 
-% dilu_vect_on      Defines whether the parameter dilu_coeff is an array or
-%                   scalar. This cannot be set by user. Instead, the
-%                   program checks if dilu_coeff is an array or scalar and
-%                   sets the value to 1 or 0 respectively.
-% 
 % coag_mode         Defines whether the particles coagulate 'normally' or
 %                   agglomerate. Value should be either 'coag' for normal
 %                   coagulation or 'aggl' for agglomeration. Agglomeration
 %                   works only for particles in the free-molecule region.
 %                   Condensation and deposition might not work correctly
 %                   for agglomerates.
-%
-% coag_num          Numerical representative of coag_mode. 
-%                   If coag_mode == 'coag' => coag_num = 1.
-%                   If coag_mode == 'aggl' => coag_num = 0.
-%                   This cannot be set directly by user, but the program
-%                   sets it based on the value of coag_mode.
+% 
+% fixed_sections    Defines whether the model will use fixed or moving
+%                   sections. If fixed_sections == 0, moving sections will
+%                   be used. Otherwise the model uses fixed sections and
+%                   moving center method.
+% 
+% max_timestep      Defines ode's MaxStep value. If max_timestep == 0,
+%                   ode's MaxStep option will not be defined, so the step
+%                   size will not be restricted.
+% 
+% Cvap_const        Defines whether the vapor concentration is constant or
+%                   not. If Cvap_const == 1, the vapor concetration stays
+%                   at value Cvap0 during the whole simulation time, so
+%                   that the value gas_source has no effect on vapor
+%                   concentration. Otherwise the vapor concentration is not
+%                   kept constant, but its value depends on Cvap0 and
+%                   gas_source.
+% 
+% vap_wallsink_on   Defines whether the vapor deposits on walls or not.
 % 
 % BASIC VALUES:
 % gas_source        The condensing vapor source rate (1/cm^3/s). 
@@ -66,6 +69,14 @@ function initialize(obj,varargin)
 %                   array is different than tvect's length, gas_source will 
 %                   be interpolated to same length.
 % 
+% part_source       The particle source rate (1/cm^3/s). Must be a
+%                   three-colum array. The first column is the time vector
+%                   and the second column the particle source rates at
+%                   corresponding time points in a similar way as in
+%                   gas_source. The first cell of third column defines the
+%                   size of particles (in meters). The rest of the cells in
+%                   the third column are not used.
+% 
 % dilu_coeff        Dilution coefficient (1/s). Dilution affects particle
 %                   concentration in following way:
 %                   dN/dt = -dilu_coeff*N   (N = particle concentration)
@@ -81,6 +92,9 @@ function initialize(obj,varargin)
 %                   as respective elements of tvect. If the length of the
 %                   array is different than tvect's length, dilu_coeff will 
 %                   be interpolated to same length.
+% 
+% vap_wallsink      The flux of vapor molecules that condense on walls
+%                   (1/s).
 % 
 % satu_conc         The condensing vapor saturation concentration (1/cm^3).
 % 
@@ -138,6 +152,45 @@ function initialize(obj,varargin)
 %                   mu.
 % 
 % sections          The number of sections in the size distribution.
+% 
+% output_sections   Defines the number of sections in output size grid. The
+%                   dN/dlogDp distribution is interpolated to a denser grid
+%                   after the simulation is finished. The number of grid
+%                   points is defined by this parameter. The more output
+%                   sections, the smoother the plot of size distribution
+%                   will be (except when using fixed sectional model).
+% 
+% Dp                Defines the diameters of sections. The number of
+%                   sections will be the same as Dp's length. If this is
+%                   used, the parameters Dp_min, Dp_max and sections are
+%                   not in use.
+% 
+% Dplims            Defines the limits between sections. Used only for
+%                   fixed sectional model. The length must be one less than
+%                   the number of sections because the last section does
+%                   not have upper limit and the first section does not
+%                   have lower limit. Usually this vector is calculated by
+%                   the model, but can be also defined by user.
+% 
+% number_distr      A vector that defines the particle concentration in
+%                   each section. The length of number_distr must equal the
+%                   number of sections. If this parameter is used, the
+%                   parameters N, mu and sigma are not in use.
+% 
+% center_diameters  Defines the initial center diameters of sections. Used
+%                   only for fixed sectional model. The length must equal
+%                   the number of sections. Usually this vector is
+%                   calculated by the model, but can be also defined by
+%                   user.
+% 
+% TOLERANCE PARAMETERS:
+% Define the tolerance settings for ode45
+% 
+% Cvap_tol          Vapor concentration tolerance.
+% 
+% N_tol             Particle concentartion tolerance.
+% 
+% Dp_tol            Particle diameter tolerance.
 %
 % *****
 % Example:
@@ -153,9 +206,12 @@ function initialize(obj,varargin)
 % 2013-06-04    0.1.1 Separated function initialize to functions set_params
 %                     and check_initials.
 
-
+% Set the parameters:
 obj.set_params(varargin{:});
+% Apply paramters Dp, Dplims, number_distr and center_diamters to the
+% chamber object:
 obj.form_distribution;
+% And finally check that the values of parameters are correct:
 obj.check_initials;
 
 

@@ -3,20 +3,19 @@ classdef chamber < handle
 % Class chamber 
 % 
 % A class for running the chamber model. The class contains the needed
-% initial parameters, such as chamber.Ntot0 (initial particle
-% concentration) and chamber.tvect (the time vector). The calculated data
-% will be in chamber.output_data.
+% initial parameters, such as chamber.N (initial particle concentration) 
+% and chamber.tvect (the time vector). The calculated data will be in
+% chamber.output_data.
 % 
 % The class has also functions related to chamber model.
 % 
-% Function chamber.initialize(varargin) defines the default initial values.
+% Function chamber.initialize(varargin) defines the initial values.
 % User can change default values through input. For example
-% chamber.initialize('Ntot0',1e6) sets the value chamber.Ntot0 = 1e6. Other
+% chamber.initialize('N',1e6) sets the value chamber.N = 1e6. Other
 % initial values will be default. For more details, type 'help
 % chamber.initialize'.
 % 
-% Function chamber.run() runs the chamber model. Before using this
-% function, the initial values must be set by chamber.initialize().
+% Function chamber.run() runs the chamber model.
 % Function chamber.run calculates the data and saves it to
 % chamber.output_data. 
 % 
@@ -25,8 +24,6 @@ classdef chamber < handle
 % chamber.plot() plots several graphs whereas chamber.plot('dist') plots
 % only the particle distribution as a function of time.
 % 
-% Function values = chamber.export_initials outputs a structure that 
-% contains all the initial values used in calculations.
 % 
 % *****
 % 
@@ -34,8 +31,8 @@ classdef chamber < handle
 % 
 % chamb=chamber %Create a chamber object named chamb
 % 
-% % Initialize chamb with default values, except for chamb.Ntot and chamb.T
-% % that are defined as chamb.Ntot = 1e6 and chamb.T = 300.
+% % Initialize chamb with default values, except for chamb.N and chamb.T
+% % that are defined as chamb.N = 1e6 and chamb.T = 300.
 % chamb.initialize('N',1e6,'T',300);
 % 
 % chamb.run; %Run the simulation.

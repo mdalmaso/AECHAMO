@@ -1,9 +1,10 @@
 function [t,Y] = run_movsec(obj)
 % RUN_MOVSEC runs the simulation with moving sections.
 % 
-% Saves the results to chamber.output_data.
+%   Returns the time vector and calculated y-vector so that
+%   [time_vector, y_vector] = chamber.run_moving_center.
 % 
-% A private function of class chamber, used by public method chamber.run.
+%   A function of class chamber, used by method chamber.run.
 
 % (c) Miikka Dal Maso & Pauli Simonen 2013
 %

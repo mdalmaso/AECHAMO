@@ -30,7 +30,7 @@ end
 % paljon hiukkasia, valkoinen = ei yht‰‰n hiukkasia. Tilanne plotataan
 % time_interval v‰lein eri kuviin. Vaatii filledCircle-funktion 
 % (Draw a filled circle, file exchange).
-time_interval = 50;
+time_interval = 20;
 kam=out.kam;
 r = out.r;
 Ntot0 = out.Ntot0;

@@ -1,7 +1,27 @@
 function [ out ] = diffusion_test(N0,num_of_circles, R, sections, time, interval)
-%DIFFUSION_TEST Summary of this function goes here
-%   Detailed explanation goes here
-% Testaa esim. out = diffusion_test(2e7,10,25,12,0:100,2);
+%DIFFUSION_TEST Simulates particle dispersion and simultaneous processes
+% Simulaatio tekee num_of_circles määrän sisäkkäisiä palloja. Uloimman
+% pallon säde on R (m), ja muiden pallojen säde määräytyy siten, että
+% jokaisen pallokuoren sisältämä tilavuus on sama.
+% 
+% Alussa kaikki hiukkaset ovat sisimmässä pallossa, josta ne leviävät
+% Fickin lain mukaisesti ulompiin. N0 tarkoittaa tässä
+% hiukkaskonsentraatiota (1/cm^3).
+% 
+% Jokaisessa pallossa on 'sections' määrä sektioita, joilla simuloidaan
+% dynaamisia prosesseja. Simulaatio ajetaan 'interval'-muuttujan määrämissä
+% jaksoissa. Jos interval on 2, ensin ajetaan 2 sekuntia kammiomallia,
+% jonka jälkeen 2 sekuntia diffuusiota. Tätä jatketaan loppuun asti.
+%
+% Diffuusio vaikuttaa liian hitaalta, kun käytetään realistisia arvoja
+% diffuusiokertoimelle (5.4e-8 10nm hiukkaselle). Nyt käytössä oleva
+% kerroin on 0.9 m^2/s.
+% 
+% Testaa esim. out = diffusion_test(5e7,12,18,15,0:2:160,2);
+% ja sen jälkeen diffusion_script.m:llä voi katsoa tuloksia. Tämä
+% simulaatio kestää n. 900 sekuntia.
+
+tic
 kam(num_of_circles) = chamber;
 kam(1).initialize('N',[N0],...
                   'mu', [5e-9],...
@@ -82,72 +102,63 @@ out.kam = kam;
 out.R = R;
 out.r = r;
 out.Ntot0 = N0;
+toc
 end
 
 function [dy] = diffusion(t, y)
+% Fick's law.
 
-num_of_sects = length(y)-1;
+num_of_spheres = length(y)-1;
 dy=zeros(length(y),1);
 
-diff_coeff = 8e-1;
+diff_coeff = 9e-1;
 
-R = y(num_of_sects+1);
+R = y(num_of_spheres+1);
 
-% The radii of circles is such that every circle has equal area.
-% r(1) = R/sqrt(num_of_sects);
-% A(1) = pi*r(1)^2;
-
-r(1) = R/((num_of_sects)^(1/3));
+% The radii of spheres is such that every sphere has equal area.
+r(1) = R/((num_of_spheres)^(1/3));
 V(1) = 4/3.*pi.*r(1)^3;
 
-% for i=2:num_of_sects
-%     r(i) = sqrt(i)*r(1);
-%    
-%     % Area of circle is: pi*radius^2 - (area of inner circles).
-%     A(i) = pi*r(i)^2-sum(A(1:i-1));
-% end
-
-for i=2:num_of_sects
+for i=2:num_of_spheres
     r(i) = i^(1/3)*r(1);
    
     V(i) = 4/3*pi*r(i)^3-sum(V(1:i-1));
 end
 
-% % l is the circumference of circles.
-% l=2.*pi.*r;
-
+% A is the area of sphere shell and the area through which the particle
+% flux goes.
 A = 4.*pi.*r.^2;
 
-
-for i=1:num_of_sects-1
-%     dN = y(i+1)/A(i+1)-y(i)/A(i);
-    dN = y(i+1)/V(i+1)-y(i)/V(i);
+% Fick: J = -D*dfii/dx.
+% dfii = particles/m^3, particle concentration difference between two
+% sphere shells. dx is the average distance between two sphere shells.
+% dy = J*A, where A is the area through which the particle flux, J, goes.
+J = zeros(1,num_of_spheres-1);
+for i=1:num_of_spheres-1
+    dfii = y(i+1)/V(i+1)-y(i)/V(i);
 
     if(i == 1)
         distance = r(1)+(r(2)-r(1))/2;
     else
         distance = .5.*(r(i+1)-r(i-1));
     end
-    
-    J(i) = -diff_coeff*dN/distance;
+    dfiidx = dfii/distance;
+    J(i) = -diff_coeff*dfiidx;
     
     if(i>1)
-%         dy(i) = -J(i)*l(i)+J(i-1)*l(i-1);
         dy(i) = -J(i)*A(i) + J(i-1)*A(i-1);
     else
-%         dy(i) = -J(i)*l(i);
         dy(i) = -J(i)*A(i);
     end
 end
 
-% At the boundary, dN = -(concentration of last circle). This is obtained
+% At the boundary, dfii = -(concentration of last circle). This is obtained
 % by assuming that the concentration outside the outer circle is zero.
-% dN_bound = -y(num_of_sects)/A(num_of_sects);
-dN_bound = -y(num_of_sects)/V(num_of_sects);
-distance_bound = .5.*(r(num_of_sects)-r(num_of_sects-2));
-J_bound = -diff_coeff*dN_bound/distance_bound;
-% dy(num_of_sects) = -J_bound*l(end) + J(end)*l(end-1);
-dy(num_of_sects) = -J_bound*A(end) + J(end)*A(end-1);
+% dfii_bound = -y(num_of_spheres)/A(num_of_spheres);
+dfii_bound = -y(num_of_spheres)/V(num_of_spheres);
+distance_bound = .5.*(r(num_of_spheres)-r(num_of_spheres-2));
+J_bound = -diff_coeff*dfii_bound/distance_bound;
+dy(num_of_spheres) = -J_bound*A(end) + J(end)*A(end-1);
 end
 
 function [Dp_new, N_new] = add_particles(Dp1, N1, Dp2, N2)
@@ -177,6 +188,4 @@ end
     
     
 end
-% 
-% 
 

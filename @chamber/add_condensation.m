@@ -1,6 +1,5 @@
 function [ dy ] = add_condensation(dy, y, initials, index)
-%UNTITLED7 Summary of this function goes here
-%   Detailed explanation goes here
+%ADD_CONDENSATION Calculates the condensation/evaporation onto particles
 
 % (c) Pauli Simonen 2013
 % Version history:

@@ -1,8 +1,13 @@
 function [out_t, out_Y] = run_moving_center(obj)
 % RUN_MOVING_CENTER Runs the simulation with fixed sections using ode45.
-% Saves the results to chamber.output_data.
-%  
-% A private function of class chamber, used by public method chamber.run.
+%   Simulation uses fixed sections, but the center diameters of sections
+%   move by condensation/coagulation and also when particles are moved from
+%   a section to another.
+%    
+%   Returns the time vector and calculated y-vector so that
+%   [time_vector, y_vector] = chamber.run_moving_center.
+% 
+%   A function of class chamber, used by method chamber.run.
 
 % Moving center solver
 % (c) Pauli Simonen 2013
@@ -150,11 +155,16 @@ while(t_span(1) < tvect(end))
     % same point where the event occured.
     y0 = y(nt,:);
     
-    % If there are more than one index, several Dp:s have grown over their
-    % limits. In that case, the program will take care of the Dp with
-    % lowest index. The other Dp:s will be handled in the next loop if
-    % needed.
+    % If there are more than one index, several sections have grown over
+    % their limits. In case there are two adjacent sections, the program
+    % will take care of the section with lower index of these two. This is
+    % done because adding particles from the section of lower index to the
+    % next section probably causes the center diameter of this section to
+    % decrease so that its diameter is not anymore over the limit.
     if(length(ie)>1)
+        
+        % Consider only events that happen simultaneously. The events that
+        % happen at the same time as the first event have equal ye:s.
         i = 1;
         while( i < length(ye(:,1)) && isequal(ye(i,:),ye(i+1,:)))
             i = i+1;
@@ -338,12 +348,15 @@ end
 if(length(tout) > length(tvect))
     % Y2 will be similar to Y, but only the variable diameters will be
     % saved to get as much information as possible. The fixed diameters
-    % will be skipped.
-    Y2 = interp1(tout,yout,tvect);
+    % will be skipped. Don't export the last column of yout, as it is only
+    % an indicator for nucleation.
+    Y2 = interp1(tout,yout(:,1:end-1),tvect);
     tout = tvect;
 else
-    % Now tout equals tvect, so there is no need for interpolation.
-    Y2 = yout;
+    % Now tout equals tvect, so there is no need for interpolation. Don't
+    % export the last column of yout, as it is only indicator for
+    % nucleation.
+    Y2 = yout(:,1:end-1);
 end
 
 out_Y = Y2;

@@ -1,7 +1,7 @@
 function[out_struct] = model_convert(obj,t,Y)
 % MODEL_CONVERT creates a structure of results calculated by simulation.
 % 
-% [out_struct] = model_convert_moving_center(obj, t, Y)
+% [out_struct] = chamber.model_convert(t, Y)
 % t is the time vector and Y is the matrix calculated by simulation.
 % The data from Y is exported to out_struct, so that out_struct contains
 % following fields:
@@ -15,10 +15,9 @@ function[out_struct] = model_convert(obj,t,Y)
 % Mdilu - Mass diluted as aerosols
 % Mvdilu - Mass diluted as vapor
 % Mvwall - Mass condensed to wall as vapor
-% distr - Distribution as a function of time
-% distr_smoothed - Smoothed distribution as a function of time. This is
-%                  created only if sections are fixed. Otherwise there is
-%                  no need for smoothed distribution.
+% distr - dN/dlogDp distribution as a function of time, interpolated to
+%         denser grid
+% distr_original - The original dN/dlogDp distribution
 
 % (c) Miikka Dal Maso & Pauli Simonen 2013
 %
@@ -33,8 +32,6 @@ function[out_struct] = model_convert(obj,t,Y)
 
 initials = obj.initials;
 
-% converts schlosser model results and plots them
-% translate back 
 mv     = initials.vap_molmass;
 rool   = initials.particle_dens;
 
