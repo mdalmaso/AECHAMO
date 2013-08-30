@@ -11,17 +11,21 @@ function run(obj)
 % 2013-05-31    0.1.0
 tic
 
-if(obj.initials.retracking == 1)
-    [t, Y] = obj.run_retracking;
-elseif(obj.initials.fixed_sections == 0)
-    [t, Y] = obj.run_movsec;
-else
-    [t, Y] = obj.run_moving_center;
+switch obj.initials.method
+    case 'moving_sectional'
+        [t,Y] = obj.run_movsec;
+        display('Ode45 finished, processing data...');
+        obj.output_data = obj.model_convert(t,Y);
+    case 'moving_center'
+        [t,Y] = obj.run_moving_center;
+        display('Ode45 finished, processing data...');
+        obj.output_data = obj.model_convert(t,Y);
+    case 'moving_center_beta'
+        [t,Y] = obj.run_movcent2;
+        display('Ode45 finished, processing data...');
+        obj.output_data = obj.model_convert2(t,Y);
 end
 
-display('Ode45 finished, processing data...');
-
-% This makes a handy structure of the results:
-obj.output_data = obj.model_convert(t,Y);
 toc
+
 end

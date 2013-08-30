@@ -80,7 +80,8 @@ classdef chamber < handle
         
         % Runs the simulation with fixed sections, but the diameter inside
         % these sections moves.
-        [out_t, out_Y] = run_moving_center(obj)       
+        [out_t, out_Y] = run_moving_center(obj)
+        [out_t, out_Y] = run_movcent2(obj)
         
         [out_t, out_Y] = run_retracking(obj)   
         
@@ -102,6 +103,8 @@ classdef chamber < handle
         
         % Converts the calculated data to nice form
         out_struct = model_convert(obj, t, Y)
+        
+        out_struct = model_convert2(obj,t,Y)
         
         % Plots some data:
         plot(obj,varargin)

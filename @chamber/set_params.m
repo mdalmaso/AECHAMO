@@ -44,10 +44,9 @@ function set_params(obj, varargin)
 %                   Condensation and deposition might not work correctly
 %                   for agglomerates.
 % 
-% fixed_sections    Defines whether the model will use fixed or moving
-%                   sections. If fixed_sections == 0, moving sections will
-%                   be used. Otherwise the model uses fixed sections and
-%                   moving center method.
+% method            Defines which of the sectional methods will be used.
+%                   The alternatives are 'moving_sectional',
+%                   'moving_center' and 'moving_center_beta'.
 % 
 % max_timestep      Defines ode's MaxStep value. If max_timestep == 0,
 %                   ode's MaxStep option will not be defined, so the step
@@ -227,12 +226,8 @@ if(isempty(obj.initials) || nargin == 1)
     obj.initials.Cvap_const = 0;          % 1 if vapor concentration is kept constant.
                              % If Cvap_const == 1, the program will set
                              % gas_source to 0.
-    obj.initials.fixed_sections = 0;      % Moving sections if this is 0, otherwise fixed sections.
     obj.initials.vap_wallsink_on = 0;     % 1 if vapor deposits on walls
-%     obj.initials.restrict_timestep = 0;   % 1 if ode's MaxStep is the same
-                                          % as time vector's spacing.
-                                          % Otherwise MaxStep will not be
-                                          % restricted.
+    obj.initials.method = 'moving_sectional';
     obj.initials.retracking = 0;
 
     % Basic values

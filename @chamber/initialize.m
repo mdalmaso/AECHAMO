@@ -35,10 +35,9 @@ function initialize(obj,varargin)
 %                   Condensation and deposition might not work correctly
 %                   for agglomerates.
 % 
-% fixed_sections    Defines whether the model will use fixed or moving
-%                   sections. If fixed_sections == 0, moving sections will
-%                   be used. Otherwise the model uses fixed sections and
-%                   moving center method.
+% method            Defines which of the sectional methods will be used.
+%                   The alternatives are 'moving_sectional',
+%                   'moving_center' and 'moving_center_beta'.
 % 
 % max_timestep      Defines ode's MaxStep value. If max_timestep == 0,
 %                   ode's MaxStep option will not be defined, so the step
