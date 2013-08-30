@@ -1,7 +1,7 @@
 % Example script for chamber_runfile. 3 different runs.
 
 #
-fixed_sections = 1;
+method = 'moving_center';
 sedi_on = 0;
 coag_on = 1;
 dilu_on = 1;
@@ -20,7 +20,7 @@ N = [4000];
 
 # 
 
-fixed_sections = 1;
+method = 'moving_center';
 sedi_on = 0;
 coag_on = 1;
 dilu_on = 1;
@@ -38,7 +38,7 @@ sigma = 1.3;
 N = [4000];
 
 #
-fixed_sections = 0;
+method = 'moving_sectional';
 sedi_on = 0;
 coag_on = 1;
 dilu_on = 1;

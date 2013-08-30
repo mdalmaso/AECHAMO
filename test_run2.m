@@ -1,5 +1,5 @@
 % Example script for chamber_runfile2. 
-% Four different runs: dilution coefficient and initial N is varied.
+% Four different runs: dilution coefficient and initial N are varied.
 
 #
 tvect = 0:600:24*3600;

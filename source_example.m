@@ -4,7 +4,7 @@
 % particles/cc.
 
 #
-fixed_sections = 1;
+method = 'moving_center';
 sedi_on = 0;
 coag_on = 1;
 dilu_on = 1;
