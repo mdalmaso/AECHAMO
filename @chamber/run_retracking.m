@@ -128,8 +128,8 @@ run_ind = 2;
 h = waitbar(0,'0 %','Name','Running simulation...');
 
 
-retrack_interval = 240;
-retrack_moment = retrack_interval;
+retrack_interval = 180;
+retrack_moment = t_start+retrack_interval;
 
 % Run the simulation as long as the beginning of the ode's time span vector
 % is smaller than the end of the user defined tvect.
@@ -205,7 +205,7 @@ while(t_span(1) < tvect(end))
     % the particles to next section and calculate the new diameter inside
     % the next section.
     for i=1:length(ie)
-        if(ie(i) == nSec)
+        if(ie(i) == 2)
             % If the ie is nSec, it means that particles are to
             % nucleate into an empty section. If this happens, the diameter
             % of the section must be moved to correspond the diameter of
@@ -216,7 +216,7 @@ while(t_span(1) < tvect(end))
                 % particles.
                 index = params.part_source(1,3,j);
                 diam = params.part_source(1,4,j);
-                if(y0(1+index) < eps)
+                if(y0(1+index) < eps || isnan(y0(nSec+1+index)))
                     y0(nSec+1+index) = diam;
                 end
             end
@@ -235,52 +235,76 @@ while(t_span(1) < tvect(end))
             
        
         elseif(ie(i) == 1)
-%             % Retracking.
-%             % Omatekoinen "interpolaatio" alkaa:
-%             y0_temp=zeros(1,length(y0));
-%             for j=1:nSec-1
-%                 if(y0(1+j) > 0)
-%                     new_ind = j;
-%                     for k=j:nSec-1
-%                         if(y0(nSec+1+j) > obj.center_diameters(k))
-%                             new_ind = k;
-%                         end
-%                     end
-%                     Dp0=y0(nSec+1+j);
-%                     Dp1=obj.center_diameters(new_ind);
-%                     Dp2=obj.center_diameters(new_ind+1);
-%                     N0=y0(1+j);
-%                     N1 = (N0*(Dp0^3-Dp2^3))/(Dp1^3-Dp2^3);
-%                     N2 = N0-N1;
-%                     y0_temp(1+new_ind) = y0_temp(1+new_ind)+N1;
-%                     y0_temp(1+1+new_ind) = y0_temp(1+1+new_ind)+N2;
-%                 end
-%             end
-%             y0(2:nSec+1) = y0_temp(2:nSec+1);
-%             % Omatekoinen "interpolaatio" p‰‰ttyy
-
+            limits = obj.Dplims;
+            for j=1:nSec-1
+                Dp_current = y0(nSec+1+j);
+                if(Dp_current > limits(j))
+                    Ni1 = y0(1+j);
+                    Ni2 = y0(1+j+1);
+                    Dp1 = Dp_current;
+                    Dp2 = y0(nSec+1+j+1);
+                    if(isnan(Dp2))
+                        Dp2 = 0;
+                    end
+                    Ntot = Ni1 + Ni2;
+                    v1 = pi/6*Dp1^3*Ni1;
+                    v2 = pi/6*Dp2^3*Ni2;
+                    vtot = (v1+v2)/Ntot;
+                    
+                    y0(nSec+1+j+1) = (6/pi*vtot)^(1/3);
+                    y0(nSec+1+j) = NaN;
+                    y0(1+j+1) = Ntot;
+                    y0(1+j) = 0;
+                end
+            end
             retrack_moment = retrack_interval + te
-            
-%             % Jakauman interpolaatio alkaa:
-%             y0(2:nSec+1) = interp1(y0(nSec+2:2*nSec+1),y0(2:nSec+1),obj.center_diameters,'pchip');
-%             y0(y0<0) = 0;
-%             % Jakauman interpolaatio p‰‰ttyy
-            
-%             y0(2:nSec+1)=y0_temp;
-%             y0(2:nSec+1) = y0_temp(2:nSec+1);
-%             clear y0_temp;
-
-            % DndlogDp interpolaatio alkaa
-            dn = obj.N_to_dlog(y0(nSec+2:2*nSec+1),y0(2:nSec+1));
-            dn_new = interp1(log10(y0(nSec+2:2*nSec+1)),dn,log10(obj.center_diameters),'pchip',0);
-            dn_new(dn_new<0) = 0;
-%             if(~all(dn_new>=0))
-%                 pause;
-%             end
-            [~, y0(2:nSec+1)] = obj.Dlog_to_N_vect(obj.center_diameters,dn_new);
-            % DndlogDp interpolaatio p‰‰ttyy
-            
-            y0(nSec+2:2*nSec+1) = obj.center_diameters;
+                    
+% %             % Retracking.
+% %             % Omatekoinen "interpolaatio" alkaa:
+% %             y0_temp=zeros(1,length(y0));
+% %             for j=1:nSec-1
+% %                 if(y0(1+j) > 0)
+% %                     new_ind = j;
+% %                     for k=j:nSec-1
+% %                         if(y0(nSec+1+j) > obj.center_diameters(k))
+% %                             new_ind = k;
+% %                         end
+% %                     end
+% %                     Dp0=y0(nSec+1+j);
+% %                     Dp1=obj.center_diameters(new_ind);
+% %                     Dp2=obj.center_diameters(new_ind+1);
+% %                     N0=y0(1+j);
+% %                     N1 = (N0*(Dp0^3-Dp2^3))/(Dp1^3-Dp2^3);
+% %                     N2 = N0-N1;
+% %                     y0_temp(1+new_ind) = y0_temp(1+new_ind)+N1;
+% %                     y0_temp(1+1+new_ind) = y0_temp(1+1+new_ind)+N2;
+% %                 end
+% %             end
+% %             y0(2:nSec+1) = y0_temp(2:nSec+1);
+% %             % Omatekoinen "interpolaatio" p‰‰ttyy
+% 
+%             retrack_moment = retrack_interval + te
+%             
+% %             % Jakauman interpolaatio alkaa:
+% %             y0(2:nSec+1) = interp1(y0(nSec+2:2*nSec+1),y0(2:nSec+1),obj.center_diameters,'pchip');
+% %             y0(y0<0) = 0;
+% %             % Jakauman interpolaatio p‰‰ttyy
+%             
+% %             y0(2:nSec+1)=y0_temp;
+% %             y0(2:nSec+1) = y0_temp(2:nSec+1);
+% %             clear y0_temp;
+% 
+%             % DndlogDp interpolaatio alkaa
+%             dn = obj.N_to_dlog(y0(nSec+2:2*nSec+1),y0(2:nSec+1));
+%             dn_new = interp1(log10(y0(nSec+2:2*nSec+1)),dn,log10(obj.center_diameters),'pchip',0);
+%             dn_new(dn_new<0) = 0;
+% %             if(~all(dn_new>=0))
+% %                 pause;
+% %             end
+%             [~, y0(2:nSec+1)] = obj.Dlog_to_N_vect(obj.center_diameters,dn_new);
+%             % DndlogDp interpolaatio p‰‰ttyy
+%             
+%             y0(nSec+2:2*nSec+1) = obj.center_diameters;
         end
     end
     % The t and y vectors from ode will be saved to cumulative output
@@ -510,8 +534,11 @@ function dy = chamberODE(t,y)
     % Nucleation:
     dy = obj.add_nucleation(dy, y,t, part_source);
     
+    real_indices = find(~isnan(y(nSec+2:2*nSec+1)))';
+%     real_indices = real_indices + nSec + 1;
+    
     % Calculation of coagulation kernels:
-    if(all(diff(y(nSec+2:2*nSec+1))>0))
+    if(all(diff(y(nSec+1+real_indices))>0))
         % Calculate the coagulation kernels only if the diameter vector is
         % increasing. In this case it is possible to calculate the
         % coagulation, so set coag_possible to 1.
@@ -520,11 +547,11 @@ function dy = chamberODE(t,y)
         % agglomeration.
         kk=zeros(nSec,length(y((nSec+2):(2*nSec+1)))); % Preallocate
         if(coagmode == 1) % coagmode == 1 => particles coagulate.
-            for i = 1:nSec,
+            for i = real_indices,
                 kk(i,:) = obj.koag_kernel(y(nSec+1+i),y((nSec+2):(2*nSec+1)),rool,T).*1e6;
             end
         else    % Else coagmode == 0 => particles agglomerate.
-            for i = 1:nSec,
+            for i = real_indices,
                 kk(i,:) = obj.aggl_kernel(y(nSec+1+i),y((nSec+2):(2*nSec+1)),rool,T,Df,r0).*1e6;
             end
         end
@@ -563,7 +590,7 @@ function dy = chamberODE(t,y)
     % Go through all particle diameters and calculate the effect of dilution,
     % coagulation, condensation and sedimentation on particle
     % concentrations.
-    for i = 1:nSec
+    for i = real_indices
         % Dilution of particles
         if params.dilu_on
             dy(i+1) = dy(i+1)-Dilu.*y(i+1);   % Decrease particle concentration
@@ -577,15 +604,22 @@ function dy = chamberODE(t,y)
         if (CX && coag_possible)    
             % calculate a coagulation matrix
             % this tells how to partition the particles 
-            cM = obj.coagulationMatrix(y((nSec+2):(2*nSec+1)),i);
-            for j = 1:i,
-                if i == j
-                    dy(j+1) = dy(j+1)-y(i+1).*y(j+1).*kk(i,j); % loss             
-                    dy(2:(nSec+1)) = dy(2:(nSec+1))+cM(j,:)'.*0.5.*y(i+1).*y(j+1).*kk(i,j); % gain
-                else
-                    dy(i+1) = dy(i+1)-y(i+1).*y(j+1).*kk(i,j); %loss
-                    dy(j+1) = dy(j+1)-y(i+1).*y(j+1).*kk(i,j); %loss           
-                    dy(2:(nSec+1)) = dy(2:(nSec+1))+cM(j,:)'.*y(i+1).*y(j+1).*kk(i,j); % gain
+%             new_ind = i-(nSec-length(real_indices));
+            new_ind = find(real_indices==i);
+            cM = obj.coagulationMatrix(y(nSec+1+real_indices),new_ind);
+            for j = real_indices,
+                new_ind2 = find(real_indices==j);
+                if(~isnan(y(nSec+1+j)) && j <= i) 
+                    if i == j
+                        dy(j+1) = dy(j+1)-y(i+1).*y(j+1).*kk(i,j); % loss             
+%                         dy(2:(nSec+1)) = dy(2:(nSec+1))+cM(j,:)'.*0.5.*y(i+1).*y(j+1).*kk(i,j); % gain
+                        dy(1+real_indices) = dy(1+real_indices)+cM(new_ind2,:)'.*0.5.*y(i+1).*y(j+1).*kk(i,j); % gain
+                    else
+                        dy(i+1) = dy(i+1)-y(i+1).*y(j+1).*kk(i,j); %loss
+                        dy(j+1) = dy(j+1)-y(i+1).*y(j+1).*kk(i,j); %loss           
+%                         dy(2:(nSec+1)) = dy(2:(nSec+1))+cM(j,:)'.*y(i+1).*y(j+1).*kk(i,j); % gain
+                        dy(1+real_indices) = dy(1+real_indices)+cM(new_ind2,:)'.*y(i+1).*y(j+1).*kk(i,j); % gain
+                    end
                 end
             end
         end %if CX
