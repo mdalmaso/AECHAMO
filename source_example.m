@@ -8,7 +8,7 @@ method = 'moving_center';
 sedi_on = 0;
 coag_on = 1;
 dilu_on = 1;
-dilu_coeff = 1e-4;
+dilu_coeff = 1/(3.*24.*3600);
 
 Dp_min = -9;
 Dp_max = -6;
