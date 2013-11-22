@@ -19,42 +19,12 @@ function [ dy ] = add_nucleation(obj,dy,y,t, part_source)
 initials = obj.initials;
 nSec = initials.sections;
 
-
-
-
-
 if(initials.part_source_is_vect)
     for i=1:length(part_source(1,1,:))
         part_source_temp = interp1(part_source(:,1,i), part_source(:,2:4,i), t,'linear',0);
-        
-        
-        %% Miikka: fixing the particle source so that it depends on the CS
-        if (part_source_temp(1)>0 && part_source_temp(3)<5e-9),
-        load('J_ave_CS.mat');
-        CSx = [1e-4 5e-4 1e-3 5e-3 1e-2];
-       
-        CS = CS_general(y((nSec+2):(2*nSec+1)),y(2:nSec+1),288,1.0)
-        if CS>1e-2,
-            CS = 1e-2;
-        elseif CS<1e-4
-            CS = 1e-4;
-        end
-          
-        Jx = interp1(CSx,mat(:,3),CS)
-
-        part_source_temp(1) = part_source_temp(1).*Jx;
-        if part_source_temp(1)<1e-3,
-            part_source_temp(1) = 0;
-        end
-        end
-        
         index = part_source_temp(2);
         diam = part_source_temp(3);
         dy(1+index) = dy(1+index) + part_source_temp(1);
-     
-        if part_source_temp(1)>0 & part_source_temp(3)>5e-9,
-            disp('adding big')
-        end
         
         if(part_source_temp(1) > 0 && y(nSec+1+index) ~= diam)
             % If there are particles that will nucleate and the diameter of

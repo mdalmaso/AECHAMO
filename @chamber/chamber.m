@@ -71,7 +71,6 @@ classdef chamber < handle
         number_distribution;
         sections;
     end
-    
     % Public methods:
     methods
         % Creates the object.
@@ -176,6 +175,7 @@ classdef chamber < handle
         
         % Calculates the coagulation sink for particles
         [Diffcoeff] = diff_particle(Dp,T);
+        
         
         [out] = integrate_distribution(Dp,dN,dmin,dmax);
         

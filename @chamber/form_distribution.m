@@ -74,6 +74,5 @@ else
     obj.center_diameters = obj.initials.center_diameters;
 end
 
-
 end
 

@@ -33,8 +33,6 @@ function [chamb,elapsed] = chamber_runfile(filename)
 % Read the settings from a file:
 settings = read_file(filename); % Function defined in the end of this file.
 
-
-
 % Get the amount of chamber objects defined in the file:
 [rows, cols] = size(settings);
 
