@@ -1,3 +1,7 @@
+## Ignore result files
+*.mat
+
+
 #################
 ## Eclipse
 #################
